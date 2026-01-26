@@ -1,6 +1,6 @@
 # coupon_code
 
-A Flutter project where you get discount coupon using this app
+A Flutter project where you get discount coupon code using this app to get discount
 
 ## Getting Started
 
