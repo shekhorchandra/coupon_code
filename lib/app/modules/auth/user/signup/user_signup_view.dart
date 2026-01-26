@@ -36,8 +36,6 @@ class UserSignupView extends GetView<UserSignupController> {
               textAlign: TextAlign.center,
               style: AppTextStyles.HeaderTitle,),
 
-            const SizedBox(height: 6),
-
             Text(
               "Please enter your details to sign up",
               textAlign: TextAlign.center,

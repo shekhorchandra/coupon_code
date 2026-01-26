@@ -27,10 +27,10 @@ class VendorLoginView extends GetView<VendorLoginController> {
           children: [
             Center(child: Image.asset(AppAssets.economic, height: 90)),
             const SizedBox(height: 16),
-            Text("Welcome Back",
+            Text("Welcome Back, Vendor",
                 textAlign: TextAlign.center,
                 style: AppTextStyles.HeaderTitle,),
-            Text("Please enter your details to sign in",
+            Text("Let’s get you back to your business",
                 textAlign: TextAlign.center,
               style: AppTextStyles.HeaderSubTitle,),
             const SizedBox(height: 20),

@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import '../modules/auth/forget/forgot_binding.dart';
 import '../modules/auth/forget/forgot_controller.dart';
 import '../modules/auth/forget/forgot_view.dart';
+import '../modules/discover/discover_view.dart';
 import '../modules/splash/splash_binding.dart';
 import '../modules/splash/splash_view.dart';
 import '../modules/onboarding/onboarding_binding.dart';
@@ -23,6 +24,12 @@ class AppPages {
       page: () => const SplashView(),
       binding: SplashBinding(),
     ),
+
+    GetPage(
+      name: AppRoutes.DISCOVER,
+      page: () => const DiscoverPage(),
+    ),
+
     GetPage(
       name: AppRoutes.ONBOARDING,
       page: () => const OnboardingView(),

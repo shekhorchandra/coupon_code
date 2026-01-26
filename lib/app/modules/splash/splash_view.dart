@@ -15,7 +15,7 @@ class SplashView extends GetView<SplashController> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Image.asset(AppAssets.economic, width: 150, height: 150),
+            Image.asset(AppAssets.economic, width: 150, height: 150,),
             const SizedBox(height: 16),
             const Text(
               "Discounts That Make You Smile",

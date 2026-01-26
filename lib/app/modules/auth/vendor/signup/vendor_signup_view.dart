@@ -32,15 +32,14 @@ class VendorSignupView extends GetView<VendorSignupController> {
             const SizedBox(height: 16),
 
             Text(
-              "Create Vendor Account",
+              "Become a Vendor",
               textAlign: TextAlign.center,
               style: AppTextStyles.HeaderTitle,
             ),
 
-            const SizedBox(height: 6),
 
             Text(
-              "Sign up to publish and manage your coupons",
+              "Expand your reach and boost your sales.",
               textAlign: TextAlign.center,
               style: AppTextStyles.HeaderSubTitle,
             ),
@@ -103,7 +102,7 @@ class VendorSignupView extends GetView<VendorSignupController> {
             const SizedBox(height: 20),
 
             AppButton(
-              text: "Sign up",
+              text: "Next",
               onPressed: () {
                 // TODO: call login API
               },

@@ -16,7 +16,8 @@ class AppButton extends StatelessWidget {
     required this.onPressed,
     this.backgroundColor = AppColors.primary,
     this.textColor = Colors.white,
-    this.width = 400,
+    this.width = double.infinity,
+    // this.width = 400,
     this.height = 52,
   });
 
@@ -35,7 +36,7 @@ class AppButton extends StatelessWidget {
         onPressed: onPressed,
         child: Text(
           text,
-          style: AppTextStyles.ButtonText.copyWith(color: textColor),
+          style: AppTextStyles.TextButton.copyWith(color: textColor),
         ),
       ),
     );

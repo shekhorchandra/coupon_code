@@ -27,7 +27,8 @@ class AppTextStyles {
   // Text button Text
   static final TextStyle TextButton = TextStyle(
     fontSize: 14,
-    color: AppColors.primary,
+    fontWeight: FontWeight.bold,
+    color: AppColors.titleColor,
   );
 
   // Button Text
@@ -35,6 +36,13 @@ class AppTextStyles {
     fontSize: 16,
     fontWeight: FontWeight.bold,
     color: AppColors.buttonText,
+  );
+
+  // Discover title Text
+  static final TextStyle Title = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+    color: AppColors.titleColor,
   );
 
 

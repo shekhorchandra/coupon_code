@@ -32,7 +32,7 @@ class OnboardingController extends GetxController {
       pageController.nextPage(
           duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
     } else {
-      Get.offNamed(AppRoutes.USER_LOGIN);
+      Get.offNamed(AppRoutes.DISCOVER);
     }
   }
 
