@@ -3,6 +3,9 @@ import '../modules/auth/forget/forgot_binding.dart';
 import '../modules/auth/forget/forgot_controller.dart';
 import '../modules/auth/forget/forgot_view.dart';
 import '../modules/discover/discover_view.dart';
+import '../modules/menu/about_us/About_Binding.dart';
+import '../modules/menu/about_us/About_View.dart';
+import '../modules/menu/menu_view.dart';
 import '../modules/splash/splash_binding.dart';
 import '../modules/splash/splash_view.dart';
 import '../modules/onboarding/onboarding_binding.dart';
@@ -19,22 +22,33 @@ import 'app_routes.dart';
 
 class AppPages {
   static final pages = [
+
+    /// Splash Screen
     GetPage(
       name: AppRoutes.SPLASH,
       page: () => const SplashView(),
       binding: SplashBinding(),
     ),
 
+    ///Bottom Nav Bar
     GetPage(
       name: AppRoutes.DISCOVER,
       page: () => const DiscoverPage(),
     ),
 
     GetPage(
+      name: AppRoutes.MENU,
+      page: () => const MenuView(),
+    ),
+
+    /// Onboarding all pages
+    GetPage(
       name: AppRoutes.ONBOARDING,
       page: () => const OnboardingView(),
       binding: OnboardingBinding(),
     ),
+
+    /// User Part
     GetPage(
       name: AppRoutes.USER_LOGIN,
       page: () => const UserLoginView(),
@@ -45,6 +59,8 @@ class AppPages {
       page: () => const UserSignupView(),
       binding: UserSignupBinding(),
     ),
+
+    /// Vendor Part
     GetPage(
       name: AppRoutes.VENDOR_LOGIN,
       page: () => const VendorLoginView(),
@@ -55,6 +71,8 @@ class AppPages {
       page: () => const VendorSignupView(),
       binding: VendorSignupBinding(),
     ),
+
+    /// User Forget password
     GetPage(
       name: AppRoutes.USER_FORGOT_PASSWORD,
       page: () => const ForgotPasswordView(),
@@ -63,6 +81,7 @@ class AppPages {
       }),
     ),
 
+    /// Vendor Forget password
     GetPage(
       name: AppRoutes.VENDOR_FORGOT_PASSWORD,
       page: () => const ForgotPasswordView(),
@@ -70,6 +89,14 @@ class AppPages {
         Get.put(ForgotPasswordController(UserRole.vendor));
       }),
     ),
+
+    /// About Us
+    GetPage(
+      name: AppRoutes.ABOUT,
+      page: () => const AboutView(),
+      binding: AboutBinding(),
+    ),
+
 
   ];
 }

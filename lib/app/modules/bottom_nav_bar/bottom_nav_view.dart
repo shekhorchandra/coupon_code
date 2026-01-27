@@ -35,7 +35,11 @@ class AppBottomNavBar extends StatelessWidget {
         height: 60, // increased height to fit text
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(46),
+          borderRadius: BorderRadius.circular(100),
+          border: Border.all(
+            color: Colors.black,
+            width: 1,
+          ),
           boxShadow: const [
             BoxShadow(
               color: Colors.black12,

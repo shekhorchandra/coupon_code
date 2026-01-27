@@ -38,9 +38,21 @@ class AppTextStyles {
     color: AppColors.buttonText,
   );
 
+  static final TextStyle MenuButtonText = TextStyle(
+    fontSize: 16,
+    color: AppColors.textcolor,
+  );
+
   // Discover title Text
   static final TextStyle Title = TextStyle(
     fontSize: 18,
+    fontWeight: FontWeight.bold,
+    color: AppColors.titleColor,
+  );
+
+  // Menu title Text
+  static final TextStyle MenuTitle = TextStyle(
+    fontSize: 20,
     fontWeight: FontWeight.bold,
     color: AppColors.titleColor,
   );

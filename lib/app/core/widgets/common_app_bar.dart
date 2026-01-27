@@ -28,6 +28,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       centerTitle: true,
       automaticallyImplyLeading: false,
+
       leading: showBack
           ? IconButton(
         icon: Icon(
@@ -35,15 +36,10 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
           color: iconColor,
           size: 20,
         ),
-        onPressed: onBack ?? () {
-          if (Get.isRegistered<GetMaterialController>()) {
-            Get.back();
-          } else {
-            Navigator.pop(context);
-          }
-        },
+        onPressed: onBack ?? () => Get.back(),
       )
           : null,
+
       title: Text(
         title,
         style: TextStyle(
@@ -53,6 +49,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       actions: actions,
     );
+
   }
 
   @override

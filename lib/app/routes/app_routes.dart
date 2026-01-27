@@ -15,7 +15,11 @@ abstract class AppRoutes {
   static const DISCOVER = '/discover';
   static const CATEGORIES = '/discover';
   static const SAVED = '/discover';
-  static const MENU = '/discover';
+  static const MENU = '/menu';
+
+  static const ABOUT = '/about';
+
+
 
 
 }
