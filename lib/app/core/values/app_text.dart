@@ -26,7 +26,7 @@ class _TextStyleBuilder {
 
   TextStyle _build(FontWeight weight) {
     return TextStyle(
-      fontFamily: 'Lufga',
+      fontFamily: 'FontMain',
       fontSize: fontSize * _textScaleFactor,
       height: height,
       fontWeight: weight,
