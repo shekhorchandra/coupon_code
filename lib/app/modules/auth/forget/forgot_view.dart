@@ -41,10 +41,7 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
 
             const SizedBox(height: 32),
 
-            const Text(
-              "Email Address",
-              style: TextStyle(fontSize: 16, color: AppColors.textcolor),
-            ),
+            const Text("Email Address", style: TextStyle(fontSize: 16, color: AppColors.textcolor)),
 
             const SizedBox(height: 16),
 
@@ -58,27 +55,24 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
             const SizedBox(height: 24),
 
             Obx(
-                  () => SizedBox(
+              () => SizedBox(
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed:
-                  controller.isLoading.value ? null : controller.sendResetLink,
+                  onPressed: controller.isLoading.value ? null : controller.sendResetLink,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                   ),
                   child: controller.isLoading.value
                       ? const CircularProgressIndicator(color: Colors.white)
                       : const Text(
-                    "Reset Password",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.buttonText,
-                    ),
-                  ),
+                          "Reset Password",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.buttonText,
+                          ),
+                        ),
                 ),
               ),
             ),
@@ -96,11 +90,7 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
                       style: AppTextStyles.TextButton,
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          Get.offNamed(
-                            isUser
-                                ? AppRoutes.USER_LOGIN
-                                : AppRoutes.VENDOR_LOGIN,
-                          );
+                          Get.offNamed(isUser ? AppRoutes.USER_LOGIN : AppRoutes.VENDOR_LOGIN);
                         },
                     ),
                   ],

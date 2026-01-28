@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../core/values/app_colors.dart';
-import '../../../core/values/app_text_styles.dart';
-import '../../../core/widgets/common_app_bar.dart';
+import '../../../../core/values/app_text_styles.dart';
+import '../../../../core/widgets/common_app_bar.dart';
+import '../../../menu/about_us/about_controller.dart';
 import '../../bottom_nav_bar/bottom_nav_view.dart';
-import 'about_controller.dart';
 
 class AboutView extends GetView<AboutController> {
   const AboutView({super.key});
@@ -14,9 +13,7 @@ class AboutView extends GetView<AboutController> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: const AppBottomNavBar(),
-      appBar: const CommonAppBar(
-        title: "About Us",
-      ),
+      appBar: const CommonAppBar(title: "About Us"),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
@@ -36,10 +33,22 @@ class AboutView extends GetView<AboutController> {
             ),
 
             _section("What We Offer"),
-            _bullet("Exclusive Deals", "Save on dining, wellness, fitness, and entertainment with exclusive offers from top-rated merchants."),
-            _bullet("Personalized Recommendations", "Browse curated deals based on your preferences and location."),
-            _bullet("Seamless Redemption", "Redeem deals with ease through QR codes or manual codes at participating merchants."),
-            _bullet("Loyalty & Rewards", "Enjoy our loyalty program and earn rewards for every deal you redeem."),
+            _bullet(
+              "Exclusive Deals",
+              "Save on dining, wellness, fitness, and entertainment with exclusive offers from top-rated merchants.",
+            ),
+            _bullet(
+              "Personalized Recommendations",
+              "Browse curated deals based on your preferences and location.",
+            ),
+            _bullet(
+              "Seamless Redemption",
+              "Redeem deals with ease through QR codes or manual codes at participating merchants.",
+            ),
+            _bullet(
+              "Loyalty & Rewards",
+              "Enjoy our loyalty program and earn rewards for every deal you redeem.",
+            ),
 
             _section("Our Promise"),
             _paragraph(
@@ -70,11 +79,7 @@ class AboutView extends GetView<AboutController> {
   Widget _paragraph(String text) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
-      child: Text(
-        text,
-        style: AppTextStyles.Text,
-        textAlign: TextAlign.justify,
-      ),
+      child: Text(text, style: AppTextStyles.Text, textAlign: TextAlign.justify),
     );
   }
 
@@ -84,25 +89,14 @@ class AboutView extends GetView<AboutController> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "•",
-            style: TextStyle(
-              fontSize: 18,
-              height: 0.7,
-            ),
-          ),
+          const Text("•", style: TextStyle(fontSize: 18, height: 0.7)),
           const SizedBox(width: 8),
           Expanded(
             child: RichText(
               text: TextSpan(
                 text: "$title: ",
                 style: AppTextStyles.Text.copyWith(),
-                children: [
-                  TextSpan(
-                    text: desc,
-                    style: AppTextStyles.Text,
-                  ),
-                ],
+                children: [TextSpan(text: desc, style: AppTextStyles.Text)],
               ),
             ),
           ),

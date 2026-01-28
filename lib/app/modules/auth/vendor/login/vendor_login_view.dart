@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../../../../core/values/app_assets.dart';
 import '../../../../core/values/app_colors.dart';
 import '../../../../core/values/app_text_styles.dart';
@@ -27,41 +28,41 @@ class VendorLoginView extends GetView<VendorLoginController> {
           children: [
             Center(child: Image.asset(AppAssets.economic, height: 90)),
             const SizedBox(height: 16),
-            Text("Welcome Back, Vendor",
-                textAlign: TextAlign.center,
-                style: AppTextStyles.HeaderTitle,),
-            Text("Let’s get you back to your business",
-                textAlign: TextAlign.center,
-              style: AppTextStyles.HeaderSubTitle,),
+            Text(
+              "Welcome Back, Vendor",
+              textAlign: TextAlign.center,
+              style: AppTextStyles.HeaderTitle,
+            ),
+            Text(
+              "Let’s get you back to your business",
+              textAlign: TextAlign.center,
+              style: AppTextStyles.HeaderSubTitle,
+            ),
             const SizedBox(height: 20),
 
             AuthToggle(
               isLogin: true,
               onLoginTap: () {},
-              onSignupTap: () =>
-                  Get.offNamed(AppRoutes.VENDOR_SIGNUP),
+              onSignupTap: () => Get.offNamed(AppRoutes.VENDOR_SIGNUP),
             ),
 
             const SizedBox(height: 20),
 
-            const CustomTextField(
-              hint: "Email Address",
-              icon: Icons.email_outlined,
-            ),
+            const CustomTextField(hint: "Email Address", icon: Icons.email_outlined),
 
             const SizedBox(height: 12),
 
-            Obx(() => CustomTextField(
-              hint: "Password",
-              icon: Icons.lock_outline,
-              obscure: controller.obscure.value,
-              suffix: IconButton(
-                icon: Icon(controller.obscure.value
-                    ? Icons.visibility_off
-                    : Icons.visibility),
-                onPressed: controller.togglePassword,
+            Obx(
+              () => CustomTextField(
+                hint: "Password",
+                icon: Icons.lock_outline,
+                obscure: controller.obscure.value,
+                suffix: IconButton(
+                  icon: Icon(controller.obscure.value ? Icons.visibility_off : Icons.visibility),
+                  onPressed: controller.togglePassword,
+                ),
               ),
-            )),
+            ),
 
             Align(
               alignment: Alignment.centerRight,
@@ -72,18 +73,15 @@ class VendorLoginView extends GetView<VendorLoginController> {
                     arguments: UserRole.user, // or UserRole.vendor
                   );
                 },
-                child: const Text(
-                  "Forgot Password?",
-                  style: TextStyle(color: AppColors.primary),
-                ),
+                child: const Text("Forgot Password?", style: TextStyle(color: AppColors.primary)),
               ),
             ),
-
 
             AppButton(
               text: "Log in",
               onPressed: () {
                 // TODO: call login API
+                Get.offAllNamed(AppRoutes.DISCOVER);
               },
             ),
 
@@ -102,26 +100,20 @@ class VendorLoginView extends GetView<VendorLoginController> {
 
             const SizedBox(height: 20),
 
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32.0),
-          child: Row(
-            children: const [
-              Expanded(
-                child: SocialButton(
-                  text: "Google",
-                  iconPath: AppAssets.google,
-                ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32.0),
+              child: Row(
+                children: const [
+                  Expanded(
+                    child: SocialButton(text: "Google", iconPath: AppAssets.google),
+                  ),
+                  SizedBox(width: 12),
+                  Expanded(
+                    child: SocialButton(text: "Apple", iconPath: AppAssets.apple),
+                  ),
+                ],
               ),
-              SizedBox(width: 12),
-              Expanded(
-                child: SocialButton(
-                  text: "Apple",
-                  iconPath: AppAssets.apple,
-                ),
-              ),
-            ],
-          ),
-        ),
+            ),
 
             const SizedBox(height: 26),
 
@@ -150,8 +142,7 @@ class VendorLoginView extends GetView<VendorLoginController> {
             SwitchRoleCard(
               title: "Switch to User Mode",
               subtitle: "Browse deals and redeem coupons.",
-              onTap: () =>
-                  Get.offAllNamed(AppRoutes.USER_LOGIN),
+              onTap: () => Get.offAllNamed(AppRoutes.USER_LOGIN),
             ),
           ],
         ),

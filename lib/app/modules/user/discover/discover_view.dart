@@ -1,14 +1,13 @@
-
-import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as AppTextStyle;
+import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 
-import '../../core/values/app_assets.dart';
-import '../../core/values/app_colors.dart';
-import '../../core/values/app_text_styles.dart';
-import '../../core/widgets/App_button.dart';
-import '../../core/widgets/custom_text_field.dart';
+import '../../../core/values/app_assets.dart';
+import '../../../core/values/app_colors.dart';
+import '../../../core/values/app_text_styles.dart';
+import '../../../core/widgets/App_button.dart';
+import '../../../core/widgets/custom_text_field.dart';
 import '../bottom_nav_bar/bottom_nav_controller.dart';
 import '../bottom_nav_bar/bottom_nav_view.dart';
 
@@ -52,10 +51,7 @@ class DiscoverPage extends StatelessWidget {
                     children: [
                       // 🔍 Search Field
                       Expanded(
-                        child: CustomTextField(
-                          hint: "Search for deals",
-                          icon: Icons.search,
-                        ),
+                        child: CustomTextField(hint: "Search for deals", icon: Icons.search),
                       ),
 
                       const SizedBox(width: 8),
@@ -84,10 +80,7 @@ class DiscoverPage extends StatelessWidget {
                       children: [
                         const Icon(Icons.location_on, color: AppColors.primary),
                         const SizedBox(width: 4),
-                        Text(
-                          "New York, United States",
-                          style: AppTextStyles.Text,
-                        ),
+                        Text("New York, United States", style: AppTextStyles.Text),
                         const SizedBox(width: 4),
                         const Icon(Icons.keyboard_arrow_down, size: 18),
                       ],
@@ -128,8 +121,7 @@ class DiscoverPage extends StatelessWidget {
                             children: [
                               CircleAvatar(
                                 radius: 28,
-                                backgroundColor: AppColors.secondary
-                                    .withOpacity(0.2),
+                                backgroundColor: AppColors.secondary.withOpacity(0.2),
                                 child: Image.asset(
                                   AppAssets.food, // 'assets/icons/food.png'
                                   width: 38,
@@ -139,10 +131,7 @@ class DiscoverPage extends StatelessWidget {
                               ),
 
                               const SizedBox(height: 4),
-                              const Text(
-                                "Food & Drink",
-                                style: TextStyle(fontSize: 12),
-                              ),
+                              const Text("Food & Drink", style: TextStyle(fontSize: 12)),
                             ],
                           ),
                         );
@@ -171,9 +160,7 @@ class DiscoverPage extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
                         color: Colors.white,
-                        boxShadow: const [
-                          BoxShadow(color: Colors.black12, blurRadius: 4),
-                        ],
+                        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4)],
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -182,18 +169,14 @@ class DiscoverPage extends StatelessWidget {
                           Stack(
                             children: [
                               Container(
-                                height: isShort
-                                    ? 155
-                                    : 255,
+                                height: isShort ? 155 : 255,
                                 decoration: BoxDecoration(
                                   borderRadius: const BorderRadius.only(
                                     topLeft: Radius.circular(16),
                                     topRight: Radius.circular(16),
                                   ),
                                   image: const DecorationImage(
-                                    image: NetworkImage(
-                                      'https://picsum.photos/300',
-                                    ),
+                                    image: NetworkImage('https://picsum.photos/300'),
                                     fit: BoxFit.cover,
                                   ),
                                 ),
@@ -209,26 +192,15 @@ class DiscoverPage extends StatelessWidget {
                                   gradient: LinearGradient(
                                     begin: Alignment.topCenter,
                                     end: Alignment.bottomCenter,
-                                    colors: [
-                                      Colors.transparent,
-                                      Colors.black54,
-                                    ],
+                                    colors: [Colors.transparent, Colors.black54],
                                   ),
                                 ),
                               ),
 
                               // Discount badge
-                              Positioned(
-                                top: 8,
-                                left: 8,
-                                child: _badge("55% off"),
-                              ),
+                              Positioned(top: 8, left: 8, child: _badge("55% off")),
 
-                              Positioned(
-                                bottom: 8,
-                                left: 8,
-                                child: _textOverlay("● 1.2 km away"),
-                              ),
+                              Positioned(bottom: 8, left: 8, child: _textOverlay("● 1.2 km away")),
                             ],
                           ),
 
@@ -247,10 +219,7 @@ class DiscoverPage extends StatelessWidget {
                                 const SizedBox(height: 4),
                                 const Text(
                                   "Glamour Glow Salon",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey,
-                                  ),
+                                  style: TextStyle(fontSize: 12, color: Colors.grey),
                                 ),
                                 const SizedBox(height: 6),
 
@@ -258,10 +227,7 @@ class DiscoverPage extends StatelessWidget {
                                   children: const [
                                     Text(
                                       "\$20",
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                     ),
                                     SizedBox(width: 6),
                                     Text(
@@ -272,8 +238,8 @@ class DiscoverPage extends StatelessWidget {
                                         decoration: TextDecoration.lineThrough,
                                       ),
                                     ),
-                                    const SizedBox(width: 24),
-                                    const Text(
+                                    SizedBox(width: 24),
+                                    Text(
                                       "10d   08h",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
@@ -312,17 +278,10 @@ class DiscoverPage extends StatelessWidget {
 Widget _badge(String text) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-    decoration: BoxDecoration(
-      color: AppColors.primary,
-      borderRadius: BorderRadius.circular(4),
-    ),
+    decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(4)),
     child: Text(
       text,
-      style: const TextStyle(
-        color: Colors.black,
-        fontSize: 10,
-        fontWeight: FontWeight.bold,
-      ),
+      style: const TextStyle(color: Colors.black, fontSize: 10, fontWeight: FontWeight.bold),
     ),
   );
 }
@@ -330,10 +289,6 @@ Widget _badge(String text) {
 Widget _textOverlay(String text) {
   return Text(
     text,
-    style: const TextStyle(
-      color: Colors.white,
-      fontSize: 10,
-      fontWeight: FontWeight.bold,
-    ),
+    style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
   );
 }

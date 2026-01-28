@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../../../../core/values/app_assets.dart';
 import '../../../../core/values/app_text_styles.dart';
 import '../../../../core/widgets/App_button.dart';
@@ -23,20 +24,10 @@ class VendorSignupView extends GetView<VendorSignupController> {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: ListView(
           children: [
-            Center(
-              child: Image.asset(
-                AppAssets.economic,
-                height: 90,
-              ),
-            ),
+            Center(child: Image.asset(AppAssets.economic, height: 90)),
             const SizedBox(height: 16),
 
-            Text(
-              "Become a Vendor",
-              textAlign: TextAlign.center,
-              style: AppTextStyles.HeaderTitle,
-            ),
-
+            Text("Become a Vendor", textAlign: TextAlign.center, style: AppTextStyles.HeaderTitle),
 
             Text(
               "Expand your reach and boost your sales.",
@@ -48,56 +39,51 @@ class VendorSignupView extends GetView<VendorSignupController> {
 
             AuthToggle(
               isLogin: false,
-              onLoginTap: () =>
-                  Get.offNamed(AppRoutes.VENDOR_LOGIN),
+              onLoginTap: () => Get.offNamed(AppRoutes.VENDOR_LOGIN),
               onSignupTap: () {},
             ),
 
             const SizedBox(height: 20),
 
-            const CustomTextField(
-              hint: "User Name",
-              icon: Icons.person_outline,
+            const CustomTextField(hint: "User Name", icon: Icons.person_outline),
+
+            const SizedBox(height: 12),
+
+            const CustomTextField(hint: "Email Address", icon: Icons.email_outlined),
+
+            const SizedBox(height: 12),
+
+            Obx(
+              () => CustomTextField(
+                hint: "Password",
+                icon: Icons.lock_outline,
+                obscure: controller.obscurePassword.value,
+                suffix: IconButton(
+                  icon: Icon(
+                    controller.obscurePassword.value ? Icons.visibility_off : Icons.visibility,
+                  ),
+                  onPressed: controller.togglePassword,
+                ),
+              ),
             ),
 
             const SizedBox(height: 12),
 
-            const CustomTextField(
-              hint: "Email Address",
-              icon: Icons.email_outlined,
+            Obx(
+              () => CustomTextField(
+                hint: "Confirm Password",
+                icon: Icons.lock_outline,
+                obscure: controller.obscureConfirmPassword.value,
+                suffix: IconButton(
+                  icon: Icon(
+                    controller.obscureConfirmPassword.value
+                        ? Icons.visibility_off
+                        : Icons.visibility,
+                  ),
+                  onPressed: controller.toggleConfirmPassword,
+                ),
+              ),
             ),
-
-            const SizedBox(height: 12),
-
-            Obx(() => CustomTextField(
-              hint: "Password",
-              icon: Icons.lock_outline,
-              obscure: controller.obscurePassword.value,
-              suffix: IconButton(
-                icon: Icon(
-                  controller.obscurePassword.value
-                      ? Icons.visibility_off
-                      : Icons.visibility,
-                ),
-                onPressed: controller.togglePassword,
-              ),
-            )),
-
-            const SizedBox(height: 12),
-
-            Obx(() => CustomTextField(
-              hint: "Confirm Password",
-              icon: Icons.lock_outline,
-              obscure: controller.obscureConfirmPassword.value,
-              suffix: IconButton(
-                icon: Icon(
-                  controller.obscureConfirmPassword.value
-                      ? Icons.visibility_off
-                      : Icons.visibility,
-                ),
-                onPressed: controller.toggleConfirmPassword,
-              ),
-            )),
 
             const SizedBox(height: 20),
 
@@ -107,7 +93,6 @@ class VendorSignupView extends GetView<VendorSignupController> {
                 // TODO: call login API
               },
             ),
-
 
             const SizedBox(height: 20),
 
@@ -129,17 +114,11 @@ class VendorSignupView extends GetView<VendorSignupController> {
               child: Row(
                 children: const [
                   Expanded(
-                    child: SocialButton(
-                      text: "Google",
-                      iconPath: AppAssets.google,
-                    ),
+                    child: SocialButton(text: "Google", iconPath: AppAssets.google),
                   ),
                   SizedBox(width: 12),
                   Expanded(
-                    child: SocialButton(
-                      text: "Apple",
-                      iconPath: AppAssets.apple,
-                    ),
+                    child: SocialButton(text: "Apple", iconPath: AppAssets.apple),
                   ),
                 ],
               ),
@@ -172,8 +151,7 @@ class VendorSignupView extends GetView<VendorSignupController> {
             SwitchRoleCard(
               title: "Switch to User Mode",
               subtitle: "Browse deals and redeem coupons.",
-              onTap: () =>
-                  Get.offAllNamed(AppRoutes.USER_SIGNUP),
+              onTap: () => Get.offAllNamed(AppRoutes.USER_SIGNUP),
             ),
           ],
         ),
