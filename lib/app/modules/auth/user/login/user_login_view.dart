@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../core/values/app_assets.dart';
-
 import '../../../../core/values/app_text_styles.dart';
 import '../../../../core/widgets/App_button.dart';
 import '../../../../core/widgets/auth_toggle.dart';
@@ -12,7 +11,6 @@ import '../../../../core/widgets/custom_text_field.dart';
 import '../../../../core/widgets/social_button.dart';
 import '../../../../core/widgets/switch_role_card.dart';
 import '../../../../routes/app_routes.dart';
-
 import 'user_login_controller.dart';
 
 class UserLoginView extends GetView<UserLoginController> {
@@ -21,7 +19,7 @@ class UserLoginView extends GetView<UserLoginController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CommonAppBar(title: " ", showBack: false,),
+      appBar: const CommonAppBar(title: " ", showBack: false),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: ListView(
@@ -30,11 +28,7 @@ class UserLoginView extends GetView<UserLoginController> {
 
             const SizedBox(height: 16),
 
-            Text(
-              "Welcome Back",
-              textAlign: TextAlign.center,
-              style: AppTextStyles.HeaderTitle,
-            ),
+            Text("Welcome Back", textAlign: TextAlign.center, style: AppTextStyles.HeaderTitle),
 
             Text(
               "Please enter your details to sign in",
@@ -52,10 +46,7 @@ class UserLoginView extends GetView<UserLoginController> {
 
             const SizedBox(height: 20),
 
-            const CustomTextField(
-              hint: "Email Address",
-              icon: Icons.email_outlined,
-            ),
+            const CustomTextField(hint: "Email Address", icon: Icons.email_outlined),
 
             const SizedBox(height: 12),
 
@@ -66,9 +57,7 @@ class UserLoginView extends GetView<UserLoginController> {
                 obscure: controller.obscurePassword.value,
                 suffix: IconButton(
                   icon: Icon(
-                    controller.obscurePassword.value
-                        ? Icons.visibility_off
-                        : Icons.visibility,
+                    controller.obscurePassword.value ? Icons.visibility_off : Icons.visibility,
                   ),
                   onPressed: controller.togglePassword,
                 ),
@@ -79,10 +68,7 @@ class UserLoginView extends GetView<UserLoginController> {
               alignment: Alignment.centerRight,
               child: TextButton(
                 onPressed: () => Get.toNamed(AppRoutes.USER_FORGOT_PASSWORD),
-                child: Text(
-                  "Forgot Password?",
-                  style: AppTextStyles.TextButton,
-                ),
+                child: Text("Forgot Password?", style: AppTextStyles.TextButton),
               ),
             ),
 
@@ -90,6 +76,7 @@ class UserLoginView extends GetView<UserLoginController> {
               text: "Log in",
               onPressed: () {
                 // TODO: call login API
+                Get.offAllNamed(AppRoutes.DISCOVER);
               },
             ),
 
@@ -113,17 +100,11 @@ class UserLoginView extends GetView<UserLoginController> {
               child: Row(
                 children: const [
                   Expanded(
-                    child: SocialButton(
-                      text: "Google",
-                      iconPath: AppAssets.google,
-                    ),
+                    child: SocialButton(text: "Google", iconPath: AppAssets.google),
                   ),
                   SizedBox(width: 12),
                   Expanded(
-                    child: SocialButton(
-                      text: "Apple",
-                      iconPath: AppAssets.apple,
-                    ),
+                    child: SocialButton(text: "Apple", iconPath: AppAssets.apple),
                   ),
                 ],
               ),

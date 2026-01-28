@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'app/modules/bottom_nav_bar/bottom_nav_controller.dart';
-import 'app/routes/app_pages.dart';
+
 import 'app/core/values/app_strings.dart';
+import 'app/modules/user/bottom_nav_bar/bottom_nav_controller.dart';
+import 'app/routes/app_pages.dart';
 import 'app/routes/app_routes.dart';
 
 void main() {
@@ -18,18 +19,9 @@ class CouponDiscountApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: AppStrings.appName,
-      theme: ThemeData(
-        scaffoldBackgroundColor: Colors.white,
-        fontFamily: 'FontMain',
-      ),
-      initialRoute: AppRoutes.SPLASH,
+      theme: ThemeData(scaffoldBackgroundColor: Colors.white, fontFamily: 'FontMain'),
+      initialRoute: AppRoutes.ONBOARDING,
       getPages: AppPages.pages,
-
-
-
     );
   }
 }
-
-
-

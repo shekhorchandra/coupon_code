@@ -1,11 +1,10 @@
 import 'package:coupon_code/app/core/values/app_assets.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../../core/values/app_colors.dart';
+import 'package:get/get.dart';
+
+import '../../../core/values/app_color.dart';
 import 'bottom_nav_controller.dart';
-
-
 
 class AppBottomNavBar extends StatelessWidget {
   const AppBottomNavBar({super.key});
@@ -14,45 +13,26 @@ class AppBottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final BottomNavController controller = Get.find();
 
-    final icons = [
-      AppAssets.discover,
-      AppAssets.category,
-      AppAssets.saved,
-      AppAssets.menu,
-    ];
+    final icons = [AppAssets.discover, AppAssets.category, AppAssets.saved, AppAssets.menu];
 
-    final labels = [
-      "Discover",
-      "Categories",
-      "Saved",
-      "Menu",
-    ];
+    final labels = ["Discover", "Categories", "Saved", "Menu"];
 
     return Obx(
-          () => Container(
+      () => Container(
         margin: const EdgeInsets.all(12),
         padding: const EdgeInsets.symmetric(horizontal: 16),
         height: 60, // increased height to fit text
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(100),
-          border: Border.all(
-            color: Colors.black,
-            width: 1,
-          ),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 6,
-              offset: Offset(0, 2),
-            ),
-          ],
+          border: Border.all(color: Colors.black, width: 1),
+          boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 2))],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: List.generate(icons.length, (index) {
             final isSelected = index == controller.selectedIndex.value;
-            final color = isSelected ? AppColors.primary : Colors.grey.shade600;
+            final color = isSelected ? AppColor.primary : Colors.grey.shade600;
 
             return GestureDetector(
               onTap: () => controller.changeIndex(index),

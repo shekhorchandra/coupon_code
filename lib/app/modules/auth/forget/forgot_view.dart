@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../core/values/app_colors.dart';
+import '../../../core/values/app_color.dart';
 import '../../../core/values/app_text_styles.dart';
 import '../../../core/widgets/common_app_bar.dart';
 import '../../../core/widgets/custom_text_field.dart';
@@ -36,15 +36,12 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
 
             const Text(
               "Enter the email associated with your account",
-              style: TextStyle(fontSize: 12, color: AppColors.greyText),
+              style: TextStyle(fontSize: 12, color: AppColor.greyText),
             ),
 
             const SizedBox(height: 32),
 
-            const Text(
-              "Email Address",
-              style: TextStyle(fontSize: 16, color: AppColors.textcolor),
-            ),
+            const Text("Email Address", style: TextStyle(fontSize: 16, color: AppColor.textcolor)),
 
             const SizedBox(height: 16),
 
@@ -58,27 +55,21 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
             const SizedBox(height: 24),
 
             Obx(
-                  () => SizedBox(
+              () => SizedBox(
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed:
-                  controller.isLoading.value ? null : controller.sendResetLink,
+                  onPressed: controller.isLoading.value ? null : controller.sendResetLink,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
+                    backgroundColor: AppColor.primary,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                   ),
                   child: controller.isLoading.value
                       ? const CircularProgressIndicator(color: Colors.white)
                       : const Text(
-                    "Reset Password",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.buttonText,
-                    ),
-                  ),
+                          "Reset Password",
+                          style: TextStyle(fontWeight: FontWeight.bold, color: AppColor.buttonText),
+                        ),
                 ),
               ),
             ),
@@ -96,11 +87,7 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
                       style: AppTextStyles.TextButton,
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          Get.offNamed(
-                            isUser
-                                ? AppRoutes.USER_LOGIN
-                                : AppRoutes.VENDOR_LOGIN,
-                          );
+                          Get.offNamed(isUser ? AppRoutes.USER_LOGIN : AppRoutes.VENDOR_LOGIN);
                         },
                     ),
                   ],

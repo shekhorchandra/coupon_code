@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../core/values/app_assets.dart';
-import '../../../../core/values/app_colors.dart';
 import '../../../../core/values/app_text_styles.dart';
 import '../../../../core/widgets/App_button.dart';
 import '../../../../core/widgets/auth_toggle.dart';
@@ -12,7 +11,6 @@ import '../../../../core/widgets/custom_text_field.dart';
 import '../../../../core/widgets/social_button.dart';
 import '../../../../core/widgets/switch_role_card.dart';
 import '../../../../routes/app_routes.dart';
-import '../login/user_login_view.dart';
 import 'user_signup_controller.dart';
 
 class UserSignupView extends GetView<UserSignupController> {
@@ -26,72 +24,70 @@ class UserSignupView extends GetView<UserSignupController> {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: ListView(
           children: [
-            Center(
-              child: Image.asset(AppAssets.economic, height: 90),
-            ),
+            Center(child: Image.asset(AppAssets.economic, height: 90)),
             const SizedBox(height: 16),
 
             Text(
               "Create New Account",
               textAlign: TextAlign.center,
-              style: AppTextStyles.HeaderTitle,),
+              style: AppTextStyles.HeaderTitle,
+            ),
 
             Text(
               "Please enter your details to sign up",
               textAlign: TextAlign.center,
-                style: AppTextStyles.HeaderSubTitle),
-
+              style: AppTextStyles.HeaderSubTitle,
+            ),
 
             const SizedBox(height: 20),
 
             AuthToggle(
               isLogin: false,
-              onLoginTap: () =>
-                  Get.offNamed(AppRoutes.USER_LOGIN),
+              onLoginTap: () => Get.offNamed(AppRoutes.USER_LOGIN),
               onSignupTap: () {},
             ),
 
             const SizedBox(height: 20),
 
-            const CustomTextField(
-              hint: "User Name",
-              icon: Icons.person_outline,
+            const CustomTextField(hint: "User Name", icon: Icons.person_outline),
+
+            const SizedBox(height: 12),
+
+            const CustomTextField(hint: "Email Address", icon: Icons.email_outlined),
+
+            const SizedBox(height: 12),
+
+            Obx(
+              () => CustomTextField(
+                hint: "Set Password",
+                icon: Icons.lock_outline,
+                obscure: controller.obscurePassword.value,
+                suffix: IconButton(
+                  icon: Icon(
+                    controller.obscurePassword.value ? Icons.visibility_off : Icons.visibility,
+                  ),
+                  onPressed: controller.togglePassword,
+                ),
+              ),
             ),
 
             const SizedBox(height: 12),
 
-            const CustomTextField(
-              hint: "Email Address",
-              icon: Icons.email_outlined,
+            Obx(
+              () => CustomTextField(
+                hint: "Confirm Password",
+                icon: Icons.lock_outline,
+                obscure: controller.obscureConfirmPassword.value,
+                suffix: IconButton(
+                  icon: Icon(
+                    controller.obscureConfirmPassword.value
+                        ? Icons.visibility_off
+                        : Icons.visibility,
+                  ),
+                  onPressed: controller.toggleConfirmPassword,
+                ),
+              ),
             ),
-
-            const SizedBox(height: 12),
-
-            Obx(() => CustomTextField(
-              hint: "Set Password",
-              icon: Icons.lock_outline,
-              obscure: controller.obscurePassword.value,
-              suffix: IconButton(
-                icon: Icon(controller.obscurePassword.value
-                    ? Icons.visibility_off
-                    : Icons.visibility),
-                onPressed: controller.togglePassword,
-              ),
-            )),
-
-            const SizedBox(height: 12),
-
-            Obx(() => CustomTextField(
-              hint: "Confirm Password",
-              icon: Icons.lock_outline,
-              obscure: controller.obscureConfirmPassword.value,
-              suffix: IconButton(
-                icon: Icon(controller.obscureConfirmPassword.value
-                    ? Icons.visibility_off
-                    : Icons.visibility),
-                onPressed: controller.toggleConfirmPassword,
-              ),
-            )),
 
             const SizedBox(height: 20),
 
@@ -101,7 +97,6 @@ class UserSignupView extends GetView<UserSignupController> {
                 // TODO: call login API
               },
             ),
-
 
             const SizedBox(height: 16),
 
@@ -123,17 +118,11 @@ class UserSignupView extends GetView<UserSignupController> {
               child: Row(
                 children: const [
                   Expanded(
-                    child: SocialButton(
-                      text: "Google",
-                      iconPath: AppAssets.google,
-                    ),
+                    child: SocialButton(text: "Google", iconPath: AppAssets.google),
                   ),
                   SizedBox(width: 12),
                   Expanded(
-                    child: SocialButton(
-                      text: "Apple",
-                      iconPath: AppAssets.apple,
-                    ),
+                    child: SocialButton(text: "Apple", iconPath: AppAssets.apple),
                   ),
                 ],
               ),
@@ -159,7 +148,6 @@ class UserSignupView extends GetView<UserSignupController> {
                 ),
               ),
             ),
-
 
             const SizedBox(height: 16),
 

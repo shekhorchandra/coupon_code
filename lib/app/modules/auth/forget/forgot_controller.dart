@@ -34,17 +34,10 @@ class ForgotPasswordController extends GetxController {
         print("Vendor forgot password API called");
       }
 
-      Get.snackbar(
-        "Success",
-        "Password reset link sent! Check your email.",
-      );
+      Get.snackbar("Success", "Password reset link sent! Check your email.");
 
       // Navigate back to correct login
-      Get.offNamed(
-        role == UserRole.user
-            ? AppRoutes.USER_LOGIN
-            : AppRoutes.VENDOR_LOGIN,
-      );
+      Get.offNamed(role == UserRole.user ? AppRoutes.USER_LOGIN : AppRoutes.VENDOR_LOGIN);
     } catch (e) {
       Get.snackbar("Error", e.toString());
     } finally {

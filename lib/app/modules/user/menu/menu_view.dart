@@ -2,10 +2,11 @@ import 'package:coupon_code/app/core/widgets/common_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
-import '../../core/values/app_colors.dart';
-import '../../core/values/app_text_styles.dart';
-import '../../core/widgets/App_button.dart';
-import '../../routes/app_routes.dart';
+
+import '../../../core/values/app_color.dart';
+import '../../../core/values/app_text_styles.dart';
+import '../../../core/widgets/App_button.dart';
+import '../../../routes/app_routes.dart';
 import '../bottom_nav_bar/bottom_nav_view.dart';
 
 class MenuView extends StatelessWidget {
@@ -33,23 +34,15 @@ class MenuView extends StatelessWidget {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 6,
-                      offset: Offset(0, 2),
-                    ),
+                    BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 2)),
                   ],
                 ),
                 child: Row(
                   children: [
                     CircleAvatar(
                       radius: 28,
-                      backgroundColor: AppColors.primary.withOpacity(0.1),
-                      child: const Icon(
-                        Icons.person,
-                        color: AppColors.primary,
-                        size: 28,
-                      ),
+                      backgroundColor: AppColor.primary.withOpacity(0.1),
+                      child: const Icon(Icons.person, color: AppColor.primary, size: 28),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -58,10 +51,7 @@ class MenuView extends StatelessWidget {
                         children: const [
                           Text(
                             "Login / Sign Up",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(height: 4),
                           Text(
@@ -99,39 +89,15 @@ class MenuView extends StatelessWidget {
                 Get.toNamed(AppRoutes.USER_LOGIN);
               },
             ),
-            _menuItem(
-              icon: Icons.contact_support_outlined,
-              title: "Contact Us",
-              onTap: () {},
-            ),
-            _menuItem(
-              icon: Icons.help_outline,
-              title: "Help & Support",
-              onTap: () {},
-            ),
+            _menuItem(icon: Icons.contact_support_outlined, title: "Contact Us", onTap: () {}),
+            _menuItem(icon: Icons.help_outline, title: "Help & Support", onTap: () {}),
 
             SizedBox(height: 24),
 
-            _menuItem(
-              icon: Icons.privacy_tip_outlined,
-              title: "Privacy Policy",
-              onTap: () {},
-            ),
-            _menuItem(
-              icon: Icons.description_outlined,
-              title: "Terms & Condition",
-              onTap: () {},
-            ),
-            _menuItem(
-              icon: Icons.star_rate_outlined,
-              title: "Rate the App",
-              onTap: () {},
-            ),
-            _menuItem(
-              icon: Icons.share_outlined,
-              title: "Invite Friends",
-              onTap: () {},
-            ),
+            _menuItem(icon: Icons.privacy_tip_outlined, title: "Privacy Policy", onTap: () {}),
+            _menuItem(icon: Icons.description_outlined, title: "Terms & Condition", onTap: () {}),
+            _menuItem(icon: Icons.star_rate_outlined, title: "Rate the App", onTap: () {}),
+            _menuItem(icon: Icons.share_outlined, title: "Invite Friends", onTap: () {}),
 
             const SizedBox(height: 24),
 
@@ -153,16 +119,12 @@ class MenuView extends StatelessWidget {
   }
 
   /// Reusable Menu Item
-  Widget _menuItem({
-    required IconData icon,
-    required String title,
-    required VoidCallback onTap,
-  }) {
+  Widget _menuItem({required IconData icon, required String title, required VoidCallback onTap}) {
     return Column(
       children: [
         ListTile(
           contentPadding: EdgeInsets.zero,
-          leading: Icon(icon, color: AppColors.primary),
+          leading: Icon(icon, color: AppColor.primary),
           title: Text(title, style: AppTextStyles.MenuButtonText),
           trailing: const Icon(Icons.arrow_forward_ios, size: 14),
           onTap: onTap,
