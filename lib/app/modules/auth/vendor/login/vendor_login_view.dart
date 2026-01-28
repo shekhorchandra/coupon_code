@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../core/values/app_assets.dart';
-import '../../../../core/values/app_colors.dart';
+import '../../../../core/values/app_color.dart';
 import '../../../../core/values/app_text_styles.dart';
 import '../../../../core/widgets/App_button.dart';
 import '../../../../core/widgets/auth_toggle.dart';
@@ -73,7 +73,7 @@ class VendorLoginView extends GetView<VendorLoginController> {
                     arguments: UserRole.user, // or UserRole.vendor
                   );
                 },
-                child: const Text("Forgot Password?", style: TextStyle(color: AppColors.primary)),
+                child: const Text("Forgot Password?", style: TextStyle(color: AppColor.primary)),
               ),
             ),
 

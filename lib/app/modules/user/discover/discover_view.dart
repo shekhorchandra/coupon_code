@@ -4,7 +4,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 
 import '../../../core/values/app_assets.dart';
-import '../../../core/values/app_colors.dart';
+import '../../../core/values/app_color.dart';
 import '../../../core/values/app_text_styles.dart';
 import '../../../core/widgets/App_button.dart';
 import '../../../core/widgets/custom_text_field.dart';
@@ -78,7 +78,7 @@ class DiscoverPage extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.location_on, color: AppColors.primary),
+                        const Icon(Icons.location_on, color: AppColor.primary),
                         const SizedBox(width: 4),
                         Text("New York, United States", style: AppTextStyles.Text),
                         const SizedBox(width: 4),
@@ -121,7 +121,7 @@ class DiscoverPage extends StatelessWidget {
                             children: [
                               CircleAvatar(
                                 radius: 28,
-                                backgroundColor: AppColors.secondary.withOpacity(0.2),
+                                backgroundColor: AppColor.secondary.withOpacity(0.2),
                                 child: Image.asset(
                                   AppAssets.food, // 'assets/icons/food.png'
                                   width: 38,
@@ -278,7 +278,7 @@ class DiscoverPage extends StatelessWidget {
 Widget _badge(String text) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-    decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(4)),
+    decoration: BoxDecoration(color: AppColor.primary, borderRadius: BorderRadius.circular(4)),
     child: Text(
       text,
       style: const TextStyle(color: Colors.black, fontSize: 10, fontWeight: FontWeight.bold),

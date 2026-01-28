@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../core/values/app_colors.dart';
+import '../../../core/values/app_color.dart';
 import 'onboarding_controller.dart';
 
 class OnboardingView extends GetView<OnboardingController> {
@@ -61,7 +61,7 @@ class OnboardingView extends GetView<OnboardingController> {
                     height: 4,
                     decoration: BoxDecoration(
                       color: controller.currentPage.value == index
-                          ? AppColors.primary
+                          ? AppColor.primary
                           : Colors.grey.shade300,
                       borderRadius: BorderRadius.circular(2),
                     ),
@@ -80,7 +80,7 @@ class OnboardingView extends GetView<OnboardingController> {
                 child: ElevatedButton(
                   onPressed: controller.nextPage,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
+                    backgroundColor: AppColor.primary,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                   ),
                   child: Obx(
@@ -90,7 +90,7 @@ class OnboardingView extends GetView<OnboardingController> {
                           : "Next",
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: AppColors.buttonText,
+                        color: AppColor.buttonText,
                       ),
                     ),
                   ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../values/app_colors.dart';
-
+import '../values/app_color.dart';
 
 class AuthToggle extends StatelessWidget {
   final bool isLogin;
@@ -21,7 +20,7 @@ class AuthToggle extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 52),
       height: 44,
       decoration: BoxDecoration(
-        color: AppColors.togglebackground,
+        color: AppColor.togglebackground,
         borderRadius: BorderRadius.circular(30),
       ),
       child: Row(
@@ -31,8 +30,6 @@ class AuthToggle extends StatelessWidget {
         ],
       ),
     );
-
-
   }
 
   Widget _button(String text, bool active, VoidCallback onTap) {
@@ -43,7 +40,7 @@ class AuthToggle extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 2), // space between buttons
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: active ? AppColors.secondary : Colors.transparent,
+            color: active ? AppColor.secondary : Colors.transparent,
             borderRadius: BorderRadius.circular(30),
           ),
           child: Text(

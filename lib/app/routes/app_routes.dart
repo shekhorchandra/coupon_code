@@ -11,7 +11,6 @@ abstract class AppRoutes {
   static const USER_FORGOT_PASSWORD = '/user/forgot-password';
   static const VENDOR_FORGOT_PASSWORD = '/vendor/forgot-password';
 
-
   static const DISCOVER = '/discover';
   static const CATEGORIES = '/discover';
   static const SAVED = '/discover';
@@ -19,7 +18,6 @@ abstract class AppRoutes {
 
   static const ABOUT = '/about';
 
-
-
-
+  // Vendor Part
+  static const CREATE_VENDOR_ACCOUNT = '/vendor/account/create';
 }

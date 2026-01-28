@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../values/app_colors.dart';
+
+import '../values/app_color.dart';
 import '../values/app_text_styles.dart';
 
 class AppButton extends StatelessWidget {
@@ -14,7 +15,7 @@ class AppButton extends StatelessWidget {
     super.key,
     required this.text,
     required this.onPressed,
-    this.backgroundColor = AppColors.primary,
+    this.backgroundColor = AppColor.primary,
     this.textColor = Colors.white,
     this.width = double.infinity,
     // this.width = 400,
@@ -29,15 +30,10 @@ class AppButton extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: backgroundColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         ),
         onPressed: onPressed,
-        child: Text(
-          text,
-          style: AppTextStyles.TextButton.copyWith(color: textColor),
-        ),
+        child: Text(text, style: AppTextStyles.TextButton.copyWith(color: textColor)),
       ),
     );
   }

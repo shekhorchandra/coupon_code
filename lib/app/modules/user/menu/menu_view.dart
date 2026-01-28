@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 
-import '../../../core/values/app_colors.dart';
+import '../../../core/values/app_color.dart';
 import '../../../core/values/app_text_styles.dart';
 import '../../../core/widgets/App_button.dart';
 import '../../../routes/app_routes.dart';
@@ -41,8 +41,8 @@ class MenuView extends StatelessWidget {
                   children: [
                     CircleAvatar(
                       radius: 28,
-                      backgroundColor: AppColors.primary.withOpacity(0.1),
-                      child: const Icon(Icons.person, color: AppColors.primary, size: 28),
+                      backgroundColor: AppColor.primary.withOpacity(0.1),
+                      child: const Icon(Icons.person, color: AppColor.primary, size: 28),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -124,7 +124,7 @@ class MenuView extends StatelessWidget {
       children: [
         ListTile(
           contentPadding: EdgeInsets.zero,
-          leading: Icon(icon, color: AppColors.primary),
+          leading: Icon(icon, color: AppColor.primary),
           title: Text(title, style: AppTextStyles.MenuButtonText),
           trailing: const Icon(Icons.arrow_forward_ios, size: 14),
           onTap: onTap,

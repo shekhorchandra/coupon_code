@@ -1,6 +1,5 @@
+import 'package:coupon_code/app/modules/user/menu/about_us/About_Controller.dart';
 import 'package:get/get.dart';
-
-import '../../../menu/about_us/about_controller.dart';
 
 class AboutBinding extends Bindings {
   @override

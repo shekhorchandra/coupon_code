@@ -91,6 +91,7 @@ class VendorSignupView extends GetView<VendorSignupController> {
               text: "Next",
               onPressed: () {
                 // TODO: call login API
+                Get.offAndToNamed(AppRoutes.CREATE_VENDOR_ACCOUNT);
               },
             ),
 

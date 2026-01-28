@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../values/app_colors.dart';
+import '../values/app_color.dart';
 
 class CustomTextField extends StatelessWidget {
   final String hint;
@@ -34,19 +34,19 @@ class CustomTextField extends StatelessWidget {
         //  Default border
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30),
-          borderSide: const BorderSide(color: AppColors.primary, width: 1),
+          borderSide: const BorderSide(color: AppColor.primary, width: 1),
         ),
 
         //  Enabled (not focused)
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30),
-          borderSide: const BorderSide(color: AppColors.border, width: 1),
+          borderSide: const BorderSide(color: AppColor.border, width: 1),
         ),
 
         //  Focused
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30),
-          borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+          borderSide: const BorderSide(color: AppColor.primary, width: 1.5),
         ),
 
         //  Error (optional)

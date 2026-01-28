@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
-import '../../../core/values/app_colors.dart';
+import '../../../core/values/app_color.dart';
 import 'bottom_nav_controller.dart';
 
 class AppBottomNavBar extends StatelessWidget {
@@ -32,7 +32,7 @@ class AppBottomNavBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: List.generate(icons.length, (index) {
             final isSelected = index == controller.selectedIndex.value;
-            final color = isSelected ? AppColors.primary : Colors.grey.shade600;
+            final color = isSelected ? AppColor.primary : Colors.grey.shade600;
 
             return GestureDetector(
               onTap: () => controller.changeIndex(index),

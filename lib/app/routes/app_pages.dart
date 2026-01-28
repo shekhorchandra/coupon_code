@@ -1,3 +1,5 @@
+import 'package:coupon_code/app/modules/vendor/vendor_account/bindings/vendor_account_binding.dart';
+import 'package:coupon_code/app/modules/vendor/vendor_account/views/create_vendor_account_view.dart';
 import 'package:get/get.dart';
 
 import '../modules/auth/forget/forgot_controller.dart';
@@ -49,18 +51,6 @@ class AppPages {
       binding: UserSignupBinding(),
     ),
 
-    /// Vendor Part
-    GetPage(
-      name: AppRoutes.VENDOR_LOGIN,
-      page: () => const VendorLoginView(),
-      binding: VendorLoginBinding(),
-    ),
-    GetPage(
-      name: AppRoutes.VENDOR_SIGNUP,
-      page: () => const VendorSignupView(),
-      binding: VendorSignupBinding(),
-    ),
-
     /// User Forget password
     GetPage(
       name: AppRoutes.USER_FORGOT_PASSWORD,
@@ -77,6 +67,23 @@ class AppPages {
       binding: BindingsBuilder(() {
         Get.put(ForgotPasswordController(UserRole.vendor));
       }),
+    ),
+
+    /// Vendor Part
+    GetPage(
+      name: AppRoutes.VENDOR_LOGIN,
+      page: () => const VendorLoginView(),
+      binding: VendorLoginBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.VENDOR_SIGNUP,
+      page: () => const VendorSignupView(),
+      binding: VendorSignupBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.CREATE_VENDOR_ACCOUNT,
+      page: () => CreateVendorAccountPage(),
+      binding: VendorAccountBinding(),
     ),
 
     /// About Us

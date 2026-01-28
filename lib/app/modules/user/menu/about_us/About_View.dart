@@ -1,9 +1,9 @@
+import 'package:coupon_code/app/modules/user/menu/about_us/About_Controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../core/values/app_text_styles.dart';
 import '../../../../core/widgets/common_app_bar.dart';
-import '../../../menu/about_us/about_controller.dart';
 import '../../bottom_nav_bar/bottom_nav_view.dart';
 
 class AboutView extends GetView<AboutController> {
