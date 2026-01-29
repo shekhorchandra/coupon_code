@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
-class VendorNavigationBarController extends GetxController {
-  VendorNavigationBarController();
+class VendorAccountController extends GetxController {
+  VendorAccountController();
 
   final _obj = ''.obs;
   set obj(value) => _obj.value = value;

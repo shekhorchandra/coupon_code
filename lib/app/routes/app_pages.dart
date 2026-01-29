@@ -1,5 +1,13 @@
 import 'package:coupon_code/app/modules/vendor/vendor_account/bindings/vendor_account_binding.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_account/views/create_vendor_account_view.dart';
+import 'package:coupon_code/app/modules/vendor/vendor_dashboard/bindings/vendor_dashboard_binding.dart';
+import 'package:coupon_code/app/modules/vendor/vendor_dashboard/views/vendor_dashboard_view.dart';
+import 'package:coupon_code/app/modules/vendor/vendor_deals/bindings/vendor_deals_binding.dart';
+import 'package:coupon_code/app/modules/vendor/vendor_deals/views/vendor_deals_view.dart';
+import 'package:coupon_code/app/modules/vendor/vendor_menu/bindings/vendor_menu_binding.dart';
+import 'package:coupon_code/app/modules/vendor/vendor_menu/views/vendor_menu_view.dart';
+import 'package:coupon_code/app/modules/vendor/vendor_navigation_bar/bindings/vendor_navigation_bar_binding.dart';
+import 'package:coupon_code/app/modules/vendor/vendor_navigation_bar/views/vendor_navigation_bar_view.dart';
 import 'package:get/get.dart';
 
 import '../modules/auth/forget/forgot_controller.dart';
@@ -84,6 +92,26 @@ class AppPages {
       name: AppRoutes.CREATE_VENDOR_ACCOUNT,
       page: () => CreateVendorAccountPage(),
       binding: VendorAccountBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.VENDOR_DASHBOARD,
+      page: () => VendorDashboardPage(),
+      binding: VendorDashboardBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.VENDOR_DEALS,
+      page: () => VendorDealsPage(),
+      binding: VendorDealsBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.VENDOR_MENU,
+      page: () => VendorMenuPage(),
+      binding: VendorMenuBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.VENDOR_NAVIGATION_BAR,
+      page: () => VendorNavigationBarPage(),
+      binding: VendorNavigationBarBinding(),
     ),
 
     /// About Us

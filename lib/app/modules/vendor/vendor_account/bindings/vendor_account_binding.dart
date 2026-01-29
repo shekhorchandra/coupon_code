@@ -1,9 +1,9 @@
-import 'package:coupon_code/app/modules/vendor/vendor_account/controllers/create_vendor_account_controller.dart';
+import 'package:coupon_code/app/modules/vendor/vendor_account/controllers/vendor_account_controller.dart';
 import 'package:get/get.dart';
 
 class VendorAccountBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<VendorNavigationBarController>(() => VendorNavigationBarController());
+    Get.lazyPut<VendorAccountController>(() => VendorAccountController());
   }
 }

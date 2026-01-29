@@ -20,6 +20,6 @@ class AppAssets {
   static const saved = 'assets/icons/saved.svg';
   static const menu = 'assets/icons/menu.svg';
 
-
+  // vendor bottom nav bar icons
+  static const dashboard = 'assets/icons/dashboard.svg';
 }
-

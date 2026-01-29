@@ -1,9 +1,9 @@
 import 'package:coupon_code/app/core/widgets/common_app_bar.dart';
-import 'package:coupon_code/app/modules/vendor/vendor_account/controllers/create_vendor_account_controller.dart';
+import 'package:coupon_code/app/modules/vendor/vendor_account/controllers/vendor_account_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class CreateVendorAccountPage extends GetView<VendorNavigationBarController> {
+class CreateVendorAccountPage extends GetView<VendorAccountController> {
   const CreateVendorAccountPage({super.key});
 
   @override

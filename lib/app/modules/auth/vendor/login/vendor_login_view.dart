@@ -81,7 +81,7 @@ class VendorLoginView extends GetView<VendorLoginController> {
               text: "Log in",
               onPressed: () {
                 // TODO: call login API
-                Get.offAllNamed(AppRoutes.DISCOVER);
+                Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR);
               },
             ),
 
