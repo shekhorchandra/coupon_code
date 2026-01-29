@@ -3,8 +3,8 @@ import 'package:coupon_code/app/modules/vendor/vendor_account/controllers/create
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class CreateVendorAccountPage extends GetView<VendorNavigationBarController> {
-  const CreateVendorAccountPage({super.key});
+class VendorDealsPage extends GetView<VendorNavigationBarController> {
+  const VendorDealsPage({super.key});
 
   @override
   Widget build(BuildContext context) {

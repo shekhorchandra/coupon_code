@@ -26,4 +26,8 @@ abstract class AppRoutes {
 
   // Vendor Part
   static const CREATE_VENDOR_ACCOUNT = '/vendor/account/create';
+  static const VENDOR_DASHBOARD = '/vendor/dashboard';
+  static const VENDOR_DEALS = '/vendor/deals';
+  static const VENDOR_MENU = '/vendor/menu';
+  static const VENDOR_NAVIGATION_BAR = '/vendor/navigation_bar';
 }
