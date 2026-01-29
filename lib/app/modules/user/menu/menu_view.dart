@@ -7,7 +7,7 @@ import '../../../core/values/app_color.dart';
 import '../../../core/values/app_text_styles.dart';
 import '../../../core/widgets/App_button.dart';
 import '../../../routes/app_routes.dart';
-import '../bottom_nav_bar/bottom_nav_view.dart';
+import '../bottom_nav_bar/views/bottom_nav_view.dart';
 
 class MenuView extends StatelessWidget {
   const MenuView({super.key});
@@ -34,7 +34,11 @@ class MenuView extends StatelessWidget {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: const [
-                    BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 2)),
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 6,
+                      offset: Offset(0, 2),
+                    ),
                   ],
                 ),
                 child: Row(
@@ -42,7 +46,11 @@ class MenuView extends StatelessWidget {
                     CircleAvatar(
                       radius: 28,
                       backgroundColor: AppColor.primary.withOpacity(0.1),
-                      child: const Icon(Icons.person, color: AppColor.primary, size: 28),
+                      child: const Icon(
+                        Icons.person,
+                        color: AppColor.primary,
+                        size: 28,
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -51,7 +59,10 @@ class MenuView extends StatelessWidget {
                         children: const [
                           Text(
                             "Login / Sign Up",
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           SizedBox(height: 4),
                           Text(
@@ -89,13 +100,29 @@ class MenuView extends StatelessWidget {
                 Get.toNamed(AppRoutes.USER_LOGIN);
               },
             ),
-            _menuItem(icon: Icons.contact_support_outlined, title: "Contact Us", onTap: () {}),
-            _menuItem(icon: Icons.help_outline, title: "Help & Support", onTap: () {}),
+            _menuItem(
+              icon: Icons.contact_support_outlined,
+              title: "Contact Us",
+              onTap: () {
+                Get.toNamed(AppRoutes.CONTACT_US);
+              },
+            ),
+            _menuItem(
+              icon: Icons.help_outline,
+              title: "Help & Support",
+              onTap: () {
+                Get.toNamed(AppRoutes.HELP_SUPPORT);
+              },
+            ),
 
             SizedBox(height: 24),
 
-            _menuItem(icon: Icons.privacy_tip_outlined, title: "Privacy Policy", onTap: () {}),
-            _menuItem(icon: Icons.description_outlined, title: "Terms & Condition", onTap: () {}),
+            _menuItem(icon: Icons.privacy_tip_outlined, title: "Privacy Policy", onTap: () {
+              Get.toNamed(AppRoutes.PRIVACYPOLICY);
+            }),
+            _menuItem(icon: Icons.description_outlined, title: "Terms & Condition", onTap: () {
+              Get.toNamed(AppRoutes.TERMSCONDITION);
+            }),
             _menuItem(icon: Icons.star_rate_outlined, title: "Rate the App", onTap: () {}),
             _menuItem(icon: Icons.share_outlined, title: "Invite Friends", onTap: () {}),
 
@@ -119,7 +146,11 @@ class MenuView extends StatelessWidget {
   }
 
   /// Reusable Menu Item
-  Widget _menuItem({required IconData icon, required String title, required VoidCallback onTap}) {
+  Widget _menuItem({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
     return Column(
       children: [
         ListTile(

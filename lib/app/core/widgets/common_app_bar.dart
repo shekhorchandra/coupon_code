@@ -1,3 +1,4 @@
+import 'package:coupon_code/app/core/values/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -42,10 +43,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
 
       title: Text(
         title,
-        style: TextStyle(
-          color: titleColor,
-          fontWeight: FontWeight.w600,
-        ),
+        style: AppTextStyles.Title.copyWith(color: Colors.black),
       ),
       actions: actions,
     );

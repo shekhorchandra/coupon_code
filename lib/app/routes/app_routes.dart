@@ -11,6 +11,7 @@ abstract class AppRoutes {
   static const USER_FORGOT_PASSWORD = '/user/forgot-password';
   static const VENDOR_FORGOT_PASSWORD = '/vendor/forgot-password';
 
+
   static const DISCOVER = '/discover';
   static const DISCOVERDETAILS = '/discover-details';
   static const CATEGORIES = '/category';

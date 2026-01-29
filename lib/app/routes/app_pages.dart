@@ -1,5 +1,3 @@
-import 'package:coupon_code/app/modules/vendor/vendor_account/bindings/vendor_account_binding.dart';
-import 'package:coupon_code/app/modules/vendor/vendor_account/views/create_vendor_account_view.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_dashboard/bindings/vendor_dashboard_binding.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_dashboard/views/vendor_dashboard_view.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/bindings/vendor_deals_binding.dart';
@@ -9,36 +7,77 @@ import 'package:coupon_code/app/modules/vendor/vendor_menu/views/vendor_menu_vie
 import 'package:coupon_code/app/modules/vendor/vendor_navigation_bar/bindings/vendor_navigation_bar_binding.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_navigation_bar/views/vendor_navigation_bar_view.dart';
 import 'package:get/get.dart';
+import '../modules/auth/forget/controllers/forgot_controller.dart';
+import '../modules/auth/forget/views/forgot_view.dart';
 
-import '../modules/auth/forget/forgot_controller.dart';
-import '../modules/auth/forget/forgot_view.dart';
-import '../modules/auth/user/login/user_login_binding.dart';
-import '../modules/auth/user/login/user_login_view.dart';
-import '../modules/auth/user/signup/user_signup_binding.dart';
-import '../modules/auth/user/signup/user_signup_view.dart';
+import '../modules/common/onboarding/bindings/onboarding_binding.dart';
+import '../modules/common/onboarding/views/onboarding_view.dart';
+import '../modules/common/splash/bindings/splash_binding.dart';
+import '../modules/common/splash/views/splash_view.dart';
+
+import '../modules/auth/user/login/bindings/user_login_binding.dart';
+import '../modules/auth/user/login/views/user_login_view.dart';
+import '../modules/auth/user/signup/bindings/user_signup_binding.dart';
+import '../modules/auth/user/signup/views/user_signup_view.dart';
 import '../modules/auth/vendor/login/vendor_login_binding.dart';
 import '../modules/auth/vendor/login/vendor_login_view.dart';
 import '../modules/auth/vendor/signup/vendor_signup_binding.dart';
 import '../modules/auth/vendor/signup/vendor_signup_view.dart';
-import '../modules/common/onboarding/onboarding_binding.dart';
-import '../modules/common/onboarding/onboarding_view.dart';
-import '../modules/common/splash/splash_binding.dart';
-import '../modules/common/splash/splash_view.dart';
-import '../modules/user/discover/discover_view.dart';
-import '../modules/user/menu/about_us/About_Binding.dart';
-import '../modules/user/menu/about_us/About_View.dart';
+
+import '../modules/user/categories/views/Categories_View.dart';
+import '../modules/user/categories/category_details/views/categoty_details_view.dart';
+import '../modules/user/discover/discover_details/views/discover_details_view_page.dart';
+import '../modules/user/discover/views/discover_view.dart';
+
+import '../modules/user/menu/about_us/bindings/About_Binding.dart';
+import '../modules/user/menu/about_us/views/About_View.dart';
+import '../modules/user/menu/contact_us/contact_us_view.dart';
+import '../modules/user/menu/help_support/Help_Support_View.dart';
 import '../modules/user/menu/menu_view.dart';
+import '../modules/user/menu/privacy_policy/Privacy_Policy_View.dart';
+import '../modules/user/menu/terms_condition/Terms_Condition_View.dart';
+import '../modules/user/saved/views/save_view.dart';
 import 'app_routes.dart';
 
 class AppPages {
   static final pages = [
     /// Splash Screen
-    GetPage(name: AppRoutes.SPLASH, page: () => const SplashView(), binding: SplashBinding()),
+    GetPage(
+      name: AppRoutes.SPLASH,
+      page: () => const SplashView(),
+      binding: SplashBinding(),
+    ),
 
     ///Bottom Nav Bar
-    GetPage(name: AppRoutes.DISCOVER, page: () => const DiscoverPage()),
+    GetPage(
+        name: AppRoutes.DISCOVER,
+        page: () => const DiscoverPage()
+    ),
 
-    GetPage(name: AppRoutes.MENU, page: () => const MenuView()),
+    GetPage(
+        name: AppRoutes.DISCOVERDETAILS,
+        page: () => ServiceDetailsPage()
+    ),
+
+    GetPage(
+        name: AppRoutes.CATEGORIES,
+        page: () => const CategoriesView()
+    ),
+
+    GetPage(
+        name: AppRoutes.CATEGORIESDETAILS,
+        page: () => const CategotyDetails()
+    ),
+
+    GetPage(
+        name: AppRoutes.SAVED,
+        page: () => MySavesPage()
+    ),
+
+    GetPage(
+        name: AppRoutes.MENU,
+        page: () => const MenuView()
+    ),
 
     /// Onboarding all pages
     GetPage(
@@ -59,6 +98,18 @@ class AppPages {
       binding: UserSignupBinding(),
     ),
 
+    /// Vendor Part
+    GetPage(
+      name: AppRoutes.VENDOR_LOGIN,
+      page: () => const VendorLoginView(),
+      binding: VendorLoginBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.VENDOR_SIGNUP,
+      page: () => const VendorSignupView(),
+      binding: VendorSignupBinding(),
+    ),
+
     /// User Forget password
     GetPage(
       name: AppRoutes.USER_FORGOT_PASSWORD,
@@ -77,21 +128,11 @@ class AppPages {
       }),
     ),
 
-    /// Vendor Part
+    /// About Us
     GetPage(
-      name: AppRoutes.VENDOR_LOGIN,
-      page: () => const VendorLoginView(),
-      binding: VendorLoginBinding(),
-    ),
-    GetPage(
-      name: AppRoutes.VENDOR_SIGNUP,
-      page: () => const VendorSignupView(),
-      binding: VendorSignupBinding(),
-    ),
-    GetPage(
-      name: AppRoutes.CREATE_VENDOR_ACCOUNT,
-      page: () => CreateVendorAccountPage(),
-      binding: VendorAccountBinding(),
+      name: AppRoutes.ABOUT,
+      page: () => const AboutView(),
+      binding: AboutBinding(),
     ),
     GetPage(
       name: AppRoutes.VENDOR_DASHBOARD,
@@ -114,7 +155,22 @@ class AppPages {
       binding: VendorNavigationBarBinding(),
     ),
 
-    /// About Us
-    GetPage(name: AppRoutes.ABOUT, page: () => const AboutView(), binding: AboutBinding()),
+    /// Contact Us
+    GetPage(name: AppRoutes.CONTACT_US, page: () => const ContactUsView()),
+
+    /// Help and Support
+    GetPage(name: AppRoutes.HELP_SUPPORT, page: () => const HelpSupportView()),
+
+    /// Terms and conditions
+    GetPage(
+      name: AppRoutes.TERMSCONDITION,
+      page: () => const TermsConditionView(),
+    ),
+
+    /// Privacy Policy
+    GetPage(
+      name: AppRoutes.PRIVACYPOLICY,
+      page: () => const PrivacyPolicyView(),
+    ),
   ];
 }
