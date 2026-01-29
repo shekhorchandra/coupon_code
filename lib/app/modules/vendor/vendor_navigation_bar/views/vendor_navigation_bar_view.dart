@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
+
 class VendorNavigationBarPage extends GetView<VendorNavigationBarController> {
   const VendorNavigationBarPage({super.key});
 

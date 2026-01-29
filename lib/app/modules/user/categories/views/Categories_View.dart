@@ -5,6 +5,7 @@ import '../../../../core/values/app_assets.dart';
 import '../../../../core/values/app_color.dart';
 import '../../../../core/values/app_text_styles.dart';
 import '../../../../core/widgets/common_app_bar.dart';
+import '../../../../core/widgets/custom_text_field.dart';
 import '../../../../routes/app_routes.dart';
 import '../../bottom_nav_bar/views/bottom_nav_view.dart';
 
@@ -38,18 +39,9 @@ class CategoriesView extends StatelessWidget {
           // 🔍 Search Bar
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: "Search categories",
-                prefixIcon: const Icon(Icons.search),
-                filled: true,
-                fillColor: Colors.grey.shade100,
-                contentPadding: const EdgeInsets.symmetric(vertical: 12),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  borderSide: BorderSide.none,
-                ),
-              ),
+            child: CustomTextField(
+               hint: 'Search categories',
+              icon: Icons.search,
             ),
           ),
 

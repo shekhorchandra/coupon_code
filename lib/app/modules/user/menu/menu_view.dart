@@ -16,7 +16,7 @@ class MenuView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: const AppBottomNavBar(),
-      appBar: const CommonAppBar(title: "Menu", showBack: false),
+      appBar: const CommonAppBar(title: "Menu", showBack: true),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
@@ -26,7 +26,7 @@ class MenuView extends StatelessWidget {
             GestureDetector(
               onTap: () {
                 // Navigate to Login / Signup
-                Get.toNamed(AppRoutes.USER_LOGIN);
+                Get.offAllNamed(AppRoutes.USER_LOGIN);
               },
               child: Container(
                 padding: const EdgeInsets.all(16),

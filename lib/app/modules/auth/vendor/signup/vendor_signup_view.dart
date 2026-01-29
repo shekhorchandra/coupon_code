@@ -19,7 +19,7 @@ class VendorSignupView extends GetView<VendorSignupController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CommonAppBar(title: " "),
+      appBar: const CommonAppBar(title: " ", showBack: false,),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: ListView(
