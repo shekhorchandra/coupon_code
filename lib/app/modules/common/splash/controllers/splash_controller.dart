@@ -20,7 +20,7 @@ class SplashController extends GetxController {
       await prefs.setBool('is_first_launch', false);
       Get.offAllNamed(AppRoutes.ONBOARDING);
     } else {
-      Get.offAllNamed(AppRoutes.DISCOVER);
+      Get.offAllNamed(AppRoutes.USER_LOGIN);
     }
   }
 }
