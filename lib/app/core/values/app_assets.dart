@@ -20,6 +20,13 @@ class AppAssets {
   static const saved = 'assets/icons/saved.svg';
   static const menu = 'assets/icons/menu.svg';
 
-  // vendor bottom nav bar icons
+  /////////////////// VENDOR ///////////////////
+
+  // vendor bottom nav bar
   static const dashboard = 'assets/icons/dashboard.svg';
+
+  // vendor dashboard
+  static const salon = 'assets/images/salon.jpg';
+  static const activeDeals = 'assets/icons/active_deals.png';
+  static const totalViews = 'assets/icons/total_views.png';
 }
