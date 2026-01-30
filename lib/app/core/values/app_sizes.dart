@@ -5,7 +5,7 @@ class AppSizes {
 
   // Padding
   static const double topscreenPadding = 44;
-  static const double screenPadding = 24;
+  static const double screenPadding = 12;
 
   // Buttons
   static const double buttonHeight = 46;
