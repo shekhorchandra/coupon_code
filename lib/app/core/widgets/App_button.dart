@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../values/app_color.dart';
 import '../values/app_text_styles.dart';
 
@@ -18,6 +19,7 @@ class AppButton extends StatelessWidget {
     this.backgroundColor = AppColor.primary,
     this.textColor = Colors.white,
     this.width = double.infinity,
+    // this.width = 400,
     this.height = 52,
     this.icon,
   });
@@ -27,33 +29,15 @@ class AppButton extends StatelessWidget {
     return SizedBox(
       width: width,
       height: height,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(horizontal: 6),
-          backgroundColor: backgroundColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
-          ),
-          elevation: 2,
-        ),
+      child: ElevatedButton.icon(
+        label: Text(text, style: AppTextStyles.TextButton.copyWith(color: textColor)),
+        icon: Icon(icon, color: AppColor.white),
         onPressed: onPressed,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            if (icon != null) ...[
-              Icon(icon, size: 18, color: textColor),
-              const SizedBox(width: 6),
-            ],
-            Text(
-              text,
-              overflow: TextOverflow.ellipsis,
-              style: AppTextStyles.TextButton.copyWith(color: textColor),
-            ),
-          ],
+        style: ElevatedButton.styleFrom(
+          backgroundColor: backgroundColor,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         ),
       ),
-
     );
   }
 }
