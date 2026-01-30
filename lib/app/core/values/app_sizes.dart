@@ -10,6 +10,8 @@ class AppSizes {
   // Buttons
   static const double buttonHeight = 46;
   static const double buttonRadius = 30;
+  static const double denseButtonHeight = 36;
+  static const double denseButtonWidth = 160;
 
   // Inputs
   static const double inputHeight = 56;

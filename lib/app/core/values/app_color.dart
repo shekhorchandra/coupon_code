@@ -45,6 +45,7 @@ abstract class AppColor {
   static const textcolor = Colors.black;
   static const buttonText = Colors.white;
   static const togglebackground = Color(0xFFF0F9FF);
+  static const cardBackground = Color(0xFFF6F7FD);
 
   /// Primary
   static const vividSky = ColorScale(

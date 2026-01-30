@@ -10,6 +10,7 @@ class AppButton extends StatelessWidget {
   final Color textColor;
   final double width;
   final double height;
+  final IconData? icon;
 
   const AppButton({
     super.key,
@@ -20,6 +21,7 @@ class AppButton extends StatelessWidget {
     this.width = double.infinity,
     // this.width = 400,
     this.height = 52,
+    this.icon,
   });
 
   @override
@@ -27,13 +29,14 @@ class AppButton extends StatelessWidget {
     return SizedBox(
       width: width,
       height: height,
-      child: ElevatedButton(
+      child: ElevatedButton.icon(
+        label: Text(text, style: AppTextStyles.TextButton.copyWith(color: textColor)),
+        icon: Icon(icon, color: AppColor.white),
+        onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: backgroundColor,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         ),
-        onPressed: onPressed,
-        child: Text(text, style: AppTextStyles.TextButton.copyWith(color: textColor)),
       ),
     );
   }
