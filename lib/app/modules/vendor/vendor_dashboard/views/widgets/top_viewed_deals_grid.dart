@@ -10,6 +10,8 @@ class TopViewedDealsGrid extends GetView<VendorDashboardController> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(VendorDashboardController());
+
     // 1. Get screen width
     double screenWidth = MediaQuery.of(context).size.width;
 
