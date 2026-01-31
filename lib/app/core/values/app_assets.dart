@@ -7,11 +7,11 @@ class AppAssets {
   static const apple = 'assets/icons/apple.png';
   static const pin = 'assets/icons/pin.png';
 
-  // discover images
+  // discover_bar images
   static const makeup = 'assets/icons/makeup.jpg';
   static const shirt = 'assets/icons/shirt.jpg';
 
-  // discover icons
+  // discover_bar icons
   static const food = 'assets/icons/food.png';
 
   // bottom nav bar icons

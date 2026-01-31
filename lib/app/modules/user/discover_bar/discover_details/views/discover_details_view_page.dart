@@ -1,11 +1,14 @@
 import 'package:coupon_code/app/core/widgets/common_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../../../../../core/values/app_assets.dart';
 import '../../../../../core/values/app_color.dart';
 import '../../../../../core/values/app_text_styles.dart';
 import '../../../../../core/widgets/App_button.dart';
+import '../../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
 import '../../../bottom_nav_bar/views/bottom_nav_view.dart';
 import '../controllers/discover_details_controller.dart';
 
@@ -16,8 +19,17 @@ class ServiceDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final navController = Get.find<UserNavigationBarController>();
     return Scaffold(
-      appBar: const CommonAppBar(title: " ", showBack: true),
+        appBar: CommonAppBar(
+          title: "Deal Details",
+          showBack: true,
+          onBack: () {
+            // Close the overlay page instead of default back
+            navController.closeOverlayPage();
+          },
+        ),
+
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -73,6 +85,30 @@ class ServiceDetailsPage extends StatelessWidget {
                         ),
                       ),
                     ),
+
+                    /// IMAGE COUNT
+                    Positioned(
+                      bottom: 12,
+                      right: 12,
+                      child: Obx(
+                            () => Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.6),
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Text(
+                            '${controller.currentImage.value + 1} / ${controller.images.length}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
                   ],
                 ),
               ),
@@ -87,14 +123,28 @@ class ServiceDetailsPage extends StatelessWidget {
               ),
 
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8),
-                child: Text(
-                  "Glamour Glow Salon",
-                  style: AppTextStyles.MenuButtonText.copyWith(
-                    color: Colors.grey,
-                  ),
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SvgPicture.asset(
+                      AppAssets.category, // or any salon/shop icon
+                      width: 14,
+                      height: 14,
+                      colorFilter: const ColorFilter.mode(
+                        Colors.grey,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    const Text(
+                      "Glamour Glow Salon",
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+                  ],
                 ),
               ),
+
 
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -234,7 +284,6 @@ Treat your skin to a complete rejuvenation with our Ultimate Radiance Revival fa
                 ),
               ),
 
-
               // ================= DESCRIPTION =================
               _section(
                 title: "Description",
@@ -274,7 +323,6 @@ Results You Can Expect:
                 ),
               ),
 
-
               // ================= HOW TO REDEEM =================
               _section(
                 title: "How to Redeem",
@@ -283,13 +331,11 @@ Results You Can Expect:
                   child: Image.asset(
                     'assets/images/redeem.png', // replace with your infographic image
                     width: double.infinity, // take full width
-                    fit: BoxFit.contain,   // or BoxFit.cover depending on your design
+                    fit: BoxFit
+                        .contain, // or BoxFit.cover depending on your design
                   ),
                 ),
               ),
-
-
-
 
               // ================= LOCATION =================
               // _section(
@@ -311,7 +357,6 @@ Results You Can Expect:
               //     ),
               //   ),
               // ),
-
               const SizedBox(height: 80),
             ],
           ),
@@ -328,21 +373,30 @@ Results You Can Expect:
               children: [
                 Expanded(
                   child: AppButton(
-                    text: 'Save For Later ❤',
+                    text: 'Save For Later',
                     onPressed: () {},
                     backgroundColor: Colors.white70,
                     textColor: AppColor.primary,
+                    leading: SvgPicture.asset(
+                      AppAssets.saved,
+                      width: 18,
+                      height: 18,
+                      colorFilter: const ColorFilter.mode(
+                        AppColor.primary,
+                        BlendMode.srcIn,
+                      ),
+                    ),
                   ),
                 ),
+
+
                 const SizedBox(width: 16),
                 Expanded(
-                  child: AppButton(onPressed: () {}, text: 'Show Coupon'),
+                  child: AppButton(onPressed: () {}, text: 'Show Coupon',),
                 ),
               ],
             ),
           ),
-
-          AppBottomNavBar(),
         ],
       ),
     );
@@ -355,9 +409,7 @@ Results You Can Expect:
         title,
         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
       ),
-      childrenPadding: const EdgeInsets.symmetric(
-        horizontal: 16,
-      ),
+      childrenPadding: const EdgeInsets.symmetric(horizontal: 16),
       children: [child],
     );
   }

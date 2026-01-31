@@ -23,6 +23,7 @@ class SaveItem {
 }
 
 class SavesController extends GetxController {
+  SavesController();
   var selectedTab = 0.obs; // 0 = All, 1 = Available, 2 = Expired
 
   // Sample data

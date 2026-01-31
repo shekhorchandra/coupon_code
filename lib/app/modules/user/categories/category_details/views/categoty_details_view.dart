@@ -10,21 +10,28 @@ import '../../../../../core/widgets/custom_text_field.dart';
 import '../../../../../routes/app_routes.dart';
 import '../../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
 import '../../../bottom_nav_bar/views/bottom_nav_view.dart';
-import '../widget/category_filter_dropdown.dart';
-
-import '../category_filter_controller.dart';
+import '../category_details_filter_widget/category_filter_controller/category_filter_controller.dart';
+import '../category_details_filter_widget/category_fliter_view/category_filter_dropdown.dart';
 
 class CategotyDetails extends StatelessWidget {
   const CategotyDetails({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final BottomNavController controller = Get.put(BottomNavController());
+    // final UserNavigationBarController controller = Get.put(UserNavigationBarController());
     final FilterController filterController = Get.put(FilterController());
+    final navController = Get.find<UserNavigationBarController>();
 
     return Scaffold(
-      bottomNavigationBar: const AppBottomNavBar(),
-      appBar: const CommonAppBar(title: "Food & Drinks", showBack: true),
+      appBar: CommonAppBar(
+        title: "Food & Drinks",
+        showBack: true,
+        onBack: () {
+          // Close the overlay page instead of default back
+          navController.closeOverlayPage();
+        },
+      ),
+      // appBar: const CommonAppBar(title: "Food & Drinks", showBack: true),
       body: SafeArea(
         child: Column(
           children: [

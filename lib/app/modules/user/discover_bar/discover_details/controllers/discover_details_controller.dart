@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 
 class ServiceDetailsController extends GetxController {
   final PageController pageController = PageController();
-
   RxInt currentImage = 0.obs;
 
   final List<String> images = [
