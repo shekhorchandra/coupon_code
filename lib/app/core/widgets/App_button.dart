@@ -5,6 +5,7 @@ import '../values/app_text_styles.dart';
 
 class AppButton extends StatelessWidget {
   final String text;
+  final Widget? leading;
   final VoidCallback onPressed;
   final Color backgroundColor;
   final Color textColor;
@@ -14,6 +15,7 @@ class AppButton extends StatelessWidget {
 
   const AppButton({
     super.key,
+    this.leading,
     required this.text,
     required this.onPressed,
     this.backgroundColor = AppColor.primary,
@@ -29,15 +31,25 @@ class AppButton extends StatelessWidget {
     return SizedBox(
       width: width,
       height: height,
-      child: ElevatedButton.icon(
-        label: Text(text, style: AppTextStyles.TextButton.copyWith(color: textColor)),
-        icon: icon != null ? Icon(icon, color: AppColor.white) : SizedBox.shrink(),
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: backgroundColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+      child:  Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (leading != null) ...[
+              leading!,
+              const SizedBox(width: 8),
+            ]
+            else if (icon != null) ...[
+              Icon(icon, size: 18, color: textColor),
+              const SizedBox(width: 6),
+            ],
+            Text(
+              text,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.TextButton.copyWith(color: textColor),
+            ),
+          ],
         ),
-      ),
     );
   }
 }

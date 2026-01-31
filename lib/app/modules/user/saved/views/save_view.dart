@@ -7,18 +7,19 @@ import 'package:get/get.dart';
 import '../../../../core/values/app_color.dart';
 import '../../../../core/widgets/common_app_bar.dart';
 import '../../../../routes/app_routes.dart';
-import '../../bottom_nav_bar/views/bottom_nav_view.dart';
 
 
-class MySavesPage extends StatelessWidget {
-  MySavesPage({super.key});
+class UserMySavesPage extends GetView<SavesController> {
+  const UserMySavesPage({super.key});
 
-  final SavesController controller = Get.put(SavesController());
+// class MySavesPage extends StatelessWidget {
+//   MySavesPage({super.key});
+//
+//   final SavesController controller = Get.put(SavesController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const AppBottomNavBar(),
       appBar: const CommonAppBar(title: "My Saves", showBack: false),
       body: Column(
         children: [

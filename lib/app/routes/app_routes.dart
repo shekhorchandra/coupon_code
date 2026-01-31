@@ -12,8 +12,8 @@ abstract class AppRoutes {
   static const VENDOR_FORGOT_PASSWORD = '/vendor/forgot-password';
 
 
-  static const DISCOVER = '/discover';
-  static const DISCOVERDETAILS = '/discover-details';
+  static const DISCOVER = '/discover_bar';
+  static const DISCOVERDETAILS = '/discover_bar-details';
   static const CATEGORIES = '/category';
   static const CATEGORIESDETAILS = '/category-details';
   static const SAVED = '/save';
@@ -24,6 +24,8 @@ abstract class AppRoutes {
   static const HELP_SUPPORT = '/help-support';
   static const TERMSCONDITION = '/terms-condition';
   static const PRIVACYPOLICY = '/privacy-policy';
+
+  static const USER_BOTTOM_NAV = '/navigation_bar';
 
   // Vendor Part
   static const CREATE_VENDOR_ACCOUNT = '/vendor/account/create';

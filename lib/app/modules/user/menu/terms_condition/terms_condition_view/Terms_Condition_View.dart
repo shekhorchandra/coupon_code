@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
-import '../../../../core/values/app_text_styles.dart';
-import '../../../../core/widgets/common_app_bar.dart';
-import '../../bottom_nav_bar/views/bottom_nav_view.dart';
-
+import 'package:get/get.dart';
+import '../../../../../core/values/app_text_styles.dart';
+import '../../../../../core/widgets/common_app_bar.dart';
+import '../../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
 
 class TermsConditionView extends StatelessWidget {
   const TermsConditionView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final navController = Get.find<UserNavigationBarController>();
+
     return Scaffold(
-      bottomNavigationBar: const AppBottomNavBar(),
-      appBar: const CommonAppBar(
+      appBar: CommonAppBar(
         title: "Terms & Condition",
         showBack: true,
+        onBack: () => navController.closeOverlayPage(), // close overlay
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -25,35 +27,27 @@ class TermsConditionView extends StatelessWidget {
                   "You must be at least [age] years old to use the app and are responsible "
                   "for the security of your account information.",
             ),
-
             const SizedBox(height: 16),
-
             _paragraph(
               "The app allows users to browse and collect coupons for third-party "
                   "merchants, but App Name is not responsible for any transactions, "
                   "services, or issues related to merchant offers. Coupons are subject "
                   "to merchant terms and must be redeemed accordingly.",
             ),
-
             const SizedBox(height: 16),
-
             _paragraph(
               "We reserve the right to suspend or terminate your access if you "
                   "violate these terms or engage in unlawful activity. App Name is "
                   "not liable for any damages arising from the use of the app, "
                   "including errors, omissions, or failure to fulfill deals.",
             ),
-
             const SizedBox(height: 16),
-
             _paragraph(
               "Any disputes with merchants should be addressed directly with them. "
                   "For details on how we handle your personal data, please read our "
                   "Privacy Policy.",
             ),
-
             const SizedBox(height: 16),
-
             _paragraph(
               "By using the app, you accept these terms and any future modifications.",
             ),
@@ -67,9 +61,7 @@ class TermsConditionView extends StatelessWidget {
   Widget _paragraph(String text) {
     return Text(
       text,
-      style: AppTextStyles.Text.copyWith(
-        height: 1.6,
-      ),
+      style: AppTextStyles.Text.copyWith(height: 1.6),
     );
   }
 }

@@ -24,18 +24,25 @@ import '../modules/auth/vendor/login/vendor_login_view.dart';
 import '../modules/auth/vendor/signup/vendor_signup_binding.dart';
 import '../modules/auth/vendor/signup/vendor_signup_view.dart';
 
-import '../modules/user/categories/views/Categories_View.dart';
-import '../modules/user/categories/category_details/views/categoty_details_view.dart';
-import '../modules/user/discover/discover_details/views/discover_details_view_page.dart';
-import '../modules/user/discover/views/discover_view.dart';
+import '../modules/user/bottom_nav_bar/bindings/user_navigation_bar_binding.dart';
+import '../modules/user/bottom_nav_bar/views/bottom_nav_view.dart';
+import '../modules/user/categories/Category/bindings/categories_binding.dart';
+import '../modules/user/categories/Category/controllers/categories_controller.dart';
+import '../modules/user/categories/Category/views/Categories_View.dart';
 
+import '../modules/user/categories/category_details/views/categoty_details_view.dart';
+
+import '../modules/user/discover_bar/Discover/bindings/discover_binding.dart';
+import '../modules/user/discover_bar/Discover/views/discover_view.dart';
+import '../modules/user/discover_bar/discover_details/views/discover_details_view_page.dart';
 import '../modules/user/menu/about_us/bindings/About_Binding.dart';
 import '../modules/user/menu/about_us/views/About_View.dart';
-import '../modules/user/menu/contact_us/contact_us_view.dart';
-import '../modules/user/menu/help_support/Help_Support_View.dart';
-import '../modules/user/menu/menu_view.dart';
-import '../modules/user/menu/privacy_policy/Privacy_Policy_View.dart';
-import '../modules/user/menu/terms_condition/Terms_Condition_View.dart';
+import '../modules/user/menu/contact_us/contact_view/contact_us_view.dart';
+import '../modules/user/menu/help_support/help_support_view/Help_Support_View.dart';
+import '../modules/user/menu/menu_bar/menu_binding/menu_binding.dart';
+import '../modules/user/menu/menu_bar/menu_view/menu_view.dart';
+import '../modules/user/menu/privacy_policy/privacy_policy_view/Privacy_Policy_View.dart';
+import '../modules/user/menu/terms_condition/terms_condition_view/Terms_Condition_View.dart';
 import '../modules/user/saved/views/save_view.dart';
 import 'app_routes.dart';
 
@@ -48,11 +55,20 @@ class AppPages {
       binding: SplashBinding(),
     ),
 
-    ///Bottom Nav Bar
+    /// User Bottom Nav Bar
+    ///
     GetPage(
-        name: AppRoutes.DISCOVER,
-        page: () => const DiscoverPage()
+      name: AppRoutes.USER_BOTTOM_NAV,
+      page: () => const UserNavigationBarPage(),
+      binding: UserNavigationBinding(),
     ),
+
+    GetPage(
+      name: AppRoutes.DISCOVER,
+      page: () => const DiscoverView(),
+      binding: DiscoverBinding(),
+    ),
+
 
     GetPage(
         name: AppRoutes.DISCOVERDETAILS,
@@ -60,23 +76,30 @@ class AppPages {
     ),
 
     GetPage(
-        name: AppRoutes.CATEGORIES,
-        page: () => const CategoriesView()
+      name: AppRoutes.CATEGORIES,
+      page: () => const CategoriesView(),
+      binding: CategoriesBinding(),
     ),
 
+
     GetPage(
-        name: AppRoutes.CATEGORIESDETAILS,
-        page: () => const CategotyDetails()
+      name: AppRoutes.CATEGORIESDETAILS,
+      page: () => CategotyDetails(),
+      binding: BindingsBuilder(() {
+        Get.put(CategoriesController());
+      }),
     ),
+
 
     GetPage(
         name: AppRoutes.SAVED,
-        page: () => MySavesPage()
+        page: () => UserMySavesPage()
     ),
 
     GetPage(
-        name: AppRoutes.MENU,
-        page: () => const MenuView()
+      name: AppRoutes.MENU,
+      page: () => const MenuView(),
+      binding: MenuBinding(),
     ),
 
     /// Onboarding all pages

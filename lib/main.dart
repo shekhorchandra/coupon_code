@@ -6,7 +6,6 @@ import 'app/core/values/app_strings.dart';
 import 'app/routes/app_routes.dart';
 
 void main() {
-  Get.put(BottomNavController(), permanent: true);
   runApp(const CouponDiscountApp());
 }
 

@@ -1,40 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../../core/values/app_color.dart';
+import '../../../../../core/values/app_text_styles.dart';
+import '../../../../../core/widgets/common_app_bar.dart';
 
-import '../../../../core/values/app_color.dart';
-import '../../../../core/values/app_text_styles.dart';
-import '../../../../core/widgets/common_app_bar.dart';
-
-
-import '../../bottom_nav_bar/views/bottom_nav_view.dart';
-
+import '../../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
 
 class ContactUsView extends StatelessWidget {
   const ContactUsView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final navController = Get.find<UserNavigationBarController>();
+
     return Scaffold(
-      bottomNavigationBar: const AppBottomNavBar(),
-      appBar: const CommonAppBar(title: "Contact Us", showBack: true),
+      appBar: CommonAppBar(
+        title: "Contact Us",
+        showBack: true,
+        onBack: () {
+          navController.closeOverlayPage(); // close overlay and return to previous bottom nav screen
+        },
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _paragraph(
-              "We’d love to hear from you!\n"
-              "Whether you have questions, need assistance, or want to share "
-              "feedback about “App Name”, we're here to help.",
+              "We’d love to hear from you!\nWhether you have questions, need assistance, or want to share "
+                  "feedback about “App Name”, we're here to help.",
             ),
-
             const SizedBox(height: 24),
-
             _sectionTitle("How to Reach Us: "),
-
             const SizedBox(height: 12),
-
             _card(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,7 +59,6 @@ class ContactUsView extends StatelessWidget {
                 ],
               ),
             ),
-
             _card(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,9 +88,6 @@ class ContactUsView extends StatelessWidget {
                 ],
               ),
             ),
-
-            const SizedBox(height: 6),
-
             _card(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,34 +101,16 @@ class ContactUsView extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 6),
-
             _card(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _sectionTitle("Social Media"),
                   const SizedBox(height: 6),
-                  _socialItem(
-                    icon: Icons.facebook,
-                    title: "Facebook",
-                    url: "https://facebook.com",
-                  ),
-                  _socialItem(
-                    icon: Icons.alternate_email,
-                    title: "Twitter",
-                    url: "https://twitter.com",
-                  ),
-                  _socialItem(
-                    icon: Icons.camera_alt,
-                    title: "Instagram",
-                    url: "https://instagram.com",
-                  ),
-                  _socialItem(
-                    icon: Icons.work,
-                    title: "LinkedIn",
-                    url: "https://linkedin.com",
-                  ),
+                  _socialItem(icon: Icons.facebook, title: "Facebook", url: "https://facebook.com"),
+                  _socialItem(icon: Icons.alternate_email, title: "Twitter", url: "https://twitter.com"),
+                  _socialItem(icon: Icons.camera_alt, title: "Instagram", url: "https://instagram.com"),
+                  _socialItem(icon: Icons.work, title: "LinkedIn", url: "https://linkedin.com"),
                 ],
               ),
             ),
@@ -169,7 +147,8 @@ class ContactUsView extends StatelessWidget {
   Widget _sectionTitle(String text) {
     return Text(
       text,
-      style: AppTextStyles.Text.copyWith(color: AppColor.textcolor, fontWeight: FontWeight.bold),
+      style: AppTextStyles.Text.copyWith(
+          color: AppColor.textcolor, fontWeight: FontWeight.bold),
     );
   }
 
@@ -177,11 +156,7 @@ class ContactUsView extends StatelessWidget {
     return Text(text, style: AppTextStyles.Text.copyWith());
   }
 
-  Widget _socialItem({
-    required IconData icon,
-    required String title,
-    required String url,
-  }) {
+  Widget _socialItem({required IconData icon, required String title, required String url}) {
     return GestureDetector(
       onTap: () => _launchUrl(url),
       child: Padding(

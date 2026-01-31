@@ -39,7 +39,9 @@ class VendorNavigationBarPage extends GetView<VendorNavigationBarController> {
                   height: 65,
                   backgroundColor: AppColor.white,
                   indicatorColor: AppColor.vividSky.s300,
-                  labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>((states) {
+                  labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>((
+                    states,
+                  ) {
                     if (states.contains(WidgetState.selected)) {
                       return TextStyle(
                         color: AppColor.vividSky.s300,
@@ -51,14 +53,17 @@ class VendorNavigationBarPage extends GetView<VendorNavigationBarController> {
                   }),
                   indicatorShape: const CircleBorder(),
                   selectedIndex: controller.selectedIndex.value,
-                  onDestinationSelected: (index) => controller.selectedIndex.value = index,
+                  onDestinationSelected: (index) =>
+                      controller.selectedIndex.value = index,
                   animationDuration: Duration.zero,
                   destinations: [
                     NavigationDestination(
                       icon: SvgPicture.asset(
                         AppAssets.dashboard,
                         colorFilter: ColorFilter.mode(
-                          controller.selectedIndex.value == 0 ? AppColor.white : AppColor.bw.s500,
+                          controller.selectedIndex.value == 0
+                              ? AppColor.white
+                              : AppColor.bw.s500,
                           BlendMode.srcIn,
                         ),
                         width: 20,
