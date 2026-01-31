@@ -8,8 +8,9 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 class DealTile extends StatelessWidget {
   final DealModel deal;
+  final int dealType;
 
-  const DealTile({super.key, required this.deal});
+  const DealTile({super.key, required this.deal, required this.dealType});
 
   String formatRemainingTime(DateTime expiryDate) {
     final now = DateTime.now();
@@ -86,11 +87,11 @@ class DealTile extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "\$${deal.afterDiscountPrice}",
+                          "\$${deal.afterDiscountPrice.toStringAsFixed(2)}",
                           style: AppText.label.bold.copyWith(fontSize: 15, color: Colors.black),
                         ),
                         Text(
-                          "\$${deal.regularPrice}",
+                          "\$${deal.regularPrice.toStringAsFixed(2)}",
                           style: const TextStyle(
                             fontSize: 11,
                             color: Colors.grey,
@@ -125,18 +126,22 @@ class DealTile extends StatelessWidget {
                     const SizedBox(width: 5),
 
                     // Edit button
-                    AppButton(
-                      text: 'Edit',
-                      onPressed: () {},
-                      icon: Iconsax.edit_2,
-                      height: 40,
-                      width: 100,
-                    ),
+                    if (dealType == 0)
+                      AppButton(
+                        text: 'Edit',
+                        onPressed: () {},
+                        icon: Iconsax.edit_2,
+                        height: 40,
+                        width: 100,
+                      ),
+
+                    if (dealType == 1)
+                      AppButton(text: 'Re-active', onPressed: () {}, height: 30, width: 112),
 
                     const SizedBox(width: 5),
 
                     // Switcher
-                    Switch.adaptive(value: true, onChanged: (value) {}),
+                    if (dealType == 0) Switch.adaptive(value: deal.isActive, onChanged: (value) {}),
                   ],
                 ),
               ],

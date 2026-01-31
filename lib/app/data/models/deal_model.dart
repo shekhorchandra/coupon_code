@@ -94,11 +94,18 @@ class DealModel {
   }
 
   factory DealModel.fromMap(Map<String, dynamic> map) {
-    // Helper to parse the date "06-Jun-2026"
-    DateTime parseDate(String dateStr) {
+    DateTime parseDate(dynamic dateStr) {
+      if (dateStr == null || dateStr.toString().isEmpty) {
+        // If no date, return a date far in the future or handle accordingly
+        return DateTime.now().add(const Duration(days: 365));
+      }
       try {
-        return DateFormat("dd-MMM-yyyy").parse(dateStr);
+        // Parse the date (06-Jun-2026)
+        DateTime parsed = DateFormat("dd-MMM-yyyy").parse(dateStr.toString());
+        // Set to end of day: 2026-06-06 23:59:59
+        return DateTime(parsed.year, parsed.month, parsed.day, 23, 59, 59);
       } catch (e) {
+        debugPrint("Error parsing date: $dateStr - $e");
         return DateTime.now(); // Fallback
       }
     }
