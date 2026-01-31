@@ -85,6 +85,12 @@ class AppPages {
 
     GetPage(name: AppRoutes.CATEGORIESDETAILS, page: () => const CategotyDetails()),
 
+    GetPage(name: AppRoutes.DISCOVERDETAILS, page: () => ServiceDetailsPage()),
+
+    GetPage(name: AppRoutes.CATEGORIES, page: () => const CategoriesView()),
+
+    GetPage(name: AppRoutes.CATEGORIESDETAILS, page: () => const CategotyDetails()),
+
     GetPage(name: AppRoutes.MENU, page: () => const MenuView()),
 
     /// Onboarding all pages
