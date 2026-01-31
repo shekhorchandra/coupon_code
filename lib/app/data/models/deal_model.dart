@@ -21,6 +21,7 @@ class DealModel {
   final DealPlanModel dealPlan;
   final DateTime expireDate;
   final int? views;
+  final bool isActive;
 
   DealModel({
     required this.id,
@@ -36,6 +37,7 @@ class DealModel {
     required this.dealPlan,
     required this.expireDate,
     this.views,
+    required this.isActive,
   });
 
   DealModel copyWith({
@@ -52,6 +54,7 @@ class DealModel {
     DealPlanModel? dealPlan,
     DateTime? expireDate,
     int? views,
+    bool? isActive,
   }) {
     return DealModel(
       id: id ?? this.id,
@@ -67,6 +70,7 @@ class DealModel {
       dealPlan: dealPlan ?? this.dealPlan,
       expireDate: expireDate ?? this.expireDate,
       views: views ?? this.views,
+      isActive: isActive ?? this.isActive,
     );
   }
 
@@ -85,6 +89,7 @@ class DealModel {
       'dealPlan': dealPlan.toMap(),
       'expireDate': expireDate.millisecondsSinceEpoch,
       'views': views,
+      'isActive': isActive,
     };
   }
 
@@ -119,6 +124,7 @@ class DealModel {
 
       expireDate: parseDate(map['expireDate']),
       views: map['views'] as int?,
+      isActive: map['isActive'] as bool,
     );
   }
 
@@ -129,7 +135,7 @@ class DealModel {
 
   @override
   String toString() {
-    return 'DealModel(id: $id, media: $media, title: $title, category: $category, highlights: $highlights, description: $description, couponCode: $couponCode, regularPrice: $regularPrice, discountPercentage: $discountPercentage, afterDiscountPrice: $afterDiscountPrice, dealPlan: $dealPlan, expireDate: $expireDate, views: $views)';
+    return 'DealModel(id: $id, media: $media, title: $title, category: $category, highlights: $highlights, description: $description, couponCode: $couponCode, regularPrice: $regularPrice, discountPercentage: $discountPercentage, afterDiscountPrice: $afterDiscountPrice, dealPlan: $dealPlan, expireDate: $expireDate, views: $views, isActive: $isActive)';
   }
 
   @override
@@ -148,7 +154,8 @@ class DealModel {
         other.afterDiscountPrice == afterDiscountPrice &&
         other.dealPlan == dealPlan &&
         other.expireDate == expireDate &&
-        other.views == views;
+        other.views == views &&
+        other.isActive == isActive;
   }
 
   @override
@@ -165,6 +172,7 @@ class DealModel {
         afterDiscountPrice.hashCode ^
         dealPlan.hashCode ^
         expireDate.hashCode ^
-        views.hashCode;
+        views.hashCode ^
+        isActive.hashCode;
   }
 }
