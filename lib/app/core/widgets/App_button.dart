@@ -31,7 +31,7 @@ class AppButton extends StatelessWidget {
       height: height,
       child: ElevatedButton.icon(
         label: Text(text, style: AppTextStyles.TextButton.copyWith(color: textColor)),
-        icon: Icon(icon, color: AppColor.white),
+        icon: icon != null ? Icon(icon, color: AppColor.white) : SizedBox.shrink(),
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: backgroundColor,
