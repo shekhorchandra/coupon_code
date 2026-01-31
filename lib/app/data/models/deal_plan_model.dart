@@ -6,20 +6,40 @@ class DealPlanModel {
   final String name;
   final String? description;
   final double price;
+  final String? icon;
 
-  DealPlanModel({required this.id, required this.name, this.description, required this.price});
+  DealPlanModel({
+    required this.id,
+    required this.name,
+    this.description,
+    required this.price,
+    this.icon,
+  });
 
-  DealPlanModel copyWith({int? id, String? name, String? description, double? price}) {
+  DealPlanModel copyWith({
+    int? id,
+    String? name,
+    String? description,
+    double? price,
+    String? icon,
+  }) {
     return DealPlanModel(
       id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,
       price: price ?? this.price,
+      icon: icon ?? this.icon,
     );
   }
 
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{'id': id, 'name': name, 'description': description, 'price': price};
+    return <String, dynamic>{
+      'id': id,
+      'name': name,
+      'description': description,
+      'price': price,
+      'icon': icon,
+    };
   }
 
   factory DealPlanModel.fromMap(Map<String, dynamic> map) {
@@ -28,6 +48,7 @@ class DealPlanModel {
       name: map['name'] ?? '',
       description: map['description'] ?? '',
       price: (map['price'] as num? ?? 0.0).toDouble(),
+      icon: (map['icon'] ?? ''),
     );
   }
 
@@ -38,7 +59,7 @@ class DealPlanModel {
 
   @override
   String toString() {
-    return 'DealPlanModel(id: $id, name: $name, description: $description, price: $price)';
+    return 'DealPlanModel(id: $id, name: $name, description: $description, price: $price, icon: $icon)';
   }
 
   @override
@@ -48,11 +69,12 @@ class DealPlanModel {
     return other.id == id &&
         other.name == name &&
         other.description == description &&
-        other.price == price;
+        other.price == price &&
+        other.icon == icon;
   }
 
   @override
   int get hashCode {
-    return id.hashCode ^ name.hashCode ^ description.hashCode ^ price.hashCode;
+    return id.hashCode ^ name.hashCode ^ description.hashCode ^ price.hashCode ^ icon.hashCode;
   }
 }

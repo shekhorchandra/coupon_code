@@ -4,59 +4,69 @@ import '../values/app_color.dart';
 
 class CustomTextField extends StatelessWidget {
   final String hint;
-  final IconData icon;
+  final IconData? icon;
   final bool obscure;
   final Widget? suffix;
   final TextEditingController? controller;
   final TextInputType keyboardType;
+  final int? maxLength;
+  final int? maxLines;
+  final String? errorText;
 
   const CustomTextField({
     super.key,
     required this.hint,
-    required this.icon,
+    this.icon,
     this.obscure = false,
     this.suffix,
     this.controller,
     this.keyboardType = TextInputType.text,
+    this.maxLength,
+    this.maxLines,
+    this.errorText,
   });
 
   @override
   Widget build(BuildContext context) {
+    final safeMaxLines = obscure ? 1 : (maxLines ?? 1);
     return TextField(
       controller: controller,
       obscureText: obscure,
       keyboardType: keyboardType,
+      maxLength: maxLength,
+      maxLines: safeMaxLines,
       decoration: InputDecoration(
         hintText: hint,
-        prefixIcon: Icon(icon),
+        errorText: errorText,
+        prefixIcon: icon != null ? Icon(icon) : null,
         suffixIcon: suffix,
-        contentPadding: const EdgeInsets.symmetric(vertical: 10),
+        contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         //  Default border
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: maxLines == null ? BorderRadius.circular(30) : BorderRadius.circular(10),
           borderSide: const BorderSide(color: AppColor.primary, width: 1),
         ),
 
         //  Enabled (not focused)
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: maxLines == null ? BorderRadius.circular(30) : BorderRadius.circular(10),
           borderSide: const BorderSide(color: AppColor.border, width: 1),
         ),
 
         //  Focused
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: maxLines == null ? BorderRadius.circular(30) : BorderRadius.circular(10),
           borderSide: const BorderSide(color: AppColor.primary, width: 1.5),
         ),
 
         //  Error (optional)
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: maxLines == null ? BorderRadius.circular(30) : BorderRadius.circular(10),
           borderSide: const BorderSide(color: Colors.red, width: 1),
         ),
 
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: maxLines == null ? BorderRadius.circular(30) : BorderRadius.circular(10),
           borderSide: const BorderSide(color: Colors.red, width: 1.5),
         ),
       ),

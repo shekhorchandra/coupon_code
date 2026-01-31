@@ -29,4 +29,9 @@ class AppAssets {
   static const salon = 'assets/images/salon.jpg';
   static const activeDeals = 'assets/icons/active_deals.png';
   static const totalViews = 'assets/icons/total_views.png';
+
+  // Add Deal
+  static const sevenDaysDeal = 'assets/icons/seven_days.png';
+  static const fourteenDaysDeal = 'assets/icons/fourteen_days.png';
+  static const thirtyDaysDeal = 'assets/icons/thirty_days.png';
 }
