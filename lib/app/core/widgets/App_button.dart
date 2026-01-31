@@ -21,7 +21,6 @@ class AppButton extends StatelessWidget {
     this.backgroundColor = AppColor.primary,
     this.textColor = Colors.white,
     this.width = double.infinity,
-    // this.width = 400,
     this.height = 52,
     this.icon,
   });
@@ -31,15 +30,25 @@ class AppButton extends StatelessWidget {
     return SizedBox(
       width: width,
       height: height,
-      child:  Row(
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: backgroundColor,
+          foregroundColor: textColor,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30), // Match your CustomTextField
+          ),
+          padding: EdgeInsets.zero,
+        ),
+        child: Row(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (leading != null) ...[
               leading!,
               const SizedBox(width: 8),
-            ]
-            else if (icon != null) ...[
+            ] else if (icon != null) ...[
               Icon(icon, size: 18, color: textColor),
               const SizedBox(width: 6),
             ],
@@ -50,6 +59,7 @@ class AppButton extends StatelessWidget {
             ),
           ],
         ),
+      ),
     );
   }
 }
