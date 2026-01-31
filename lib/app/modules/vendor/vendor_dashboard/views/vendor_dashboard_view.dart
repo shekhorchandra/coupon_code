@@ -8,6 +8,7 @@ import 'package:coupon_code/app/modules/vendor/vendor_dashboard/views/widgets/ov
 import 'package:coupon_code/app/modules/vendor/vendor_dashboard/views/widgets/overview_chart.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_dashboard/views/widgets/top_viewed_deals_grid.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_dashboard/views/widgets/total_impression_card.dart';
+import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
@@ -58,7 +59,7 @@ class VendorDashboardPage extends GetView<VendorDashboardController> {
                           ),
                           const SizedBox(height: 8),
                           AppButton(
-                            onPressed: () {},
+                            onPressed: () => Get.toNamed(AppRoutes.ADD_DEAL),
                             text: 'Add New Deal',
                             icon: Icons.add,
                             height: AppSizes.denseButtonHeight,
