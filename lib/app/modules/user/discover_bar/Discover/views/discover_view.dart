@@ -59,8 +59,13 @@ class DiscoverView extends GetView<DiscoverController> {
                         text: "ZIP Code",
                         width: 110,
                         height: 42,
+                        icon: Icons.location_on_outlined,
                         onPressed: controller.onZipPressed,
+                        backgroundColor: Colors.white,
+                        textColor: AppColor.primary,
+                        borderColor: AppColor.primary,
                       ),
+
                     ],
                   ),
                   const SizedBox(height: 8),

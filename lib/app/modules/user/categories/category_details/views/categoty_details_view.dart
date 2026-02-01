@@ -58,9 +58,10 @@ class CategotyDetails extends StatelessWidget {
                       AppButton(
                         text: "ZIP Code",
                         width: 100,
-                        height: 40,
+                        height: 42,
                         backgroundColor: Colors.white,
-                        textColor: Colors.grey,
+                        textColor: AppColor.primary,
+                        borderColor: AppColor.primary,
                         icon: Icons.location_on_outlined,
                         onPressed: () {
                           /// open zip selector
