@@ -28,6 +28,8 @@ import '../modules/user/bottom_nav_bar/views/bottom_nav_view.dart';
 import '../modules/user/categories/Category/bindings/categories_binding.dart';
 import '../modules/user/categories/Category/controllers/categories_controller.dart';
 import '../modules/user/categories/Category/views/Categories_View.dart';
+import '../modules/user/categories/category_details/bindings/category_details_binding.dart';
+import '../modules/user/categories/category_details/controllers/category_details_controller.dart';
 import '../modules/user/categories/category_details/views/categoty_details_view.dart';
 import '../modules/user/discover_bar/Discover/bindings/discover_binding.dart';
 import '../modules/user/discover_bar/Discover/views/discover_view.dart';
@@ -75,11 +77,14 @@ class AppPages {
 
     GetPage(
       name: AppRoutes.CATEGORIESDETAILS,
-      page: () => CategotyDetails(),
+      page: () => const CategotyDetails(),
       binding: BindingsBuilder(() {
-        Get.put(CategoriesController());
+        // Inject the controller here
+        Get.put(CategoryDetailsController());
       }),
     ),
+
+
 
     GetPage(name: AppRoutes.SAVED, page: () => UserMySavesPage()),
 
