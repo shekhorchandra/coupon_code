@@ -21,35 +21,47 @@ class OnboardingView extends GetView<OnboardingController> {
                 itemBuilder: (context, index) {
                   final page = controller.pages[index];
                   return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Expanded(flex: 6, child: Image.asset(page['image']!, fit: BoxFit.contain)),
-                        const SizedBox(height: 24),
-                        Text(
-                          page['title']!,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        page['image']!,
+                        height: 395,
+                        width: double.infinity,
+                        fit: BoxFit.contain,
+                      ),
+
+                      const SizedBox(height: 20), // ✅ image → title gap
+
+                      Text(
+                        page['title']!,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
                         ),
-                        const SizedBox(height: 8),
-                        Text(
-                          page['subtitle']!,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(fontSize: 13, color: Colors.black54),
+                      ),
+
+                      const SizedBox(height: 20), // ✅ title → subtitle gap
+
+                      Text(
+                        page['subtitle']!,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: Colors.black54,
                         ),
-                        const SizedBox(height: 16),
-                      ],
-                    ),
+                      ),
+                    ],
+                  ),
+
                   );
                 },
               ),
             ),
-
+            const SizedBox(height: 160),
             Obx(
               () => Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -73,19 +85,22 @@ class OnboardingView extends GetView<OnboardingController> {
             const SizedBox(height: 20),
 
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16,),
               child: SizedBox(
                 width: double.infinity,
-                height: 50,
+                height: 52,
                 child: ElevatedButton(
                   onPressed: controller.nextPage,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColor.primary,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
                   ),
                   child: Obx(
                     () => Text(
-                      controller.currentPage.value == controller.pages.length - 1
+                      controller.currentPage.value ==
+                              controller.pages.length - 1
                           ? "Get Started"
                           : "Next",
                       style: const TextStyle(
