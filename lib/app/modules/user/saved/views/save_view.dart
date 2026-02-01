@@ -7,20 +7,28 @@ import 'package:get/get.dart';
 import '../../../../core/values/app_color.dart';
 import '../../../../core/widgets/common_app_bar.dart';
 import '../../../../routes/app_routes.dart';
+import '../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
+import '../../categories/category_details/views/categoty_details_view.dart';
+import '../../discover_bar/discover_details/views/discover_details_view_page.dart';
 
 
 class UserMySavesPage extends GetView<SavesController> {
   const UserMySavesPage({super.key});
 
-// class MySavesPage extends StatelessWidget {
-//   MySavesPage({super.key});
-//
-//   final SavesController controller = Get.put(SavesController());
 
   @override
   Widget build(BuildContext context) {
+    final navController = Get.find<UserNavigationBarController>();
     return Scaffold(
-      appBar: const CommonAppBar(title: "My Saves", showBack: false),
+      // appBar: const CommonAppBar(title: "My Saves", showBack: false),
+      appBar: CommonAppBar(
+        title: "My Saves",
+        showBack: true,
+        onBack: () {
+          // Close the overlay page instead of default back
+          navController.closeOverlayPage();
+        },
+      ),
       body: Column(
         children: [
           // --- Tabs ---
@@ -70,7 +78,7 @@ class UserMySavesPage extends GetView<SavesController> {
                     isAvailable: item.isAvailable,
                     Status: item.Status,
                     onTap: () {
-                      Get.toNamed(AppRoutes.DISCOVERDETAILS);
+                      navController.openOverlayPage(ServiceDetailsPage());
                     },
                   );
                 },
