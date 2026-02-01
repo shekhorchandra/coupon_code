@@ -22,14 +22,14 @@ class ServiceDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final navController = Get.find<UserNavigationBarController>();
     return Scaffold(
-        appBar: CommonAppBar(
-          title: "Deal Details",
-          showBack: true,
-          onBack: () {
-            // Close the overlay page instead of default back
-            navController.closeOverlayPage();
-          },
-        ),
+      appBar: CommonAppBar(
+        title: "Deal Details",
+        showBack: true,
+        onBack: () {
+          // Close the overlay page instead of default back
+          navController.closeOverlayPage();
+        },
+      ),
 
       body: SingleChildScrollView(
         child: Padding(
@@ -92,8 +92,11 @@ class ServiceDetailsPage extends StatelessWidget {
                       bottom: 12,
                       right: 12,
                       child: Obx(
-                            () => Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        () => Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 6,
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.black.withOpacity(0.6),
                             borderRadius: BorderRadius.circular(16),
@@ -109,7 +112,6 @@ class ServiceDetailsPage extends StatelessWidget {
                         ),
                       ),
                     ),
-
                   ],
                 ),
               ),
@@ -145,7 +147,6 @@ class ServiceDetailsPage extends StatelessWidget {
                   ],
                 ),
               ),
-
 
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -213,7 +214,7 @@ class ServiceDetailsPage extends StatelessWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColor.primary, // 🔴 background
+                        color: AppColor.primary,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: const Text(
@@ -338,27 +339,56 @@ Results You Can Expect:
                 ),
               ),
 
-              // ================= LOCATION =================
-              // _section(
-              //   title: "Location",
-              //   child: SizedBox(
-              //     height: 200,
-              //     child: GoogleMap(
-              //       initialCameraPosition: const CameraPosition(
-              //         target: LatLng(23.8103, 90.4125),
-              //         zoom: 14,
-              //       ),
-              //       markers: {
-              //         const Marker(
-              //           markerId: MarkerId("salon"),
-              //           position: LatLng(23.8103, 90.4125),
-              //           infoWindow: InfoWindow(title: "Glamour Glow Salon"),
-              //         ),
-              //       },
-              //     ),
-              //   ),
-              // ),
-              const SizedBox(height: 80),
+              //Location
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Section Title
+                    const Text(
+                      "Location",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    // Subtitle with icon
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.storefront, // or use a custom SVG
+                          size: 16,
+                          color: Colors.grey,
+                        ),
+                        const SizedBox(width: 6),
+                        const Text(
+                          "Grown Salon",
+                          style: TextStyle(fontSize: 14, color: Colors.grey),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    // Map Image
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.network(
+                        "https://static-maps.yandex.ru/1.x/?ll=-74.0060,40.7128&size=400,200&z=14&l=map&pt=-74.0060,40.7128,pm2rdm",
+                        width: double.infinity,
+                        height: 200,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 20),
             ],
           ),
         ),
@@ -391,12 +421,14 @@ Results You Can Expect:
                   ),
                 ),
 
-
                 const SizedBox(width: 16),
                 Expanded(
-                  child: AppButton(onPressed: () {
-                    showCouponDemoPopup();
-                  }, text: 'Show Coupon',),
+                  child: AppButton(
+                    onPressed: () {
+                      showCouponDemoPopup();
+                    },
+                    text: 'Show Coupon',
+                  ),
                 ),
               ],
             ),

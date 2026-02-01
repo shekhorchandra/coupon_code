@@ -10,6 +10,7 @@ import '../../../../../core/widgets/custom_text_field.dart';
 import '../../../../../routes/app_routes.dart';
 import '../../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
 import '../../../bottom_nav_bar/views/bottom_nav_view.dart';
+import '../../../discover_bar/discover_details/views/discover_details_view_page.dart';
 import '../category_details_filter_widget/category_filter_controller/category_filter_controller.dart';
 import '../category_details_filter_widget/category_fliter_view/category_filter_dropdown.dart';
 
@@ -266,7 +267,7 @@ class CategotyDetails extends StatelessWidget {
                                   height: 32,
                                   onPressed: () {
                                     // redeem action
-                                    Get.toNamed(AppRoutes.DISCOVERDETAILS);
+                                    navController.openOverlayPage(ServiceDetailsPage());
                                   },
                                 ),
                               ],
