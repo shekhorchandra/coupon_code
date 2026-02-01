@@ -46,7 +46,11 @@ import 'app_routes.dart';
 class AppPages {
   static final pages = [
     /// Splash Screen
-    GetPage(name: AppRoutes.SPLASH, page: () => const SplashView(), binding: SplashBinding()),
+    GetPage(
+      name: AppRoutes.SPLASH,
+      page: () => const SplashView(),
+      binding: SplashBinding(),
+    ),
 
     /// User Bottom Nav Bar
     GetPage(
@@ -55,7 +59,11 @@ class AppPages {
       binding: UserNavigationBinding(),
     ),
 
-    GetPage(name: AppRoutes.DISCOVER, page: () => const DiscoverView(), binding: DiscoverBinding()),
+    GetPage(
+      name: AppRoutes.DISCOVER,
+      page: () => const DiscoverView(),
+      binding: DiscoverBinding(),
+    ),
 
     GetPage(name: AppRoutes.DISCOVERDETAILS, page: () => ServiceDetailsPage()),
 
@@ -75,20 +83,30 @@ class AppPages {
 
     GetPage(name: AppRoutes.SAVED, page: () => UserMySavesPage()),
 
-    GetPage(name: AppRoutes.MENU, page: () => const MenuView(), binding: MenuBinding()),
+    GetPage(
+      name: AppRoutes.MENU,
+      page: () => const MenuView(),
+      binding: MenuBinding(),
+    ),
 
     ///Bottom Nav Bar
     GetPage(name: AppRoutes.DISCOVERDETAILS, page: () => ServiceDetailsPage()),
 
     GetPage(name: AppRoutes.CATEGORIES, page: () => const CategoriesView()),
 
-    GetPage(name: AppRoutes.CATEGORIESDETAILS, page: () => const CategotyDetails()),
+    GetPage(
+      name: AppRoutes.CATEGORIESDETAILS,
+      page: () => const CategotyDetails(),
+    ),
 
     GetPage(name: AppRoutes.DISCOVERDETAILS, page: () => ServiceDetailsPage()),
 
     GetPage(name: AppRoutes.CATEGORIES, page: () => const CategoriesView()),
 
-    GetPage(name: AppRoutes.CATEGORIESDETAILS, page: () => const CategotyDetails()),
+    GetPage(
+      name: AppRoutes.CATEGORIESDETAILS,
+      page: () => const CategotyDetails(),
+    ),
 
     GetPage(name: AppRoutes.MENU, page: () => const MenuView()),
 
@@ -147,7 +165,11 @@ class AppPages {
     ),
 
     /// About Us
-    GetPage(name: AppRoutes.ABOUT, page: () => const AboutView(), binding: AboutBinding()),
+    GetPage(
+      name: AppRoutes.ABOUT,
+      page: () => const AboutView(),
+      binding: AboutBinding(),
+    ),
     GetPage(
       name: AppRoutes.VENDOR_DASHBOARD,
       page: () => VendorDashboardPage(),
@@ -176,9 +198,15 @@ class AppPages {
     GetPage(name: AppRoutes.HELP_SUPPORT, page: () => const HelpSupportView()),
 
     /// Terms and conditions
-    GetPage(name: AppRoutes.TERMSCONDITION, page: () => const TermsConditionView()),
+    GetPage(
+      name: AppRoutes.TERMSCONDITION,
+      page: () => const TermsConditionView(),
+    ),
 
     /// Privacy Policy
-    GetPage(name: AppRoutes.PRIVACYPOLICY, page: () => const PrivacyPolicyView()),
+    GetPage(
+      name: AppRoutes.PRIVACYPOLICY,
+      page: () => const PrivacyPolicyView(),
+    ),
   ];
 }
