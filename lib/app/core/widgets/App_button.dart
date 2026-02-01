@@ -9,6 +9,7 @@ class AppButton extends StatelessWidget {
   final VoidCallback onPressed;
   final Color backgroundColor;
   final Color textColor;
+  final Color? borderColor;
   final double width;
   final double height;
   final IconData? icon;
@@ -18,6 +19,7 @@ class AppButton extends StatelessWidget {
     this.leading,
     required this.text,
     required this.onPressed,
+    this.borderColor,
     this.backgroundColor = AppColor.primary,
     this.textColor = Colors.white,
     this.width = double.infinity,
@@ -35,9 +37,13 @@ class AppButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: backgroundColor,
           foregroundColor: textColor,
+
           elevation: 0,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30), // Match your CustomTextField
+            borderRadius: BorderRadius.circular(30),
+            side: borderColor != null
+                ? BorderSide(color: borderColor!, width: 1.5)
+                : BorderSide.none,
           ),
           padding: EdgeInsets.zero,
         ),
