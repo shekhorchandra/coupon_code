@@ -97,7 +97,7 @@ class DiscoverView extends GetView<DiscoverController> {
               ),
             ),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: 6),
 
             // POPULAR CATEGORIES
             Container(
