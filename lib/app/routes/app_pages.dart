@@ -49,7 +49,6 @@ class AppPages {
     GetPage(name: AppRoutes.SPLASH, page: () => const SplashView(), binding: SplashBinding()),
 
     /// User Bottom Nav Bar
-    ///
     GetPage(
       name: AppRoutes.USER_BOTTOM_NAV,
       page: () => const UserNavigationBarPage(),
