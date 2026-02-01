@@ -100,6 +100,8 @@ class DealCard extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 24),
+
+
                     Text(
                       "10d   08h",
                       style: TextStyle(
