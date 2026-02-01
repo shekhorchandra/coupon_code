@@ -380,7 +380,7 @@ Results You Can Expect:
                       child: Image.network(
                         "https://static-maps.yandex.ru/1.x/?ll=-74.0060,40.7128&size=400,200&z=14&l=map&pt=-74.0060,40.7128,pm2rdm",
                         width: double.infinity,
-                        height: 200,
+                        height: 172,
                         fit: BoxFit.cover,
                       ),
                     ),
