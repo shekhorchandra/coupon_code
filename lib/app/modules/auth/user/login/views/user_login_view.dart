@@ -76,7 +76,7 @@ class UserLoginView extends GetView<UserLoginController> {
               text: "Log in",
               onPressed: () {
                 // TODO: call login API
-                Get.offAllNamed(AppRoutes.DISCOVER);
+                Get.offAllNamed(AppRoutes.USER_BOTTOM_NAV);
               },
             ),
 
