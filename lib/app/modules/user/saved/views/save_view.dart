@@ -23,7 +23,7 @@ class UserMySavesPage extends GetView<SavesController> {
       // appBar: const CommonAppBar(title: "My Saves", showBack: false),
       appBar: CommonAppBar(
         title: "My Saves",
-        showBack: true,
+        showBack: false,
         onBack: () {
           // Close the overlay page instead of default back
           navController.closeOverlayPage();
