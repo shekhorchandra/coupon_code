@@ -1,4 +1,5 @@
 import 'package:coupon_code/app/core/widgets/common_app_bar.dart';
+import 'package:coupon_code/app/modules/user/discover_bar/coupon_code/qr_code.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -377,6 +378,7 @@ Results You Can Expect:
                     onPressed: () {},
                     backgroundColor: Colors.white70,
                     textColor: AppColor.primary,
+                    borderColor: AppColor.primary,
                     leading: SvgPicture.asset(
                       AppAssets.saved,
                       width: 18,
@@ -392,7 +394,9 @@ Results You Can Expect:
 
                 const SizedBox(width: 16),
                 Expanded(
-                  child: AppButton(onPressed: () {}, text: 'Show Coupon',),
+                  child: AppButton(onPressed: () {
+                    showCouponDemoPopup();
+                  }, text: 'Show Coupon',),
                 ),
               ],
             ),
