@@ -82,7 +82,7 @@ class MenuView extends GetView<MenuController> {
 
           _menuItem(Icons.campaign_outlined, 'Advertise on App', controller.onAdvertiseTap),
             _menuItem(Icons.contact_support_outlined, "Contact Us", controller.onContactUsTap),
-            _menuItem(Icons.help_outline, "Help & Support", controller.onHelpSupportTap),
+            _menuItem(Icons.emergency, "Help & Support", controller.onHelpSupportTap),
             const SizedBox(height: 24),
             _menuItem(Icons.privacy_tip_outlined, "Privacy Policy", controller.onPrivacyPolicyTap),
             _menuItem(Icons.description_outlined, "Terms & Condition", controller.onTermsTap),
