@@ -7,6 +7,8 @@ import '../../../../../core/widgets/common_app_bar.dart';
 import '../../../../../core/widgets/custom_text_field.dart';
 import '../../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
 import '../../../discover_bar/discover_details/views/discover_details_view_page.dart';
+import '../category_details_filter_widget/category_filter_controller/category_filter_controller.dart';
+import '../category_details_filter_widget/category_fliter_view/category_filter_dropdown.dart';
 import '../controllers/category_details_controller.dart';
 
 
@@ -17,6 +19,7 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
   Widget build(BuildContext context) {
     final navController = Get.find<UserNavigationBarController>();
     final controller = Get.put(CategoryDetailsController());
+    final FilterController filterController = Get.put(FilterController());
 
     return Scaffold(
       appBar: CommonAppBar(
@@ -29,13 +32,95 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
       body: SafeArea(
         child: Column(
           children: [
-            // Search Bar
+            // Search + Zip Code + Location
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              child: CustomTextField(
-                hint: "Search for deals",
-                icon: Icons.search,
-                onChanged: controller.onSearch,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Search Bar + Zip Code Button
+                  Row(
+                    children: [
+                      // Search Field
+                      Expanded(
+                        child: CustomTextField(
+                          hint: "Search for deals",
+                          icon: Icons.search,
+                        ),
+                      ),
+
+                      const SizedBox(width: 4),
+                      AppButton(
+                        text: "ZIP Code",
+                        width: 100,
+                        height: 40,
+                        backgroundColor: Colors.white,
+                        textColor: AppColor.primary,
+                        borderColor: AppColor.primary,
+                        icon: Icons.location_on_outlined,
+                        onPressed: () {
+                          /// open zip selector
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                ],
+              ),
+            ),
+
+            // Dropdown
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+              color: Colors.grey.shade100,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    filterDropdown(
+                      hint: "Sort By",
+                      selectedValue: filterController.sortBy,
+                      items: filterController.sortOptions,
+                    ),
+                    const SizedBox(width: 8),
+
+                    filterDropdown(
+                      hint: "Categories",
+                      selectedValue: filterController.category,
+                      items: filterController.categoryOptions,
+                    ),
+                    const SizedBox(width: 8),
+
+                    filterDropdown(
+                      hint: "Price",
+                      selectedValue: filterController.price,
+                      items: filterController.priceOptions,
+                    ),
+                    const SizedBox(width: 8),
+
+                    filterDropdown(
+                      hint: "Availability",
+                      selectedValue: filterController.availability,
+                      items: filterController.availabilityOptions,
+                    ),
+
+                    const SizedBox(width: 8),
+
+                    filterDropdown(
+                      hint: "Distance",
+                      selectedValue: filterController.distance,
+                      items: filterController.distanceOptions,
+                    ),
+
+                    const SizedBox(width: 8),
+
+                    filterDropdown(
+                      hint: "Location",
+                      selectedValue: filterController.location,
+                      items: filterController.locationOptions,
+                    ),
+                  ],
+                ),
               ),
             ),
 
