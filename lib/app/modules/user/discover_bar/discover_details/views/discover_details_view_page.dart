@@ -241,7 +241,7 @@ class ServiceDetailsPage extends StatelessWidget {
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
-                              "${deal.discountPercentage}% off",
+                              "${deal.discountPercentage.toStringAsFixed(0)}% off",
                               style: const TextStyle(
                                 fontSize: 12,
                                 color: Colors.white,

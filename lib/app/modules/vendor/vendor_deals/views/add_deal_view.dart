@@ -117,9 +117,10 @@ class AddDealView extends GetView<VendorDealsController> {
               Text('Discount Percentage', style: AppText.body1.semiBold),
               const SizedBox(height: 5),
               CustomTextField(
-                hint: '20%',
+                hint: '20',
                 controller: controller.discountController,
                 keyboardType: TextInputType.number,
+                suffix: Icon(Icons.percent_rounded),
               ),
               const SizedBox(height: 10),
 

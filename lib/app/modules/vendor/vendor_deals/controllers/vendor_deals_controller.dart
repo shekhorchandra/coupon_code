@@ -36,6 +36,56 @@ class VendorDealsController extends GetxController {
   // }
 
   // Add New Deal
+  bool _isUpdatingDiscount = false;
+  bool _isUpdatingFinalPrice = false;
+
+  @override
+  void onInit() {
+    super.onInit();
+
+    priceController.addListener(_calculateFromDiscount);
+    discountController.addListener(_calculateFinalPrice);
+    finalPriceController.addListener(_calculateDiscount);
+  }
+
+  void _calculateFinalPrice() {
+    if (_isUpdatingFinalPrice) return;
+
+    final price = double.tryParse(priceController.text);
+    final discount = double.tryParse(discountController.text);
+
+    if (price == null || discount == null) return;
+
+    _isUpdatingDiscount = true;
+
+    final finalPrice = price - (price * discount / 100);
+    finalPriceController.text = finalPrice.toStringAsFixed(2);
+
+    _isUpdatingDiscount = false;
+  }
+
+  void _calculateDiscount() {
+    if (_isUpdatingDiscount) return;
+
+    final price = double.tryParse(priceController.text);
+    final finalPrice = double.tryParse(finalPriceController.text);
+
+    if (price == null || finalPrice == null || price == 0) return;
+
+    _isUpdatingFinalPrice = true;
+
+    final discount = ((price - finalPrice) / price) * 100;
+    discountController.text = discount.toStringAsFixed(2);
+
+    _isUpdatingFinalPrice = false;
+  }
+
+  void _calculateFromDiscount() {
+    if (discountController.text.isNotEmpty) {
+      _calculateFinalPrice();
+    }
+  }
+
   // Text Controllers
   final titleController = TextEditingController(text: 'Fitness Jump Rope with LCD Counter');
   final highlightController = TextEditingController(
@@ -48,7 +98,7 @@ class VendorDealsController extends GetxController {
   );
   final couponController = TextEditingController(text: 'EK8648');
   final priceController = TextEditingController(text: '543');
-  final discountController = TextEditingController(text: '25');
+  final discountController = TextEditingController(text: '25.00');
   final finalPriceController = TextEditingController(text: '135.75');
 
   // Selections
@@ -121,7 +171,7 @@ class VendorDealsController extends GetxController {
       description: descController.text.trim(),
       couponCode: couponController.text.trim(),
       regularPrice: double.parse(priceController.text),
-      discountPercentage: int.parse(discountController.text),
+      discountPercentage: double.parse(discountController.text),
       afterDiscountPrice: double.parse(finalPriceController.text),
       dealPlan: selectedDealPlan.value!,
       expireDate: selectedValidityRange.value!.end,
