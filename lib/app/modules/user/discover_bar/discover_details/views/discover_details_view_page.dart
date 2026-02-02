@@ -75,13 +75,16 @@ class ServiceDetailsPage extends StatelessWidget {
                         final imageUrl = deal!.media[index].imageUrl;
 
                         return isNetworkImage ?? true
-                            ? CachedNetworkImage(
-                                imageUrl: imageUrl,
-                                fit: BoxFit.cover,
-                                width: double.infinity,
-                                placeholder: (_, _) =>
-                                    const Center(child: CircularProgressIndicator()),
-                                errorWidget: (_, _, _) => const Icon(Icons.broken_image),
+                            ? Hero(
+                                tag: 'top-deals-grid-${deal.id}',
+                                child: CachedNetworkImage(
+                                  imageUrl: imageUrl,
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  placeholder: (_, _) =>
+                                      const Center(child: CircularProgressIndicator()),
+                                  errorWidget: (_, _, _) => const Icon(Icons.broken_image),
+                                ),
                               )
                             : Image.file(File(imageUrl), fit: BoxFit.cover, width: double.infinity);
                       },
