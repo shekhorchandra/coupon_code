@@ -3,6 +3,7 @@ import 'package:coupon_code/app/core/values/app_sizes.dart';
 import 'package:coupon_code/app/core/values/app_text.dart';
 import 'package:coupon_code/app/core/widgets/common_app_bar.dart';
 import 'package:coupon_code/app/data/mock_data/mock_payment_method.dart';
+import 'package:coupon_code/app/modules/vendor/payment_method/controller/payment_method_controller.dart';
 import 'package:coupon_code/app/modules/vendor/payment_method/view/widgets/payment_method_tile.dart';
 import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -10,10 +11,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class PaymentMethodsView extends StatelessWidget {
-  const PaymentMethodsView({super.key});
+  const PaymentMethodsView({super.key, this.isSelectable = false});
+
+  final bool? isSelectable;
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(PaymentMethodController());
+
     return Scaffold(
       appBar: CommonAppBar(title: 'Payment Methods'),
       body: SingleChildScrollView(
@@ -21,15 +26,29 @@ class PaymentMethodsView extends StatelessWidget {
         child: Column(
           children: [
             // Payment methods list
-            ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: mockPaymentMethod.length,
-              itemBuilder: (context, index) {
-                final paymentMethod = mockPaymentMethod[index];
-                return PaymentMethodTile(paymentMethod: paymentMethod);
-              },
-            ),
+            Obx(() {
+              final selected = controller.selectedPaymentMethod.value;
+
+              return ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: mockPaymentMethod.length,
+                itemBuilder: (_, index) {
+                  return Column(
+                    children: [
+                      PaymentMethodTile(
+                        paymentMethod: mockPaymentMethod[index],
+                        isSelectable: isSelectable ?? false,
+                        isSelected: selected == index,
+                        onSelect: () => controller.selectedPaymentMethod.value = index,
+                      ),
+
+                      const SizedBox(height: 10),
+                    ],
+                  );
+                },
+              );
+            }),
 
             // Add new card
             InkWell(

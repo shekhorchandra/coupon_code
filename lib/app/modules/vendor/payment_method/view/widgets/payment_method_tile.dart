@@ -5,9 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class PaymentMethodTile extends StatelessWidget {
-  const PaymentMethodTile({super.key, required this.paymentMethod});
+  const PaymentMethodTile({
+    super.key,
+    required this.paymentMethod,
+    this.isSelectable = false,
+    this.isSelected = false,
+    this.onSelect,
+  });
 
   final PaymentMethodModel paymentMethod;
+  final bool isSelectable;
+  final bool isSelected;
+  final VoidCallback? onSelect;
 
   String getMaskedNumber(String number) {
     if (number.length <= 4) return number;
@@ -17,12 +26,13 @@ class PaymentMethodTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10.0),
+    return InkWell(
+      onTap: isSelectable ? onSelect : null,
+      borderRadius: BorderRadius.circular(100),
       child: Container(
         decoration: BoxDecoration(
-          border: BoxBorder.all(color: AppColor.border),
           borderRadius: BorderRadius.circular(100),
+          color: isSelected ? AppColor.primary.withAlpha(30) : Colors.transparent,
         ),
         padding: EdgeInsets.all(15),
         child: Row(
@@ -45,36 +55,42 @@ class PaymentMethodTile extends StatelessWidget {
               ],
             ),
 
-            PopupMenuButton<String>(
-              color: AppColor.cardBackground,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              onSelected: (value) {
-                if (value == 'delete') {
-                  debugPrint('Delete button pressed!');
-
-                  // TODO: Add delete logic
-                }
-              },
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  value: 'delete',
-                  child: Row(
-                    children: [
-                      Icon(Icons.delete_outline_rounded, color: AppColor.error),
-                      const SizedBox(width: 10),
-                      Text('Delete', style: AppText.body2.medium.copyWith(color: AppColor.error)),
-                    ],
+            Row(
+              children: [
+                if (isSelectable)
+                  Icon(
+                    isSelected ? Icons.check_circle : Icons.radio_button_off,
+                    color: isSelected ? AppColor.primary : AppColor.border,
+                  ),
+                PopupMenuButton<String>(
+                  color: AppColor.cardBackground,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  onSelected: (value) {
+                    if (value == 'delete') {
+                      debugPrint('Delete button pressed!');
+                    }
+                  },
+                  itemBuilder: (_) => [
+                    PopupMenuItem(
+                      value: 'delete',
+                      child: Row(
+                        children: [
+                          Icon(Icons.delete_outline_rounded, color: AppColor.error),
+                          const SizedBox(width: 10),
+                          Text(
+                            'Delete',
+                            style: AppText.body2.medium.copyWith(color: AppColor.error),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                  child: const Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Icon(Icons.more_vert_rounded, size: 20),
                   ),
                 ),
               ],
-              child: InkWell(
-                // onTap: () {},
-                borderRadius: BorderRadius.circular(50),
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Icon(Icons.more_vert_rounded, size: 20),
-                ),
-              ),
             ),
           ],
         ),

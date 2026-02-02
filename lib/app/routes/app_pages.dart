@@ -64,7 +64,7 @@ class AppPages {
     GetPage(
       name: AppRoutes.DISCOVERDETAILS,
       page: () {
-        final args = Get.arguments as Map<String, dynamic>;
+        final args = Get.arguments as Map<String, dynamic>? ?? {};
 
         return ServiceDetailsPage(
           id: args['id'] as int?,
@@ -97,7 +97,7 @@ class AppPages {
     GetPage(
       name: AppRoutes.DISCOVERDETAILS,
       page: () {
-        final args = Get.arguments as Map<String, dynamic>;
+        final args = Get.arguments as Map<String, dynamic>? ?? {};
 
         return ServiceDetailsPage(
           id: args['id'] as int,
@@ -114,7 +114,7 @@ class AppPages {
     GetPage(
       name: AppRoutes.DISCOVERDETAILS,
       page: () {
-        final args = Get.arguments as Map<String, dynamic>;
+        final args = Get.arguments as Map<String, dynamic>? ?? {};
 
         return ServiceDetailsPage(
           id: args['id'] as int,
@@ -167,7 +167,11 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.PAYMENT_METHOD,
-      page: () => const PaymentMethodsView(),
+      page: () {
+        final args = Get.arguments as Map<String, dynamic>? ?? {};
+
+        return PaymentMethodsView(isSelectable: args['isSelectable'] as bool? ?? false);
+      },
       binding: PaymentMethodBinding(),
     ),
     GetPage(

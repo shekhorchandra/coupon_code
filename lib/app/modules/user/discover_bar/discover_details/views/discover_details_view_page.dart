@@ -389,7 +389,8 @@ class ServiceDetailsPage extends StatelessWidget {
                   Expanded(
                     child: AppButton(
                       text: 'Payment & Publish',
-                      onPressed: () => Get.toNamed(AppRoutes.PAYMENT_METHOD),
+                      onPressed: () =>
+                          Get.toNamed(AppRoutes.PAYMENT_METHOD, arguments: {'isSelectable': true}),
                     ),
                   ),
 

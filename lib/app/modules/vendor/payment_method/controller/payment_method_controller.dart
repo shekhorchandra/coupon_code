@@ -3,7 +3,5 @@ import 'package:get/get.dart';
 class PaymentMethodController extends GetxController {
   PaymentMethodController();
 
-  final _obj = ''.obs;
-  set obj(value) => _obj.value = value;
-  String get obj => _obj.value;
+  Rx<int> selectedPaymentMethod = (-1).obs;
 }

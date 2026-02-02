@@ -18,7 +18,7 @@ class VendorMenuPage extends GetView<VendorAccountController> {
           children: [
             Text('CreateVendorAccountController'),
 
-            AppButton(text: 'Logout', onPressed: () => Get.toNamed(AppRoutes.USER_LOGIN)),
+            AppButton(text: 'Logout', onPressed: () => Get.toNamed(AppRoutes.PAYMENT_METHOD)),
           ],
         ),
       ),
