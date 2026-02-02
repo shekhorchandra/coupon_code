@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
+
 import '../../../../../core/values/app_color.dart';
 import '../../../../../core/widgets/App_button.dart';
 import '../../../../../core/widgets/common_app_bar.dart';
@@ -10,7 +11,6 @@ import '../../../discover_bar/discover_details/views/discover_details_view_page.
 import '../category_details_filter_widget/category_filter_controller/category_filter_controller.dart';
 import '../category_details_filter_widget/category_fliter_view/category_filter_dropdown.dart';
 import '../controllers/category_details_controller.dart';
-
 
 class CategotyDetails extends GetView<CategoryDetailsController> {
   const CategotyDetails({super.key});
@@ -43,10 +43,7 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                     children: [
                       // Search Field
                       Expanded(
-                        child: CustomTextField(
-                          hint: "Search for deals",
-                          icon: Icons.search,
-                        ),
+                        child: CustomTextField(hint: "Search for deals", icon: Icons.search),
                       ),
 
                       const SizedBox(width: 4),
@@ -142,7 +139,6 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                 ),
               ),
             ),
-
           ],
         ),
       ),
@@ -213,10 +209,7 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                 const SizedBox(height: 6),
                 Row(
                   children: const [
-                    Text(
-                      "\$20",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
+                    Text("\$20", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                     SizedBox(width: 6),
                     Text(
                       "\$30",
@@ -229,10 +222,7 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                     SizedBox(width: 24),
                     Text(
                       "10d   08h",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.orange,
-                      ),
+                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange),
                     ),
                   ],
                 ),
@@ -241,7 +231,7 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                   text: "Redeem Now",
                   height: 32,
                   onPressed: () {
-                    navController.openOverlayPage(ServiceDetailsPage());
+                    navController.openOverlayPage(ServiceDetailsPage(id: 1));
                   },
                 ),
               ],
@@ -254,24 +244,15 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
 
   Widget _badge(String text) => Container(
     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-    decoration: BoxDecoration(
-      color: AppColor.primary,
-      borderRadius: BorderRadius.circular(4),
+    decoration: BoxDecoration(color: AppColor.primary, borderRadius: BorderRadius.circular(4)),
+    child: Text(
+      text,
+      style: const TextStyle(color: Colors.black, fontSize: 10, fontWeight: FontWeight.bold),
     ),
-    child: Text(text,
-        style: const TextStyle(
-          color: Colors.black,
-          fontSize: 10,
-          fontWeight: FontWeight.bold,
-        )),
   );
 
   Widget _textOverlay(String text) => Text(
     text,
-    style: const TextStyle(
-      color: Colors.white,
-      fontSize: 10,
-      fontWeight: FontWeight.bold,
-    ),
+    style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
   );
 }

@@ -17,9 +17,9 @@ import '../../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
 import '../controllers/discover_details_controller.dart';
 
 class ServiceDetailsPage extends StatelessWidget {
-  ServiceDetailsPage({super.key, this.id = 1});
+  ServiceDetailsPage({super.key, required this.id});
 
-  final int? id;
+  final int id;
   final controller = Get.put(ServiceDetailsController());
 
   @override
@@ -200,46 +200,54 @@ class ServiceDetailsPage extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
-                    const Text("\$20", style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold)),
-                    const SizedBox(width: 6),
-                    const Text(
-                      "\$30",
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.grey,
-                        decoration: TextDecoration.lineThrough,
+                    /// LEFT SIDE (prices + discount)
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Text(
+                            "\$${deal.afterDiscountPrice.toStringAsFixed(2)}",
+                            style: const TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            "\$${deal.regularPrice.toStringAsFixed(2)}",
+                            style: const TextStyle(
+                              fontSize: 20,
+                              color: Colors.grey,
+                              decoration: TextDecoration.lineThrough,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: AppColor.primary,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              "${deal.discountPercentage}% off",
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
 
-                    const SizedBox(width: 8),
+                    /// RIGHT SIDE (countdown)
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: AppColor.primary,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Text(
-                        "55% off",
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.white, // readable on red
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(width: 34),
-
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.orange.withOpacity(0.15), // light orange background
+                        color: Colors.orange.withOpacity(0.15),
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withOpacity(0.1),
                             blurRadius: 4,
-                            offset: const Offset(0, 2),
+                            offset: Offset(0, 2),
                           ),
                         ],
                       ),
@@ -247,7 +255,7 @@ class ServiceDetailsPage extends StatelessWidget {
                         "10d   08h   54m   23s",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Colors.orange, // bold orange text
+                          color: Colors.orange,
                           fontSize: 14,
                         ),
                       ),
@@ -261,19 +269,8 @@ class ServiceDetailsPage extends StatelessWidget {
               // ================= HIGHLIGHTS =================
               _section(
                 title: "Highlights",
-                child: const Text(
-                  '''
-The Ultimate Radiance Revival: Luxurious Facial, Skin Rejuvenation, and Glowing Treatment Experience
-
-Treat your skin to a complete rejuvenation with our Ultimate Radiance Revival facial. Designed to nourish, hydrate, and revitalize, this luxurious facial treatment is perfect for anyone seeking a radiant glow.
-
-• Luxurious Facial Treatment
-• Skin Rejuvenation
-• Radiant, Glowing Skin
-• Exclusive 60-Minute Session
-• Pampering & Refreshing Experience
-• Ideal for All Skin Types
-''',
+                child: Text(
+                  deal.highlights,
                   style: TextStyle(
                     fontSize: 14,
                     height: 1.5, // better spacing for readability
@@ -285,34 +282,8 @@ Treat your skin to a complete rejuvenation with our Ultimate Radiance Revival fa
               // ================= DESCRIPTION =================
               _section(
                 title: "Description",
-                child: const Text(
-                  '''
-The Ultimate Radiance Revival: Luxurious Facial, Skin Rejuvenation, and Glowing Treatment Experience
-
-Treat your skin to a complete rejuvenation with our Ultimate Radiance Revival facial. Designed to nourish, hydrate, and revitalize, this luxurious facial treatment is perfect for anyone seeking a radiant glow.
-
-What’s Included:
-• Deep Cleansing Facial – Remove impurities and toxins
-• Exfoliation – Reveal smoother, fresher skin
-• Custom Face Mask – Tailored to your skin needs
-• Skin Rejuvenation Treatment – Nourishing serums & oils
-• Facial Massage – Relaxation & circulation boost
-• Glow Finish – Soft, hydrated, glowing skin
-
-Ideal For:
-• Dull, tired skin
-• Special occasions
-• Pampering self-care
-• Suitable for all skin types
-
-Duration: 60 minutes
-
-Results You Can Expect:
-• Radiant, glowing complexion
-• Smoother skin texture
-• Deep hydration & nourishment
-• Total relaxation & rejuvenation
-''',
+                child: Text(
+                  deal.description,
                   style: TextStyle(
                     fontSize: 14,
                     height: 1.5, // better spacing for readability
