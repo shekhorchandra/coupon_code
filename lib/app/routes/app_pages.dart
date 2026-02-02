@@ -1,3 +1,7 @@
+import 'package:coupon_code/app/data/models/deal_model.dart';
+import 'package:coupon_code/app/modules/vendor/payment_method/bindings/payment_method_binding.dart';
+import 'package:coupon_code/app/modules/vendor/payment_method/view/add_new_card_view.dart';
+import 'package:coupon_code/app/modules/vendor/payment_method/view/payment_methods_view.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_dashboard/bindings/vendor_dashboard_binding.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_dashboard/views/vendor_dashboard_view.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/bindings/vendor_deals_binding.dart';
@@ -59,7 +63,15 @@ class AppPages {
 
     GetPage(
       name: AppRoutes.DISCOVERDETAILS,
-      page: () => ServiceDetailsPage(id: Get.arguments as int),
+      page: () {
+        final args = Get.arguments as Map<String, dynamic>;
+
+        return ServiceDetailsPage(
+          id: args['id'] as int?,
+          dealItem: args['dealItem'] as DealModel?,
+          isNetworkImage: args['isNetworkImage'] as bool? ?? true,
+        );
+      },
     ),
 
     GetPage(
@@ -84,7 +96,15 @@ class AppPages {
     ///Bottom Nav Bar
     GetPage(
       name: AppRoutes.DISCOVERDETAILS,
-      page: () => ServiceDetailsPage(id: Get.arguments as int),
+      page: () {
+        final args = Get.arguments as Map<String, dynamic>;
+
+        return ServiceDetailsPage(
+          id: args['id'] as int,
+          dealItem: args['dealItem'] as DealModel,
+          isNetworkImage: args['isNetworkImage'] as bool? ?? true,
+        );
+      },
     ),
 
     GetPage(name: AppRoutes.CATEGORIES, page: () => const CategoriesView()),
@@ -93,7 +113,15 @@ class AppPages {
 
     GetPage(
       name: AppRoutes.DISCOVERDETAILS,
-      page: () => ServiceDetailsPage(id: Get.arguments as int),
+      page: () {
+        final args = Get.arguments as Map<String, dynamic>;
+
+        return ServiceDetailsPage(
+          id: args['id'] as int,
+          dealItem: args['dealItem'] as DealModel,
+          isNetworkImage: args['isNetworkImage'] as bool? ?? true,
+        );
+      },
     ),
 
     GetPage(name: AppRoutes.CATEGORIES, page: () => const CategoriesView()),
@@ -136,6 +164,16 @@ class AppPages {
       name: AppRoutes.ADD_DEAL,
       page: () => const AddDealView(),
       binding: VendorDealsBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.PAYMENT_METHOD,
+      page: () => const PaymentMethodsView(),
+      binding: PaymentMethodBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.ADD_PAYMENT_METHOD,
+      page: () => const AddNewCardView(),
+      binding: PaymentMethodBinding(),
     ),
 
     /// User Forget password

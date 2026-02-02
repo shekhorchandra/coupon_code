@@ -1,10 +1,13 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coupon_code/app/core/widgets/common_app_bar.dart';
 import 'package:coupon_code/app/data/mock_data/mock_deals.dart';
 import 'package:coupon_code/app/data/models/deal_model.dart';
 import 'package:coupon_code/app/modules/user/discover_bar/coupon_code/qr_code.dart';
+import 'package:coupon_code/app/modules/user/discover_bar/discover_details/views/widgets/deal_creation_preview_app_bar.dart';
+import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -13,20 +16,19 @@ import '../../../../../core/values/app_assets.dart';
 import '../../../../../core/values/app_color.dart';
 import '../../../../../core/values/app_text_styles.dart';
 import '../../../../../core/widgets/App_button.dart';
-import '../../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
 import '../controllers/discover_details_controller.dart';
 
 class ServiceDetailsPage extends StatelessWidget {
-  ServiceDetailsPage({super.key, this.id, this.dealItem});
+  ServiceDetailsPage({super.key, this.id, this.dealItem, this.isNetworkImage = true});
 
   final int? id;
   final DealModel? dealItem;
+  final bool? isNetworkImage;
 
   final controller = Get.put(ServiceDetailsController());
 
   @override
   Widget build(BuildContext context) {
-    final navController = Get.find<UserNavigationBarController>();
     DealModel? deal;
 
     if (id != null) {
@@ -48,14 +50,9 @@ class ServiceDetailsPage extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: CommonAppBar(
-        title: "Deal Details",
-        showBack: true,
-        onBack: () {
-          // Close the overlay page instead of default back
-          navController.closeOverlayPage();
-        },
-      ),
+      appBar: dealItem == null
+          ? CommonAppBar(title: "Deal Details", showBack: true)
+          : DealCreationPreviewAppBar(),
 
       body: SingleChildScrollView(
         child: Padding(
@@ -75,11 +72,18 @@ class ServiceDetailsPage extends StatelessWidget {
                       itemCount: deal.media.length,
                       onPageChanged: controller.onPageChanged,
                       itemBuilder: (_, index) {
-                        return CachedNetworkImage(
-                          imageUrl: deal!.media[index].imageUrl,
-                          fit: .cover,
-                          width: double.infinity,
-                        );
+                        final imageUrl = deal!.media[index].imageUrl;
+
+                        return isNetworkImage ?? true
+                            ? CachedNetworkImage(
+                                imageUrl: imageUrl,
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                placeholder: (_, _) =>
+                                    const Center(child: CircularProgressIndicator()),
+                                errorWidget: (_, _, _) => const Icon(Icons.broken_image),
+                              )
+                            : Image.file(File(imageUrl), fit: BoxFit.cover, width: double.infinity);
                       },
                     ),
 
@@ -209,21 +213,27 @@ class ServiceDetailsPage extends StatelessWidget {
                     /// LEFT SIDE (prices + discount)
                     Expanded(
                       child: Row(
+                        mainAxisAlignment: .spaceBetween,
                         children: [
-                          Text(
-                            "\$${deal.afterDiscountPrice.toStringAsFixed(2)}",
-                            style: const TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            "\$${deal.regularPrice.toStringAsFixed(2)}",
-                            style: const TextStyle(
-                              fontSize: 20,
-                              color: Colors.grey,
-                              decoration: TextDecoration.lineThrough,
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                "\$${deal.afterDiscountPrice.toStringAsFixed(2)}",
+                                style: const TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                "\$${deal.regularPrice.toStringAsFixed(2)}",
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.grey,
+                                  decoration: TextDecoration.lineThrough,
+                                ),
+                              ),
+                            ],
                           ),
                           const SizedBox(width: 8),
+
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
@@ -242,31 +252,34 @@ class ServiceDetailsPage extends StatelessWidget {
                         ],
                       ),
                     ),
-
-                    /// RIGHT SIDE (countdown)
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.orange.withOpacity(0.15),
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 4,
-                            offset: Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: const Text(
-                        "10d   08h   54m   23s",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.orange,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
                   ],
+                ),
+              ),
+
+              /// Countdown
+              Align(
+                alignment: .centerRight,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 4,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: const Text(
+                    "10d   08h   54m   23s",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.orange,
+                      fontSize: 14,
+                    ),
+                  ),
                 ),
               ),
 
@@ -368,34 +381,46 @@ class ServiceDetailsPage extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            // padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsetsGeometry.only(top: 1, right: 16, bottom: 20, left: 16),
             child: Row(
               children: [
-                Expanded(
-                  child: AppButton(
-                    text: 'Save For Later',
-                    onPressed: () {},
-                    backgroundColor: Colors.white70,
-                    textColor: AppColor.primary,
-                    borderColor: AppColor.primary,
-                    leading: SvgPicture.asset(
-                      AppAssets.saved,
-                      width: 18,
-                      height: 18,
-                      colorFilter: const ColorFilter.mode(AppColor.primary, BlendMode.srcIn),
+                if (dealItem != null)
+                  Expanded(
+                    child: AppButton(
+                      text: 'Payment & Publish',
+                      onPressed: () => Get.toNamed(AppRoutes.PAYMENT_METHOD),
                     ),
                   ),
-                ),
 
-                const SizedBox(width: 16),
-                Expanded(
-                  child: AppButton(
-                    onPressed: () {
-                      showCouponDemoPopup();
-                    },
-                    text: 'Show Coupon',
+                if (dealItem == null) ...[
+                  Expanded(
+                    child: AppButton(
+                      text: 'Save For Later',
+                      onPressed: () {},
+                      backgroundColor: Colors.white70,
+                      textColor: AppColor.primary,
+                      borderColor: AppColor.primary,
+                      leading: SvgPicture.asset(
+                        AppAssets.saved,
+                        width: 18,
+                        height: 18,
+                        colorFilter: const ColorFilter.mode(AppColor.primary, BlendMode.srcIn),
+                      ),
+                    ),
                   ),
-                ),
+
+                  if (dealItem == null) const SizedBox(width: 16),
+                  if (dealItem == null)
+                    Expanded(
+                      child: AppButton(
+                        onPressed: () {
+                          showCouponDemoPopup();
+                        },
+                        text: 'Show Coupon',
+                      ),
+                    ),
+                ],
               ],
             ),
           ),

@@ -34,4 +34,9 @@ class AppAssets {
   static const sevenDaysDeal = 'assets/icons/seven_days.png';
   static const fourteenDaysDeal = 'assets/icons/fourteen_days.png';
   static const thirtyDaysDeal = 'assets/icons/thirty_days.png';
+
+  // Payment method
+  static const visaPaymentMethod = 'assets/icons/visa.svg';
+  static const discoverPaymentMethod = 'assets/icons/discover_card_logo.svg';
+  static const paypalPaymentMethod = 'assets/icons/paypal.svg';
 }

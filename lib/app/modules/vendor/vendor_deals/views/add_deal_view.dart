@@ -199,7 +199,10 @@ class AddDealView extends GetView<VendorDealsController> {
               controller.validateAndSubmit();
 
               if (!controller.hasError.value) {
-                // TODO: navigate to preview page
+                Get.toNamed(
+                  AppRoutes.DISCOVERDETAILS,
+                  arguments: {'dealItem': controller.deal.value, 'isNetworkImage': false},
+                );
               }
             },
           ),

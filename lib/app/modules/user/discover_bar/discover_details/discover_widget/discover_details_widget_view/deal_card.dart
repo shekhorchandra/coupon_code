@@ -1,11 +1,12 @@
-import 'package:coupon_code/app/modules/user/discover_bar/discover_details/views/discover_details_view_page.dart';
+import 'dart:math';
+
+import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 import '../../../../../../core/values/app_assets.dart';
 import '../../../../../../core/widgets/App_button.dart';
-import '../../../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
 import '../deal_badge.dart';
 import '../deal_overlay_text.dart';
 
@@ -16,7 +17,6 @@ class DealCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final navController = Get.find<UserNavigationBarController>();
     final isShort = index % 2 == 0;
 
     return Container(
@@ -101,7 +101,10 @@ class DealCard extends StatelessWidget {
                 AppButton(
                   text: "Redeem Now",
                   height: 32,
-                  onPressed: () => navController.openOverlayPage(ServiceDetailsPage(id: 1)),
+                  onPressed: () => Get.toNamed(
+                    AppRoutes.DISCOVERDETAILS,
+                    arguments: {'id': Random().nextInt(50) + 1},
+                  ),
                 ),
               ],
             ),
