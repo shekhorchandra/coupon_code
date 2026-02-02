@@ -17,9 +17,11 @@ import '../../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
 import '../controllers/discover_details_controller.dart';
 
 class ServiceDetailsPage extends StatelessWidget {
-  ServiceDetailsPage({super.key, required this.id});
+  ServiceDetailsPage({super.key, this.id, this.dealItem});
 
-  final int id;
+  final int? id;
+  final DealModel? dealItem;
+
   final controller = Get.put(ServiceDetailsController());
 
   @override
@@ -27,14 +29,18 @@ class ServiceDetailsPage extends StatelessWidget {
     final navController = Get.find<UserNavigationBarController>();
     DealModel? deal;
 
-    final List<DealModel> deals = (jsonDecode(mockDeals) as List)
-        .map((e) => DealModel.fromMap(e as Map<String, dynamic>))
-        .toList();
+    if (id != null) {
+      final List<DealModel> deals = (jsonDecode(mockDeals) as List)
+          .map((e) => DealModel.fromMap(e as Map<String, dynamic>))
+          .toList();
 
-    try {
-      deal = deals.firstWhere((d) => d.id == id);
-    } catch (_) {
-      deal = null;
+      try {
+        deal = deals.firstWhere((d) => d.id == id);
+      } catch (_) {
+        deal = null;
+      }
+    } else {
+      deal = dealItem;
     }
 
     if (deal == null) {
