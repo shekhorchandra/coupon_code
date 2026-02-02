@@ -1,9 +1,11 @@
-import 'package:coupon_code/app/modules/user/discover_bar/discover_details/views/discover_details_view_page.dart';
+import 'dart:math';
+
+import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+
 import '../../../../../../core/values/app_assets.dart';
-import '../../../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
 import '../../../../../../core/widgets/App_button.dart';
 import '../deal_badge.dart';
 import '../deal_overlay_text.dart';
@@ -15,7 +17,6 @@ class DealCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final navController = Get.find<UserNavigationBarController>();
     final isShort = index % 2 == 0;
 
     return Container(
@@ -32,9 +33,7 @@ class DealCard extends StatelessWidget {
               Container(
                 height: isShort ? 155 : 255,
                 decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(16),
-                  ),
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
                   image: const DecorationImage(
                     image: NetworkImage('https://picsum.photos/300'),
                     fit: BoxFit.cover,
@@ -42,11 +41,7 @@ class DealCard extends StatelessWidget {
                 ),
               ),
               Positioned(top: 8, left: 8, child: dealBadge("55% off")),
-              Positioned(
-                bottom: 8,
-                right: 8,
-                child: dealOverlayText("● 1.2 km away"),
-              ),
+              Positioned(bottom: 8, right: 8, child: dealOverlayText("● 1.2 km away")),
             ],
           ),
 
@@ -69,10 +64,7 @@ class DealCard extends StatelessWidget {
                       AppAssets.category, // or any salon/shop icon
                       width: 14,
                       height: 14,
-                      colorFilter: const ColorFilter.mode(
-                        Colors.grey,
-                        BlendMode.srcIn,
-                      ),
+                      colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
                     ),
                     const SizedBox(width: 4),
                     const Text(
@@ -86,10 +78,7 @@ class DealCard extends StatelessWidget {
 
                 Row(
                   children: const [
-                    Text(
-                      "\$20",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
+                    Text("\$20", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                     SizedBox(width: 6),
                     Text(
                       "\$30",
@@ -101,13 +90,9 @@ class DealCard extends StatelessWidget {
                     ),
                     SizedBox(width: 24),
 
-
                     Text(
                       "10d   08h",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.orange,
-                      ),
+                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange),
                     ),
                   ],
                 ),
@@ -116,8 +101,10 @@ class DealCard extends StatelessWidget {
                 AppButton(
                   text: "Redeem Now",
                   height: 32,
-                  onPressed: () =>
-                      navController.openOverlayPage(ServiceDetailsPage()),
+                  onPressed: () => Get.toNamed(
+                    AppRoutes.DISCOVERDETAILS,
+                    arguments: {'id': Random().nextInt(50) + 1},
+                  ),
                 ),
               ],
             ),

@@ -1,4 +1,3 @@
-
 import 'package:coupon_code/app/modules/user/saved/controllers/save_controller.dart';
 import 'package:coupon_code/app/modules/user/saved/widget/save_item_card.dart';
 import 'package:flutter/material.dart';
@@ -6,15 +5,11 @@ import 'package:get/get.dart';
 
 import '../../../../core/values/app_color.dart';
 import '../../../../core/widgets/common_app_bar.dart';
-import '../../../../routes/app_routes.dart';
 import '../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
-import '../../categories/category_details/views/categoty_details_view.dart';
 import '../../discover_bar/discover_details/views/discover_details_view_page.dart';
-
 
 class UserMySavesPage extends GetView<SavesController> {
   const UserMySavesPage({super.key});
-
 
   @override
   Widget build(BuildContext context) {
@@ -34,11 +29,7 @@ class UserMySavesPage extends GetView<SavesController> {
           // --- Tabs ---
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _tabButton("All", 0),
-              _tabButton("Available", 1),
-              _tabButton("Expired", 2),
-            ],
+            children: [_tabButton("All", 0), _tabButton("Available", 1), _tabButton("Expired", 2)],
           ),
 
           const SizedBox(height: 8),
@@ -59,9 +50,7 @@ class UserMySavesPage extends GetView<SavesController> {
               }
 
               if (listToShow.isEmpty) {
-                return const Center(
-                  child: Text("No items found"),
-                );
+                return const Center(child: Text("No items found"));
               }
 
               return ListView.builder(
@@ -78,7 +67,7 @@ class UserMySavesPage extends GetView<SavesController> {
                     isAvailable: item.isAvailable,
                     Status: item.Status,
                     onTap: () {
-                      navController.openOverlayPage(ServiceDetailsPage());
+                      navController.openOverlayPage(ServiceDetailsPage(id: 1));
                     },
                   );
                 },
@@ -113,5 +102,4 @@ class UserMySavesPage extends GetView<SavesController> {
       );
     });
   }
-
 }

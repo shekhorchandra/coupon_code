@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:coupon_code/app/core/values/app_color.dart';
 import 'package:coupon_code/app/data/models/deal_category_model.dart';
+import 'package:coupon_code/app/data/models/deal_media_model.dart';
+import 'package:coupon_code/app/data/models/deal_model.dart';
 import 'package:coupon_code/app/data/models/deal_plan_model.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/data/deal_plans.dart';
 import 'package:flutter/material.dart';
@@ -34,14 +36,70 @@ class VendorDealsController extends GetxController {
   // }
 
   // Add New Deal
+  bool _isUpdatingDiscount = false;
+  bool _isUpdatingFinalPrice = false;
+
+  @override
+  void onInit() {
+    super.onInit();
+
+    priceController.addListener(_calculateFromDiscount);
+    discountController.addListener(_calculateFinalPrice);
+    finalPriceController.addListener(_calculateDiscount);
+  }
+
+  void _calculateFinalPrice() {
+    if (_isUpdatingFinalPrice) return;
+
+    final price = double.tryParse(priceController.text);
+    final discount = double.tryParse(discountController.text);
+
+    if (price == null || discount == null) return;
+
+    _isUpdatingDiscount = true;
+
+    final finalPrice = price - (price * discount / 100);
+    finalPriceController.text = finalPrice.toStringAsFixed(2);
+
+    _isUpdatingDiscount = false;
+  }
+
+  void _calculateDiscount() {
+    if (_isUpdatingDiscount) return;
+
+    final price = double.tryParse(priceController.text);
+    final finalPrice = double.tryParse(finalPriceController.text);
+
+    if (price == null || finalPrice == null || price == 0) return;
+
+    _isUpdatingFinalPrice = true;
+
+    final discount = ((price - finalPrice) / price) * 100;
+    discountController.text = discount.toStringAsFixed(2);
+
+    _isUpdatingFinalPrice = false;
+  }
+
+  void _calculateFromDiscount() {
+    if (discountController.text.isNotEmpty) {
+      _calculateFinalPrice();
+    }
+  }
+
   // Text Controllers
-  final titleController = TextEditingController();
-  final highlightController = TextEditingController();
-  final descController = TextEditingController();
-  final couponController = TextEditingController();
-  final priceController = TextEditingController();
-  final discountController = TextEditingController();
-  final finalPriceController = TextEditingController();
+  final titleController = TextEditingController(text: 'Fitness Jump Rope with LCD Counter');
+  final highlightController = TextEditingController(
+    text:
+        'In congue. Etiam justo. Etiam pretium iaculis justo. In hac habitasse platea dictumst. Etiam faucibus cursus urna.',
+  );
+  final descController = TextEditingController(
+    text:
+        'Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.\n\nPraesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede.',
+  );
+  final couponController = TextEditingController(text: 'EK8648');
+  final priceController = TextEditingController(text: '543');
+  final discountController = TextEditingController(text: '25.00');
+  final finalPriceController = TextEditingController(text: '135.75');
 
   // Selections
   Rx<DealCategoryModel> selectedCategory = DealCategoryModel(id: -1, name: '').obs;
@@ -54,6 +112,7 @@ class VendorDealsController extends GetxController {
   Rx<DateTimeRange?> selectedValidityRange = Rx<DateTimeRange?>(null);
   Rx<bool> acceptedTnC = false.obs;
   Rx<bool> hasError = true.obs;
+  Rxn<DealModel> deal = Rxn<DealModel>();
 
   // Image Picker
   var images = <File>[].obs;
@@ -90,6 +149,35 @@ class VendorDealsController extends GetxController {
     if (currentImageIndex.value > 0) {
       pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeIn);
     }
+  }
+
+  DealModel buildDealModel() {
+    return DealModel(
+      id: DateTime.now().millisecondsSinceEpoch, // temp ID for mock / local
+      media: images
+          .asMap()
+          .entries
+          .map(
+            (entry) => DealMediaModel(
+              id: entry.key,
+              imageUrl: entry.value.path, // local file path
+              isPrimary: entry.key == 0,
+            ),
+          )
+          .toList(),
+      title: titleController.text.trim(),
+      category: selectedCategory.value,
+      highlights: highlightController.text.trim(),
+      description: descController.text.trim(),
+      couponCode: couponController.text.trim(),
+      regularPrice: double.parse(priceController.text),
+      discountPercentage: double.parse(discountController.text),
+      afterDiscountPrice: double.parse(finalPriceController.text),
+      dealPlan: selectedDealPlan.value!,
+      expireDate: selectedValidityRange.value!.end,
+      views: 0,
+      isActive: true,
+    );
   }
 
   void validateAndSubmit() {
@@ -147,6 +235,8 @@ class VendorDealsController extends GetxController {
     hasError.value = false;
 
     // TODO: Call repository/API here
+    deal.value = buildDealModel();
+    debugPrint("Created Deal: ${deal.value}");
   }
 
   void _showError(String message) {

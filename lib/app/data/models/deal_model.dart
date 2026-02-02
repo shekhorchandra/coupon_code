@@ -16,7 +16,7 @@ class DealModel {
   final String description;
   final String couponCode;
   final double regularPrice;
-  final int discountPercentage;
+  final double discountPercentage;
   final double afterDiscountPrice;
   final DealPlanModel dealPlan;
   final DateTime expireDate;
@@ -49,7 +49,7 @@ class DealModel {
     String? description,
     String? couponCode,
     int? regularPrice,
-    int? discountPercentage,
+    double? discountPercentage,
     int? afterDiscountPrice,
     DealPlanModel? dealPlan,
     DateTime? expireDate,
@@ -123,7 +123,7 @@ class DealModel {
       description: map['description'] ?? '',
       couponCode: map['couponCode'] ?? '',
       regularPrice: (map['regularPrice'] as num? ?? 0.0).toDouble(),
-      discountPercentage: (map['discountPercentage'] as num? ?? 0).toInt(),
+      discountPercentage: (map['discountPercentage'] as num? ?? 0).toDouble(),
       afterDiscountPrice: (map['afterDiscountPrice'] as num? ?? 0.0).toDouble(),
       dealPlan: (map['dealPlan'] != null && (map['dealPlan'] as List).isNotEmpty)
           ? DealPlanModel.fromMap(map['dealPlan'][0])
