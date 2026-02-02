@@ -31,9 +31,16 @@ class DiscoverView extends GetView<DiscoverController> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text("Explore Nearby", style: AppTextStyles.HeaderTitle),
+                  // IconButton(
+                  //   icon: const Icon(Icons.notifications_none),
+                  //   onPressed: controller.onNotificationPressed,
+                  // ),
                   IconButton(
-                    icon: const Icon(Icons.notifications_none),
-                    onPressed: controller.onNotificationPressed,
+                      icon: Badge.count(
+                          count: 9,
+                        child: const Icon(Icons.notifications_none),
+                      ),
+                    onPressed: () {},
                   ),
                 ],
               ),
@@ -57,9 +64,13 @@ class DiscoverView extends GetView<DiscoverController> {
                       const SizedBox(width: 8),
                       AppButton(
                         text: "ZIP Code",
-                        width: 110,
-                        height: 42,
+                        width: 100,
+                        height: 40,
+                        icon: Icons.location_on_outlined,
                         onPressed: controller.onZipPressed,
+                        backgroundColor: Colors.white,
+                        textColor: AppColor.primary,
+                        borderColor: AppColor.primary,
                       ),
                     ],
                   ),
@@ -73,7 +84,10 @@ class DiscoverView extends GetView<DiscoverController> {
                       children: [
                         const Icon(Icons.location_on, color: AppColor.primary),
                         const SizedBox(width: 4),
-                        Text("New York, United States", style: AppTextStyles.Text),
+                        Text(
+                          "New York, United States",
+                          style: AppTextStyles.Text,
+                        ),
                         const SizedBox(width: 4),
                         const Icon(Icons.keyboard_arrow_down, size: 18),
                       ],
@@ -83,11 +97,11 @@ class DiscoverView extends GetView<DiscoverController> {
               ),
             ),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: 6),
 
             // POPULAR CATEGORIES
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
               color: Colors.grey.shade100,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,12 +114,17 @@ class DiscoverView extends GetView<DiscoverController> {
                         Text("Popular Categories", style: AppTextStyles.Title),
                         TextButton(
                           onPressed: () {
-                            final navController = Get.find<UserNavigationBarController>();
-                            navController.openOverlayPage(const CategoriesView());
+                            final navController =
+                                Get.find<UserNavigationBarController>();
+                            navController.openOverlayPage(
+                              const CategoriesView(),
+                            );
                           },
-                          child: Text("See All", style: AppTextStyles.TextButton),
+                          child: Text(
+                            "See All",
+                            style: AppTextStyles.TextButton,
+                          ),
                         ),
-
                       ],
                     ),
                   ),
@@ -120,19 +139,25 @@ class DiscoverView extends GetView<DiscoverController> {
                           padding: const EdgeInsets.symmetric(horizontal: 6),
                           child: InkWell(
                             borderRadius: BorderRadius.circular(40),
-                            onTap: () => // Get the navigation controller
-
-                            // Open overlay page instead of full navigation
-                            navController.openOverlayPage( CategotyDetails()),
+                            onTap:
+                                () => // Get the navigation controller
+                                    // Open overlay page instead of full navigation
+                                    navController.openOverlayPage(
+                                      CategotyDetails(),
+                                    ),
                             child: Column(
                               children: [
                                 CircleAvatar(
                                   radius: 28,
-                                  backgroundColor: AppColor.secondary.withOpacity(0.2),
+                                  backgroundColor: AppColor.secondary
+                                      .withOpacity(0.2),
                                   child: Image.asset(AppAssets.food, width: 38),
                                 ),
                                 const SizedBox(height: 4),
-                                const Text("Food & Drink", style: TextStyle(fontSize: 12)),
+                                const Text(
+                                  "Food & Drink",
+                                  style: TextStyle(fontSize: 12),
+                                ),
                               ],
                             ),
                           ),

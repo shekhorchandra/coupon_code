@@ -28,11 +28,11 @@ class UserNavigationBarPage extends GetView<UserNavigationBarController> {
 
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(100),
-              border: Border.all(color: AppColor.bw.s100, width: 0.5),
+              border: Border.all(color: AppColor.textcolor, width: 0.5),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withAlpha(13),
