@@ -17,10 +17,7 @@ class ServiceDetailsController extends GetxController {
 
   void next() {
     if (currentImage.value < images.length - 1) {
-      pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
+      pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
     }
   }
 

@@ -1,26 +1,46 @@
+import 'dart:convert';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coupon_code/app/core/widgets/common_app_bar.dart';
+import 'package:coupon_code/app/data/mock_data/mock_deals.dart';
+import 'package:coupon_code/app/data/models/deal_model.dart';
 import 'package:coupon_code/app/modules/user/discover_bar/coupon_code/qr_code.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../../../../core/values/app_assets.dart';
 import '../../../../../core/values/app_color.dart';
 import '../../../../../core/values/app_text_styles.dart';
 import '../../../../../core/widgets/App_button.dart';
 import '../../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
-import '../../../bottom_nav_bar/views/bottom_nav_view.dart';
 import '../controllers/discover_details_controller.dart';
 
 class ServiceDetailsPage extends StatelessWidget {
-  ServiceDetailsPage({super.key});
+  ServiceDetailsPage({super.key, this.id = 1});
 
+  final int? id;
   final controller = Get.put(ServiceDetailsController());
 
   @override
   Widget build(BuildContext context) {
     final navController = Get.find<UserNavigationBarController>();
+    DealModel? deal;
+
+    final List<DealModel> deals = (jsonDecode(mockDeals) as List)
+        .map((e) => DealModel.fromMap(e as Map<String, dynamic>))
+        .toList();
+
+    try {
+      deal = deals.firstWhere((d) => d.id == id);
+    } catch (_) {
+      deal = null;
+    }
+
+    if (deal == null) {
+      return const Scaffold(body: Center(child: Text('Deal not found')));
+    }
+
     return Scaffold(
       appBar: CommonAppBar(
         title: "Deal Details",
@@ -46,12 +66,12 @@ class ServiceDetailsPage extends StatelessWidget {
                     /// IMAGE SLIDER
                     PageView.builder(
                       controller: controller.pageController,
-                      itemCount: controller.images.length,
+                      itemCount: deal.media.length,
                       onPageChanged: controller.onPageChanged,
                       itemBuilder: (_, index) {
-                        return Image.asset(
-                          controller.images[index],
-                          fit: BoxFit.cover,
+                        return CachedNetworkImage(
+                          imageUrl: deal!.media[index].imageUrl,
+                          fit: .cover,
                           width: double.infinity,
                         );
                       },
@@ -76,9 +96,7 @@ class ServiceDetailsPage extends StatelessWidget {
                       right: 12,
                       child: Obx(
                         () => IconButton(
-                          onPressed:
-                              controller.currentImage.value ==
-                                  controller.images.length - 1
+                          onPressed: controller.currentImage.value == deal!.media.length - 1
                               ? null
                               : controller.next,
                           icon: const Icon(Icons.arrow_forward_ios),
@@ -93,16 +111,13 @@ class ServiceDetailsPage extends StatelessWidget {
                       right: 12,
                       child: Obx(
                         () => Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 6,
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                           decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.6),
+                            color: Colors.black.withAlpha(128),
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: Text(
-                            '${controller.currentImage.value + 1} / ${controller.images.length}',
+                            '${controller.currentImage.value + 1} / ${deal!.media.length}',
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 12,
@@ -120,7 +135,7 @@ class ServiceDetailsPage extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.all(8),
                 child: Text(
-                  "The Ultimate Radiance Revival: Luxurious Facial, Skin Rejuvenation, and Glowing Treatment Experience",
+                  deal.title,
                   style: AppTextStyles.MenuTitle.copyWith(color: Colors.black),
                 ),
               ),
@@ -134,10 +149,7 @@ class ServiceDetailsPage extends StatelessWidget {
                       AppAssets.category, // or any salon/shop icon
                       width: 14,
                       height: 14,
-                      colorFilter: const ColorFilter.mode(
-                        Colors.grey,
-                        BlendMode.srcIn,
-                      ),
+                      colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
                     ),
                     const SizedBox(width: 4),
                     const Text(
@@ -159,9 +171,7 @@ class ServiceDetailsPage extends StatelessWidget {
                         "1234 Streets, New York  ● 1.2 km away",
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: AppTextStyles.MenuButtonText.copyWith(
-                          color: AppColor.titleColor,
-                        ),
+                        style: AppTextStyles.MenuButtonText.copyWith(color: AppColor.titleColor),
                       ),
                     ),
 
@@ -190,13 +200,7 @@ class ServiceDetailsPage extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
-                    const Text(
-                      "\$20",
-                      style: TextStyle(
-                        fontSize: 36,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    const Text("\$20", style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold)),
                     const SizedBox(width: 6),
                     const Text(
                       "\$30",
@@ -209,10 +213,7 @@ class ServiceDetailsPage extends StatelessWidget {
 
                     const SizedBox(width: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: AppColor.primary,
                         borderRadius: BorderRadius.circular(8),
@@ -230,14 +231,9 @@ class ServiceDetailsPage extends StatelessWidget {
                     const SizedBox(width: 34),
 
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: Colors.orange.withOpacity(
-                          0.15,
-                        ), // light orange background
+                        color: Colors.orange.withOpacity(0.15), // light orange background
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
@@ -333,8 +329,7 @@ Results You Can Expect:
                   child: Image.asset(
                     'assets/images/redeem.png', // replace with your infographic image
                     width: double.infinity, // take full width
-                    fit: BoxFit
-                        .contain, // or BoxFit.cover depending on your design
+                    fit: BoxFit.contain, // or BoxFit.cover depending on your design
                   ),
                 ),
               ),
@@ -348,10 +343,7 @@ Results You Can Expect:
                     // Section Title
                     const Text(
                       "Location",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
 
                     const SizedBox(height: 8),
@@ -413,10 +405,7 @@ Results You Can Expect:
                       AppAssets.saved,
                       width: 18,
                       height: 18,
-                      colorFilter: const ColorFilter.mode(
-                        AppColor.primary,
-                        BlendMode.srcIn,
-                      ),
+                      colorFilter: const ColorFilter.mode(AppColor.primary, BlendMode.srcIn),
                     ),
                   ),
                 ),
@@ -441,10 +430,7 @@ Results You Can Expect:
   // ================= COMMON FOLDABLE SECTION =================
   static Widget _section({required String title, required Widget child}) {
     return ExpansionTile(
-      title: Text(
-        title,
-        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-      ),
+      title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
       childrenPadding: const EdgeInsets.symmetric(horizontal: 16),
       children: [child],
     );
