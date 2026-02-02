@@ -13,6 +13,7 @@ class CustomTextField extends StatelessWidget {
   final int? maxLength;
   final int? maxLines;
   final String? errorText;
+  final FocusNode? focusNode;
 
   const CustomTextField({
     super.key,
@@ -26,6 +27,7 @@ class CustomTextField extends StatelessWidget {
     this.maxLength,
     this.maxLines,
     this.errorText,
+    this.focusNode,
   });
 
   @override
@@ -33,6 +35,7 @@ class CustomTextField extends StatelessWidget {
     final safeMaxLines = obscure ? 1 : (maxLines ?? 1);
     return TextField(
       controller: controller,
+      focusNode: focusNode,
       obscureText: obscure,
       keyboardType: keyboardType,
       onChanged: onChanged,

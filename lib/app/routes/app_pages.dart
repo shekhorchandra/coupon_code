@@ -176,7 +176,7 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.ADD_PAYMENT_METHOD,
-      page: () => const AddNewCardView(),
+      page: () => AddNewCardView(),
       binding: PaymentMethodBinding(),
     ),
 
