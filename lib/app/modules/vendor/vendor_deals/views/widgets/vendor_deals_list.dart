@@ -43,10 +43,15 @@ class VendorDealsList extends GetView<VendorDashboardController> {
         itemCount: filteredDeals.length,
         itemBuilder: (context, index) {
           final deal = filteredDeals[index];
-          return DealTile(
-            key: ValueKey(deal.id),
-            deal: deal,
-            dealType: dealController.selectedTab.value,
+          return Column(
+            children: [
+              DealTile(
+                key: ValueKey(deal.id),
+                deal: deal,
+                dealType: dealController.selectedTab.value,
+              ),
+              const SizedBox(height: 10),
+            ],
           );
         },
       );

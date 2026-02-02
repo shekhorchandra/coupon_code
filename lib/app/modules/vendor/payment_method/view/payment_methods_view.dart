@@ -1,6 +1,7 @@
 import 'package:coupon_code/app/core/values/app_color.dart';
 import 'package:coupon_code/app/core/values/app_sizes.dart';
 import 'package:coupon_code/app/core/values/app_text.dart';
+import 'package:coupon_code/app/core/widgets/App_button.dart';
 import 'package:coupon_code/app/core/widgets/common_app_bar.dart';
 import 'package:coupon_code/app/data/mock_data/mock_payment_method.dart';
 import 'package:coupon_code/app/modules/vendor/payment_method/controller/payment_method_controller.dart';
@@ -75,6 +76,28 @@ class PaymentMethodsView extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: AppSizes.denseButtonHeight,
+          vertical: AppSizes.denseButtonHeight,
+        ),
+        child: AppButton(
+          text: 'Publish Deal',
+          onPressed: () {
+            if (controller.selectedPaymentMethod == -1) {
+              Get.snackbar(
+                'Error',
+                'Please select a payment method!',
+                snackPosition: SnackPosition.TOP,
+                backgroundColor: AppColor.error,
+                colorText: AppColor.white,
+                margin: const EdgeInsets.all(15),
+              );
+            }
+          },
         ),
       ),
     );
