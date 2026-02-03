@@ -159,7 +159,7 @@ class ServiceDetailsPage extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     SvgPicture.asset(
-                      AppAssets.category, // or any salon/shop icon
+                      AppAssets.category,
                       width: 14,
                       height: 14,
                       colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
@@ -193,7 +193,7 @@ class ServiceDetailsPage extends StatelessWidget {
                       icon: const Icon(Icons.favorite_border),
                       color: Colors.grey,
                       onPressed: () {
-                        // handle save / favorite
+                        // TODO: handle save / favorite
                       },
                     ),
 

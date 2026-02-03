@@ -7,6 +7,7 @@ import 'package:coupon_code/app/modules/vendor/vendor_dashboard/views/vendor_das
 import 'package:coupon_code/app/modules/vendor/vendor_deals/bindings/vendor_deals_binding.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/views/add_deal_view.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/views/vendor_deals_view.dart';
+import 'package:coupon_code/app/modules/vendor/vendor_deals/views/vendor_single_deal_view.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_menu/bindings/vendor_menu_binding.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_menu/views/vendor_menu_view.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_navigation_bar/bindings/vendor_navigation_bar_binding.dart';
@@ -163,6 +164,15 @@ class AppPages {
     GetPage(
       name: AppRoutes.ADD_DEAL,
       page: () => const AddDealView(),
+      binding: VendorDealsBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.VENDOR_DEAL_DETAILS,
+      page: () {
+        final args = Get.arguments as Map<String, dynamic>? ?? {};
+
+        return VendorSingleDealView(deal: args['dealItem'] as DealModel);
+      },
       binding: VendorDealsBinding(),
     ),
     GetPage(

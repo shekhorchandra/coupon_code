@@ -3,6 +3,7 @@ import 'package:coupon_code/app/core/values/app_color.dart';
 import 'package:coupon_code/app/core/values/app_sizes.dart';
 import 'package:coupon_code/app/core/values/app_text.dart';
 import 'package:coupon_code/app/core/widgets/App_button.dart';
+import 'package:coupon_code/app/core/widgets/section_heading.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_dashboard/controllers/vendor_dashboard_controller.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_dashboard/views/widgets/overview_card.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_dashboard/views/widgets/overview_chart.dart';
@@ -104,6 +105,9 @@ class VendorDashboardPage extends GetView<VendorDashboardController> {
                 const SizedBox(height: 30),
 
                 // Overview Chart
+                SectionHeading(title: "Personal Overview", subtitle: "last 1 year"),
+                const SizedBox(height: 10),
+
                 OverviewChart(),
                 const SizedBox(height: 30),
 
