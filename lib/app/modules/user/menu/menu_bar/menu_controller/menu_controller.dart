@@ -1,11 +1,7 @@
 import 'package:get/get.dart';
+
 import '../../../../../routes/app_routes.dart';
 import '../../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
-import '../../about_us/views/About_View.dart';
-import '../../contact_us/contact_view/contact_us_view.dart';
-import '../../help_support/help_support_view/Help_Support_View.dart';
-import '../../privacy_policy/privacy_policy_view/Privacy_Policy_View.dart';
-import '../../terms_condition/terms_condition_view/Terms_Condition_View.dart';
 
 class MenuController extends GetxController {
   final navController = Get.find<UserNavigationBarController>();
@@ -15,7 +11,7 @@ class MenuController extends GetxController {
   }
 
   void goToAbout() {
-    navController.openOverlayPage(const AboutView());
+    Get.toNamed(AppRoutes.ABOUT);
   }
 
   void onAdvertiseTap() {
@@ -23,19 +19,19 @@ class MenuController extends GetxController {
   }
 
   void onContactUsTap() {
-    navController.openOverlayPage(const ContactUsView());
+    Get.toNamed(AppRoutes.CONTACT_US);
   }
 
   void onHelpSupportTap() {
-    navController.openOverlayPage(const HelpSupportView());
+    Get.toNamed(AppRoutes.HELP_SUPPORT);
   }
 
   void onPrivacyPolicyTap() {
-    navController.openOverlayPage(const PrivacyPolicyView());
+    Get.toNamed(AppRoutes.PRIVACYPOLICY);
   }
 
   void onTermsTap() {
-    navController.openOverlayPage(const TermsConditionView());
+    Get.toNamed(AppRoutes.TERMSCONDITION);
   }
 
   void onRateAppTap() {

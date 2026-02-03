@@ -4,23 +4,14 @@ import 'package:get/get.dart';
 
 import '../../../../../core/values/app_text_styles.dart';
 import '../../../../../core/widgets/common_app_bar.dart';
-import '../../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
 
 class AboutView extends GetView<AboutController> {
   const AboutView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final navController = Get.find<UserNavigationBarController>();
     return Scaffold(
-      appBar: CommonAppBar(
-        title: "About Us",
-        showBack: true,
-        onBack: () {
-          // Close the overlay page instead of default back
-          navController.closeOverlayPage();
-        },
-      ),
+      appBar: CommonAppBar(title: "About Us"),
 
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16),

@@ -1,4 +1,4 @@
-
+import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:flutter/material.dart' hide MenuController;
 import 'package:get/get.dart';
 
@@ -6,8 +6,6 @@ import '../../../../../core/values/app_color.dart';
 import '../../../../../core/values/app_text_styles.dart';
 import '../../../../../core/widgets/App_button.dart';
 import '../../../../../core/widgets/common_app_bar.dart';
-import '../../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
-import '../../about_us/views/About_View.dart';
 import '../menu_controller/menu_controller.dart';
 
 class MenuView extends GetView<MenuController> {
@@ -31,11 +29,7 @@ class MenuView extends GetView<MenuController> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 6,
-                      offset: Offset(0, 2),
-                    ),
+                    BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 2)),
                   ],
                 ),
                 child: Row(
@@ -74,13 +68,9 @@ class MenuView extends GetView<MenuController> {
             const SizedBox(height: 12),
 
             // _menuItem(Icons.info_outline, "About Us", controller.goToAbout),
-          _menuItem(Icons.info_outline, "About Us", () {
-            final navController = Get.find<UserNavigationBarController>();
-            navController.openOverlayPage(const AboutView());
-          }),
+            _menuItem(Icons.info_outline, "About Us", () => Get.toNamed(AppRoutes.ABOUT)),
 
-
-          _menuItem(Icons.campaign_outlined, 'Advertise on App', controller.onAdvertiseTap),
+            _menuItem(Icons.campaign_outlined, 'Advertise on App', controller.onAdvertiseTap),
             _menuItem(Icons.contact_support_outlined, "Contact Us", controller.onContactUsTap),
             _menuItem(Icons.emergency, "Help & Support", controller.onHelpSupportTap),
             const SizedBox(height: 24),
@@ -94,10 +84,7 @@ class MenuView extends GetView<MenuController> {
             SizedBox(
               width: double.infinity,
               height: 52,
-              child: AppButton(
-                text: 'Logout',
-                onPressed: controller.onLogoutTap,
-              ),
+              child: AppButton(text: 'Logout', onPressed: controller.onLogoutTap),
             ),
           ],
         ),
