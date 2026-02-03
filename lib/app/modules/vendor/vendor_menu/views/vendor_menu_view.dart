@@ -1,7 +1,7 @@
-import 'package:coupon_code/app/core/widgets/App_button.dart';
+import 'package:coupon_code/app/core/values/app_sizes.dart';
+import 'package:coupon_code/app/core/values/app_text.dart';
 import 'package:coupon_code/app/core/widgets/common_app_bar.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_account/controllers/vendor_account_controller.dart';
-import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -14,12 +14,25 @@ class VendorMenuPage extends GetView<VendorAccountController> {
       appBar: CommonAppBar(title: 'Menu', showBack: false),
 
       body: SafeArea(
-        child: Column(
-          children: [
-            Text('CreateVendorAccountController'),
-
-            AppButton(text: 'Logout', onPressed: () => Get.toNamed(AppRoutes.PAYMENT_METHOD)),
-          ],
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(AppSizes.screenPadding),
+          child: Column(
+            children: [
+              // User Info
+              Container(
+                child: Row(
+                  children: [
+                    Column(
+                      children: [
+                        Text('Glamour Glow Salon', style: AppText.h5.semiBold),
+                        Text('glamourglow123@gmail.com', style: AppText.body2.medium),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
