@@ -27,7 +27,7 @@ class DealTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Get.toNamed(AppRoutes.DISCOVERDETAILS, arguments: {'id': deal.id}),
+      onTap: () => Get.toNamed(AppRoutes.VENDOR_DEAL_DETAILS, arguments: {'dealItem': deal}),
       child: Container(
         padding: EdgeInsets.only(bottom: 15),
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Color(0xFFF6F7FD)),

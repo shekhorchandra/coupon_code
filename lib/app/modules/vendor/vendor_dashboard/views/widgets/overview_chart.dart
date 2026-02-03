@@ -1,5 +1,4 @@
 import 'package:coupon_code/app/core/values/app_color.dart';
-import 'package:coupon_code/app/core/widgets/section_heading.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_dashboard/controllers/vendor_overview_chart_controller.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -16,11 +15,6 @@ class OverviewChart extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // TITLE
-        SectionHeading(title: "Personal Overview", subtitle: "last 1 year"),
-
-        const SizedBox(height: 10),
-
         // DROPDOWNS
         Row(
           children: [

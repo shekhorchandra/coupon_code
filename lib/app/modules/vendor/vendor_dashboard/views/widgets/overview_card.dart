@@ -4,9 +4,9 @@ import 'package:coupon_code/app/core/values/app_text.dart';
 import 'package:flutter/material.dart';
 
 class OverviewCard extends StatelessWidget {
-  const OverviewCard({super.key, required this.icon, required this.title, required this.number});
+  const OverviewCard({super.key, this.icon, required this.title, required this.number});
 
-  final String icon;
+  final String? icon;
   final String title;
   final String number;
 
@@ -21,14 +21,21 @@ class OverviewCard extends StatelessWidget {
       child: Column(
         children: [
           Row(
-            mainAxisAlignment: .center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(icon, height: 34),
-              const SizedBox(width: 5),
-              Text(title, style: AppText.h5.bold),
+              if (icon != null) ...[Image.asset(icon!, height: 34), const SizedBox(width: 5)],
+              Flexible(
+                child: Text(
+                  title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: AppText.h5.medium,
+                ),
+              ),
             ],
           ),
-          Text(number, style: AppText.h5.semiBold),
+          Text(number, style: AppText.h5.bold),
         ],
       ),
     );

@@ -4,10 +4,9 @@ import 'package:coupon_code/app/core/values/app_text.dart';
 import 'package:coupon_code/app/core/widgets/App_button.dart';
 import 'package:coupon_code/app/core/widgets/common_app_bar.dart';
 import 'package:coupon_code/app/core/widgets/custom_date_range_selector.dart';
-import 'package:coupon_code/app/core/widgets/custom_dropdown_field.dart';
 import 'package:coupon_code/app/core/widgets/custom_text_field.dart';
 import 'package:coupon_code/app/core/widgets/section_heading.dart';
-import 'package:coupon_code/app/data/models/deal_category_model.dart';
+import 'package:coupon_code/app/data/models/deal_model.dart';
 import 'package:coupon_code/app/data/models/deal_plan_model.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/controllers/vendor_deals_controller.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/data/deal_plans.dart';
@@ -17,13 +16,42 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class AddDealView extends GetView<VendorDealsController> {
-  const AddDealView({super.key});
+class AddDealView extends StatefulWidget {
+  const AddDealView({super.key, this.deal});
+
+  final DealModel? deal;
+
+  @override
+  State<AddDealView> createState() => _AddDealViewState();
+}
+
+class _AddDealViewState extends State<AddDealView> {
+  final VendorDealsController controller = Get.put(VendorDealsController());
+
+  @override
+  void initState() {
+    super.initState();
+    _prefillData();
+  }
+
+  void _prefillData() {
+    final deal = widget.deal;
+    if (deal == null) return;
+
+    controller.titleController.text = deal.title;
+    controller.selectedCategory.value = deal.category;
+    controller.highlightController.text = deal.highlights;
+    controller.descController.text = deal.description;
+    controller.couponController.text = deal.couponCode;
+    controller.priceController.text = deal.regularPrice.toString();
+    controller.discountController.text = deal.discountPercentage.toStringAsFixed(2);
+    controller.finalPriceController.text = deal.afterDiscountPrice.toStringAsFixed(2);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(title: 'Add New Deal'),
+      appBar: CommonAppBar(title: widget.deal != null ? 'Update Deal' : 'Add New Deal'),
 
       body: SafeArea(
         child: SingleChildScrollView(
@@ -52,25 +80,26 @@ class AddDealView extends GetView<VendorDealsController> {
               CustomTextField(hint: 'Title', controller: controller.titleController),
               const SizedBox(height: 10),
 
-              Text('Category', style: AppText.body1.semiBold),
-              const SizedBox(height: 5),
-              Obx(
-                () => CustomDropdownField<DealCategoryModel>(
-                  hint: 'Select a category',
-                  value: controller.selectedCategory.value.id == -1
-                      ? null
-                      : controller.selectedCategory.value,
-                  items: controller.categories,
-                  itemLabel: (item) => item.name,
-                  onChanged: (value) {
-                    if (value != null) {
-                      controller.selectedCategory.value = value;
-                    }
-                  },
-                ),
-              ),
-              const SizedBox(height: 10),
+              // TODO: Add Category
 
+              // Text('Category', style: AppText.body1.semiBold),
+              // const SizedBox(height: 5),
+              // Obx(
+              //   () => CustomDropdownField<DealCategoryModel>(
+              //     hint: 'Select a category',
+              //     value: controller.selectedCategory.value.id == -1
+              //         ? null
+              //         : controller.selectedCategory.value,
+              //     items: controller.categories,
+              //     itemLabel: (item) => item.name,
+              //     onChanged: (value) {
+              //       if (value != null) {
+              //         controller.selectedCategory.value = value;
+              //       }
+              //     },
+              //   ),
+              // ),
+              // const SizedBox(height: 10),
               Text('Highlights', style: AppText.body1.semiBold),
               const SizedBox(height: 5),
               CustomTextField(
@@ -192,10 +221,15 @@ class AddDealView extends GetView<VendorDealsController> {
 
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(bottom: 25.0, left: 20, right: 20),
-        child: Obx(
-          () => AppButton(
-            text:
-                'Continue with ${controller.selectedDealPlan.value?.name} / \$${controller.selectedDealPlan.value?.price.toStringAsFixed(0)}',
+        child: Obx(() {
+          final plan = controller.selectedDealPlan.value;
+
+          final buttonText = widget.deal != null
+              ? 'Update'
+              : 'Continue with ${plan?.name} / \$${plan?.price.toStringAsFixed(0)}';
+
+          return AppButton(
+            text: buttonText,
             onPressed: () {
               controller.validateAndSubmit();
 
@@ -206,8 +240,8 @@ class AddDealView extends GetView<VendorDealsController> {
                 );
               }
             },
-          ),
-        ),
+          );
+        }),
       ),
     );
   }

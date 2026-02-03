@@ -1,3 +1,4 @@
+import 'package:coupon_code/app/core/values/app_color.dart';
 import 'package:coupon_code/app/core/values/app_sizes.dart';
 import 'package:coupon_code/app/core/values/app_text.dart';
 import 'package:coupon_code/app/core/widgets/App_button.dart';
@@ -113,6 +114,30 @@ class AddNewCardView extends StatelessWidget {
                     ),
                   ),
                 ],
+              ),
+              const SizedBox(height: 20),
+              Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    color: AppColor.greyText.shade100,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisSize: .min,
+                      children: [
+                        Icon(Icons.verified_rounded, color: AppColor.success),
+                        const SizedBox(width: 5),
+                        Text(
+                          'Payments are securely enrypted with SSL',
+                          maxLines: 2,
+                          overflow: .ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
               const SizedBox(height: 40),
 
