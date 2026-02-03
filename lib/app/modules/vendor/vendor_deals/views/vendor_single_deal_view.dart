@@ -9,7 +9,9 @@ import 'package:coupon_code/app/core/widgets/section_heading.dart';
 import 'package:coupon_code/app/data/models/deal_model.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_dashboard/views/widgets/overview_card.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_dashboard/views/widgets/overview_chart.dart';
+import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class VendorSingleDealView extends StatelessWidget {
   const VendorSingleDealView({super.key, required this.deal});
@@ -80,7 +82,7 @@ class VendorSingleDealView extends StatelessWidget {
                     text: 'Edit Details',
                     leading: Icon(Icons.edit_rounded),
                     height: 50,
-                    onPressed: () {},
+                    onPressed: () => Get.toNamed(AppRoutes.UPDATE_DEAL, arguments: {'deal': deal}),
                   ),
                 ),
               ],

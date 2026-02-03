@@ -161,9 +161,14 @@ class AppPages {
       page: () => const VendorSignupView(),
       binding: VendorSignupBinding(),
     ),
+    GetPage(name: AppRoutes.ADD_DEAL, page: () => AddDealView(), binding: VendorDealsBinding()),
     GetPage(
-      name: AppRoutes.ADD_DEAL,
-      page: () => const AddDealView(),
+      name: AppRoutes.UPDATE_DEAL,
+      page: () {
+        final args = Get.arguments as Map<String, dynamic>? ?? {};
+
+        return AddDealView(deal: args['deal'] as DealModel);
+      },
       binding: VendorDealsBinding(),
     ),
     GetPage(
