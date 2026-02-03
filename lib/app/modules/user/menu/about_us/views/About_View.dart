@@ -4,24 +4,14 @@ import 'package:get/get.dart';
 
 import '../../../../../core/values/app_text_styles.dart';
 import '../../../../../core/widgets/common_app_bar.dart';
-import '../../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
-import '../../../bottom_nav_bar/views/bottom_nav_view.dart';
 
 class AboutView extends GetView<AboutController> {
   const AboutView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final navController = Get.find<UserNavigationBarController>();
     return Scaffold(
-      appBar: CommonAppBar(
-        title: "About Us",
-        showBack: true,
-        onBack: () {
-          // Close the overlay page instead of default back
-          navController.closeOverlayPage();
-        },
-      ),
+      appBar: CommonAppBar(title: "About Us"),
 
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -82,10 +72,7 @@ class AboutView extends GetView<AboutController> {
       padding: const EdgeInsets.only(bottom: 8),
       child: Text(
         text,
-        style: AppTextStyles.Title.copyWith(
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
-        ),
+        style: AppTextStyles.Title.copyWith(fontWeight: FontWeight.bold, color: Colors.black),
       ),
     );
   }
@@ -93,11 +80,7 @@ class AboutView extends GetView<AboutController> {
   Widget _paragraph(String text) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
-      child: Text(
-        text,
-        style: AppTextStyles.Text,
-        textAlign: TextAlign.justify,
-      ),
+      child: Text(text, style: AppTextStyles.Text, textAlign: TextAlign.justify),
     );
   }
 

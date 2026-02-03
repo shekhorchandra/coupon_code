@@ -3,6 +3,7 @@ import 'package:coupon_code/app/core/values/app_color.dart';
 import 'package:coupon_code/app/core/values/app_sizes.dart';
 import 'package:coupon_code/app/core/values/app_text.dart';
 import 'package:coupon_code/app/core/widgets/App_button.dart';
+import 'package:coupon_code/app/core/widgets/app_circular_avatar.dart';
 import 'package:coupon_code/app/core/widgets/section_heading.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_dashboard/controllers/vendor_dashboard_controller.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_dashboard/views/widgets/overview_card.dart';
@@ -31,21 +32,7 @@ class VendorDashboardPage extends GetView<VendorDashboardController> {
                 Row(
                   children: [
                     // Avatar with circular border
-                    Container(
-                      padding: const EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: AppColor.vividSky.s300, width: 2),
-                      ),
-                      child: ClipOval(
-                        child: Image.asset(
-                          AppAssets.salon,
-                          width: 70,
-                          height: 70,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
+                    AppCircularAvatar(),
 
                     const SizedBox(width: 12),
 

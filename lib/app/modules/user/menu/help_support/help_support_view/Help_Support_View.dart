@@ -1,27 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../../core/values/app_color.dart';
 import '../../../../../core/values/app_text_styles.dart';
 import '../../../../../core/widgets/common_app_bar.dart';
-import '../../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
 
 class HelpSupportView extends StatelessWidget {
   const HelpSupportView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final navController = Get.find<UserNavigationBarController>();
-
     return Scaffold(
-      appBar: CommonAppBar(
-        title: "Help & Support",
-        showBack: true,
-        onBack: () {
-          navController.closeOverlayPage(); // close overlay
-        },
-      ),
+      appBar: CommonAppBar(title: "Help & Support"),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
@@ -29,7 +19,7 @@ class HelpSupportView extends StatelessWidget {
           children: [
             _paragraph(
               "We are here to assist you with any questions or issues you may have while using App Name. "
-                  "Below are the available support options:",
+              "Below are the available support options:",
             ),
             const SizedBox(height: 24),
             _sectionTitle("Need Assistance?"),
@@ -90,7 +80,9 @@ class HelpSupportView extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _paragraph("If you're experiencing a technical issue or error with the app, please try:"),
+                  _paragraph(
+                    "If you're experiencing a technical issue or error with the app, please try:",
+                  ),
                   const SizedBox(height: 8),
                   Text("• Check for Updates: Make sure you have the latest version installed."),
                   const SizedBox(height: 4),
@@ -135,19 +127,14 @@ class HelpSupportView extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 2)),
-        ],
+        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 2))],
       ),
       child: child,
     );
   }
 
   Widget _sectionTitle(String text) {
-    return Text(
-      text,
-      style: AppTextStyles.Text.copyWith(fontWeight: FontWeight.bold),
-    );
+    return Text(text, style: AppTextStyles.Text.copyWith(fontWeight: FontWeight.bold));
   }
 
   Widget _paragraph(String text) {

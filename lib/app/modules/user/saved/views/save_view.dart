@@ -1,12 +1,12 @@
 import 'package:coupon_code/app/modules/user/saved/controllers/save_controller.dart';
 import 'package:coupon_code/app/modules/user/saved/widget/save_item_card.dart';
+import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../core/values/app_color.dart';
 import '../../../../core/widgets/common_app_bar.dart';
 import '../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
-import '../../discover_bar/discover_details/views/discover_details_view_page.dart';
 
 class UserMySavesPage extends GetView<SavesController> {
   const UserMySavesPage({super.key});
@@ -67,7 +67,7 @@ class UserMySavesPage extends GetView<SavesController> {
                     isAvailable: item.isAvailable,
                     Status: item.Status,
                     onTap: () {
-                      navController.openOverlayPage(ServiceDetailsPage(id: 1));
+                      Get.toNamed(AppRoutes.DISCOVERDETAILS, arguments: {'id': 1});
                     },
                   );
                 },

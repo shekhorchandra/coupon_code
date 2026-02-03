@@ -87,19 +87,13 @@ class VendorDealsController extends GetxController {
   }
 
   // Text Controllers
-  final titleController = TextEditingController(text: 'Fitness Jump Rope with LCD Counter');
-  final highlightController = TextEditingController(
-    text:
-        'In congue. Etiam justo. Etiam pretium iaculis justo. In hac habitasse platea dictumst. Etiam faucibus cursus urna.',
-  );
-  final descController = TextEditingController(
-    text:
-        'Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.\n\nPraesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede.',
-  );
-  final couponController = TextEditingController(text: 'EK8648');
-  final priceController = TextEditingController(text: '543');
-  final discountController = TextEditingController(text: '25.00');
-  final finalPriceController = TextEditingController(text: '135.75');
+  final titleController = TextEditingController(text: '');
+  final highlightController = TextEditingController(text: '');
+  final descController = TextEditingController(text: '');
+  final couponController = TextEditingController(text: '');
+  final priceController = TextEditingController(text: '');
+  final discountController = TextEditingController(text: '');
+  final finalPriceController = TextEditingController(text: '');
 
   // Selections
   Rx<DealCategoryModel> selectedCategory = DealCategoryModel(id: -1, name: '').obs;
