@@ -84,21 +84,23 @@ class PaymentMethodsView extends StatelessWidget {
           horizontal: AppSizes.denseButtonHeight,
           vertical: AppSizes.denseButtonHeight,
         ),
-        child: AppButton(
-          text: 'Publish Deal',
-          onPressed: () {
-            if (controller.selectedPaymentMethod == -1) {
-              Get.snackbar(
-                'Error',
-                'Please select a payment method!',
-                snackPosition: SnackPosition.TOP,
-                backgroundColor: AppColor.error,
-                colorText: AppColor.white,
-                margin: const EdgeInsets.all(15),
-              );
-            }
-          },
-        ),
+        child: isSelectable ?? false
+            ? AppButton(
+                text: 'Publish Deal',
+                onPressed: () {
+                  if (controller.selectedPaymentMethod == -1) {
+                    Get.snackbar(
+                      'Error',
+                      'Please select a payment method!',
+                      snackPosition: SnackPosition.TOP,
+                      backgroundColor: AppColor.error,
+                      colorText: AppColor.white,
+                      margin: const EdgeInsets.all(15),
+                    );
+                  }
+                },
+              )
+            : SizedBox.shrink(),
       ),
     );
   }
