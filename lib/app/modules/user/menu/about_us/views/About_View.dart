@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import '../../../../../core/values/app_text_styles.dart';
 import '../../../../../core/widgets/common_app_bar.dart';
 import '../../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
-import '../../../bottom_nav_bar/views/bottom_nav_view.dart';
 
 class AboutView extends GetView<AboutController> {
   const AboutView({super.key});
@@ -82,10 +81,7 @@ class AboutView extends GetView<AboutController> {
       padding: const EdgeInsets.only(bottom: 8),
       child: Text(
         text,
-        style: AppTextStyles.Title.copyWith(
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
-        ),
+        style: AppTextStyles.Title.copyWith(fontWeight: FontWeight.bold, color: Colors.black),
       ),
     );
   }
@@ -93,11 +89,7 @@ class AboutView extends GetView<AboutController> {
   Widget _paragraph(String text) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
-      child: Text(
-        text,
-        style: AppTextStyles.Text,
-        textAlign: TextAlign.justify,
-      ),
+      child: Text(text, style: AppTextStyles.Text, textAlign: TextAlign.justify),
     );
   }
 
