@@ -1,6 +1,6 @@
 class AppAssets {
   static const logo = 'assets/logo.png';
-  static const economic = 'assets/economic.png';
+  static const economic = 'assets/yepp.png';
 
   // Social icons
   static const google = 'assets/icons/google.png';
@@ -13,6 +13,9 @@ class AppAssets {
 
   // discover_bar icons
   static const food = 'assets/icons/food.png';
+
+// Menu page
+  static const vendor = 'assets/icons/Vendor.svg';
 
   // bottom nav bar icons
   static const discover = 'assets/icons/discover.svg';
