@@ -37,14 +37,16 @@ class MenuView extends GetView<MenuController> {
                 child: Row(
                   children: [
                     CircleAvatar(
-                      radius: 40,
+                      radius: 30,
                       backgroundColor: AppColor.primary.withOpacity(0.1),
-                      child: SvgPicture.asset(
+                      child: Image.asset(
                         AppAssets.vendor,
-                        height: 28,
-                        width: 28,
+                        height: 50,
+                        width: 50,
+                        fit: BoxFit.contain,
                       ),
                     ),
+
 
                     const SizedBox(width: 12),
                     Expanded(
@@ -54,14 +56,14 @@ class MenuView extends GetView<MenuController> {
                           Row(
                             children: [
                               const Text(
-                                "Become a Vendor",
+                                "Switch to vendor",
                                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                             ],
                           ),
                           const SizedBox(height: 4),
                           const Text(
-                            "Showcase your deals and attract real customers.",
+                            "Continue as a vendor",
                             style: TextStyle(fontSize: 13, color: Colors.grey),
                           ),
                         ],

@@ -15,7 +15,7 @@ class AppAssets {
   static const food = 'assets/icons/food.png';
 
 // Menu page
-  static const vendor = 'assets/icons/Vendor.svg';
+  static const vendor = 'assets/icons/vendor.png';
 
   // bottom nav bar icons
   static const discover = 'assets/icons/discover.svg';
