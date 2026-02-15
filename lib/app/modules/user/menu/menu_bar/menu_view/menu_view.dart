@@ -1,5 +1,7 @@
+import 'package:coupon_code/app/core/values/app_assets.dart';
 import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:flutter/material.dart' hide MenuController;
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 import '../../../../../core/values/app_color.dart';
@@ -35,22 +37,31 @@ class MenuView extends GetView<MenuController> {
                 child: Row(
                   children: [
                     CircleAvatar(
-                      radius: 28,
+                      radius: 40,
                       backgroundColor: AppColor.primary.withOpacity(0.1),
-                      child: const Icon(Icons.person, color: AppColor.primary, size: 28),
+                      child: SvgPicture.asset(
+                        AppAssets.vendor,
+                        height: 28,
+                        width: 28,
+                      ),
                     ),
+
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
-                            "Login / Sign Up",
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        children: [
+                          Row(
+                            children: [
+                              const Text(
+                                "Become a Vendor",
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                            ],
                           ),
-                          SizedBox(height: 4),
-                          Text(
-                            "Sign in to save deals and track your favorites",
+                          const SizedBox(height: 4),
+                          const Text(
+                            "Showcase your deals and attract real customers.",
                             style: TextStyle(fontSize: 13, color: Colors.grey),
                           ),
                         ],
@@ -61,6 +72,7 @@ class MenuView extends GetView<MenuController> {
                 ),
               ),
             ),
+
 
             const SizedBox(height: 24),
 
