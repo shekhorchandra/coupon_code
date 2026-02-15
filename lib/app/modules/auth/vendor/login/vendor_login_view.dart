@@ -27,7 +27,7 @@ class VendorLoginView extends GetView<VendorLoginController> {
         child: ListView(
           children: [
             Center(child: Image.asset(AppAssets.economic, height: 90)),
-            const SizedBox(height: 16),
+            // const SizedBox(height: 16),
             Text(
               "Welcome Back, Vendor",
               textAlign: TextAlign.center,
@@ -137,13 +137,13 @@ class VendorLoginView extends GetView<VendorLoginController> {
               ),
             ),
 
-            const SizedBox(height: 20),
-
-            SwitchRoleCard(
-              title: "Switch to User Mode",
-              subtitle: "Browse deals and redeem coupons.",
-              onTap: () => Get.offAllNamed(AppRoutes.USER_LOGIN),
-            ),
+            // const SizedBox(height: 20),
+            //
+            // SwitchRoleCard(
+            //   title: "Switch to User Mode",
+            //   subtitle: "Browse deals and redeem coupons.",
+            //   onTap: () => Get.offAllNamed(AppRoutes.USER_LOGIN),
+            // ),
           ],
         ),
       ),
