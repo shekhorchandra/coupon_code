@@ -26,8 +26,6 @@ class UserLoginView extends GetView<UserLoginController> {
           children: [
             Center(child: Image.asset(AppAssets.economic, height: 90)),
 
-            const SizedBox(height: 16),
-
             Text("Welcome Back", textAlign: TextAlign.center, style: AppTextStyles.HeaderTitle),
 
             Text(
@@ -132,13 +130,13 @@ class UserLoginView extends GetView<UserLoginController> {
               ),
             ),
 
-            const SizedBox(height: 50),
-
-            SwitchRoleCard(
-              title: "Are you a Vendor?",
-              subtitle: "Continue as a vendor",
-              onTap: () => Get.offAllNamed(AppRoutes.VENDOR_LOGIN),
-            ),
+            // const SizedBox(height: 50),
+            //
+            // SwitchRoleCard(
+            //   title: "Are you a Vendor?",
+            //   subtitle: "Continue as a vendor",
+            //   onTap: () => Get.offAllNamed(AppRoutes.VENDOR_LOGIN),
+            // ),
           ],
         ),
       ),
