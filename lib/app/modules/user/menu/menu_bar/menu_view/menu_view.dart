@@ -84,7 +84,7 @@ class MenuView extends GetView<MenuController> {
             // _menuItem(Icons.info_outline, "About Us", controller.goToAbout),
             _menuItem(Icons.info_outline, "About Us", () => Get.toNamed(AppRoutes.ABOUT)),
 
-            _menuItem(Icons.campaign_outlined, 'Advertise on App', controller.onAdvertiseTap),
+            // _menuItem(Icons.campaign_outlined, 'Advertise on App', controller.onAdvertiseTap),
             _menuItem(Icons.contact_support_outlined, "Contact Us", controller.onContactUsTap),
             _menuItem(Icons.emergency, "Help & Support", controller.onHelpSupportTap),
             const SizedBox(height: 24),
