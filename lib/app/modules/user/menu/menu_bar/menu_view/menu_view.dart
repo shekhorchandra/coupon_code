@@ -93,11 +93,11 @@ class MenuView extends GetView<MenuController> {
 
             const SizedBox(height: 24),
 
-            SizedBox(
-              width: double.infinity,
-              height: 52,
-              child: AppButton(text: 'Logout', onPressed: controller.onLogoutTap),
-            ),
+            // SizedBox(
+            //   width: double.infinity,
+            //   height: 52,
+            //   child: AppButton(text: 'Logout', onPressed: controller.onLogoutTap),
+            // ),
           ],
         ),
       ),
