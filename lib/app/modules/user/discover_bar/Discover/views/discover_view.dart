@@ -137,12 +137,13 @@ class DiscoverView extends GetView<DiscoverController> {
                           padding: const EdgeInsets.symmetric(horizontal: 6),
                           child: InkWell(
                             borderRadius: BorderRadius.circular(40),
-                            onTap:
-                                () => // Get the navigation controller
-                                    // Open overlay page instead of full navigation
-                                    navController.openOverlayPage(
-                                      CategotyDetails(),
-                                    ),
+                            onTap: () {
+                              final navController = Get.find<UserNavigationBarController>();
+
+                              navController.changeTab(1);
+                              navController.openOverlayPage(CategotyDetails());
+                            },
+
                             child: Column(
                               children: [
                                 CircleAvatar(
