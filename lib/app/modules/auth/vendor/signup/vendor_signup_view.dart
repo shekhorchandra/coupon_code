@@ -149,11 +149,11 @@ class VendorSignupView extends GetView<VendorSignupController> {
 
             const SizedBox(height: 20),
 
-            SwitchRoleCard(
-              title: "Switch to User Mode",
-              subtitle: "Browse deals and redeem coupons.",
-              onTap: () => Get.offAllNamed(AppRoutes.USER_SIGNUP),
-            ),
+            // SwitchRoleCard(
+            //   title: "Switch to User Mode",
+            //   subtitle: "Browse deals and redeem coupons.",
+            //   onTap: () => Get.offAllNamed(AppRoutes.USER_SIGNUP),
+            // ),
           ],
         ),
       ),

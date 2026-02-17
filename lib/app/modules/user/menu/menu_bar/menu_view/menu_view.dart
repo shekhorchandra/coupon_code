@@ -1,9 +1,7 @@
 import 'package:coupon_code/app/core/values/app_assets.dart';
 import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:flutter/material.dart' hide MenuController;
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-
 import '../../../../../core/values/app_color.dart';
 import '../../../../../core/values/app_text_styles.dart';
 import '../../../../../core/widgets/App_button.dart';
