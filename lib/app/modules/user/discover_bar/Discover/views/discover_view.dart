@@ -114,17 +114,15 @@ class DiscoverView extends GetView<DiscoverController> {
                         Text("Popular Categories", style: AppTextStyles.Title),
                         TextButton(
                           onPressed: () {
-                            final navController =
-                                Get.find<UserNavigationBarController>();
-                            navController.openOverlayPage(
-                              const CategoriesView(),
-                            );
+                            final navController = Get.find<UserNavigationBarController>();
+                            navController.changeTab(1);
                           },
                           child: Text(
                             "See All",
                             style: AppTextStyles.TextButton,
                           ),
                         ),
+
                       ],
                     ),
                   ),
