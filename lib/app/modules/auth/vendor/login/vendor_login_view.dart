@@ -16,7 +16,10 @@ import '../../../../routes/app_routes.dart';
 import 'vendor_login_controller.dart';
 
 class VendorLoginView extends GetView<VendorLoginController> {
-  const VendorLoginView({super.key});
+  VendorLoginView({super.key});
+
+  final VendorLoginController controller = Get.find<VendorLoginController>(); //instance
+
 
   @override
   Widget build(BuildContext context) {
@@ -48,12 +51,16 @@ class VendorLoginView extends GetView<VendorLoginController> {
 
             const SizedBox(height: 20),
 
-            const CustomTextField(hint: "Email Address", icon: Icons.email_outlined),
+            CustomTextField(
+              controller: controller.emailController.value,
+                hint: "Email Address", icon: Icons.email_outlined
+            ),
 
             const SizedBox(height: 12),
 
             Obx(
               () => CustomTextField(
+                controller: controller.passwordController.value,
                 hint: "Password",
                 icon: Icons.lock_outline,
                 obscure: controller.obscure.value,
@@ -81,7 +88,8 @@ class VendorLoginView extends GetView<VendorLoginController> {
               text: "Log in",
               onPressed: () {
                 // TODO: call login API
-                Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR);
+                controller.loginApi();
+                // Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR);
               },
             ),
 
