@@ -24,7 +24,7 @@ class VendorSignupView extends GetView<VendorSignupController> {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: ListView(
           children: [
-            Center(child: Image.asset(AppAssets.economic, height: 90)),
+            Center(child: Image.asset(AppAssets.economic, height: 50)),
             const SizedBox(height: 16),
 
             Text("Become a Vendor", textAlign: TextAlign.center, style: AppTextStyles.HeaderTitle),

@@ -26,8 +26,8 @@ class VendorLoginView extends GetView<VendorLoginController> {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: ListView(
           children: [
-            Center(child: Image.asset(AppAssets.economic, height: 90)),
-            // const SizedBox(height: 16),
+            Center(child: Image.asset(AppAssets.economic, height: 50,)),
+            const SizedBox(height: 10),
             Text(
               "Welcome Back, Vendor",
               textAlign: TextAlign.center,

@@ -16,7 +16,7 @@ class SplashView extends GetView<SplashController> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Image.asset(AppAssets.economic, width: 300, height: 300),
+            Image.asset(AppAssets.economic, width: 200, height: 200),
           ],
         ),
       ),
