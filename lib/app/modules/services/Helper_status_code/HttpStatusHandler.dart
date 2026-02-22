@@ -7,7 +7,7 @@ class HttpStatusHandler {
       case 201:
         return "Created successfully";
       case 400:
-        return "Bad request. Please check your input.";
+        return "User already exist. Please login!";
       case 401:
       case 403:
         return "You are not authorized to access this content.";

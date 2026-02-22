@@ -14,12 +14,15 @@ import '../../../../routes/app_routes.dart';
 import 'vendor_signup_controller.dart';
 
 class VendorSignupView extends GetView<VendorSignupController> {
-  const VendorSignupView({super.key});
+  VendorSignupView({super.key});
+
+  late final VendorSignupController controller =
+      Get.find<VendorSignupController>(); //instance
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CommonAppBar(title: " ", showBack: false,),
+      appBar: const CommonAppBar(title: " ", showBack: false),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: ListView(
@@ -27,7 +30,11 @@ class VendorSignupView extends GetView<VendorSignupController> {
             Center(child: Image.asset(AppAssets.economic, height: 50)),
             const SizedBox(height: 16),
 
-            Text("Become a Vendor", textAlign: TextAlign.center, style: AppTextStyles.HeaderTitle),
+            Text(
+              "Become a Vendor",
+              textAlign: TextAlign.center,
+              style: AppTextStyles.HeaderTitle,
+            ),
 
             Text(
               "Expand your reach and boost your sales.",
@@ -45,22 +52,33 @@ class VendorSignupView extends GetView<VendorSignupController> {
 
             const SizedBox(height: 20),
 
-            const CustomTextField(hint: "User Name", icon: Icons.person_outline),
+            CustomTextField(
+              controller: controller.userNameController,
+              hint: "User Name",
+              icon: Icons.person_outline,
+            ),
 
             const SizedBox(height: 12),
 
-            const CustomTextField(hint: "Email Address", icon: Icons.email_outlined),
+            CustomTextField(
+              controller: controller.emailController,
+              hint: "Email Address",
+              icon: Icons.email_outlined,
+            ),
 
             const SizedBox(height: 12),
 
             Obx(
               () => CustomTextField(
+                controller: controller.passwordController,
                 hint: "Password",
                 icon: Icons.lock_outline,
                 obscure: controller.obscurePassword.value,
                 suffix: IconButton(
                   icon: Icon(
-                    controller.obscurePassword.value ? Icons.visibility_off : Icons.visibility,
+                    controller.obscurePassword.value
+                        ? Icons.visibility_off
+                        : Icons.visibility,
                   ),
                   onPressed: controller.togglePassword,
                 ),
@@ -71,6 +89,7 @@ class VendorSignupView extends GetView<VendorSignupController> {
 
             Obx(
               () => CustomTextField(
+                controller: controller.confirmPasswordController,
                 hint: "Confirm Password",
                 icon: Icons.lock_outline,
                 obscure: controller.obscureConfirmPassword.value,
@@ -87,13 +106,20 @@ class VendorSignupView extends GetView<VendorSignupController> {
 
             const SizedBox(height: 20),
 
-            AppButton(
+            // AppButton(
+            //   text: "Next",
+            //   onPressed: () {
+            //     // TODO: call login API
+            //     Get.offAndToNamed(AppRoutes.CREATE_VENDOR_ACCOUNT);
+            //   },
+            // ),
+
+            Obx(() => AppButton(
               text: "Next",
-              onPressed: () {
-                // TODO: call login API
-                Get.offAndToNamed(AppRoutes.CREATE_VENDOR_ACCOUNT);
-              },
-            ),
+              loading: controller.isSubmitting.value,
+              onPressed: controller.registerVendor,
+            )),
+
 
             const SizedBox(height: 20),
 
@@ -115,11 +141,17 @@ class VendorSignupView extends GetView<VendorSignupController> {
               child: Row(
                 children: const [
                   Expanded(
-                    child: SocialButton(text: "Google", iconPath: AppAssets.google),
+                    child: SocialButton(
+                      text: "Google",
+                      iconPath: AppAssets.google,
+                    ),
                   ),
                   SizedBox(width: 12),
                   Expanded(
-                    child: SocialButton(text: "Apple", iconPath: AppAssets.apple),
+                    child: SocialButton(
+                      text: "Apple",
+                      iconPath: AppAssets.apple,
+                    ),
                   ),
                 ],
               ),

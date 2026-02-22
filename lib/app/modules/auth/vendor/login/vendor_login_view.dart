@@ -18,18 +18,19 @@ import 'vendor_login_controller.dart';
 class VendorLoginView extends GetView<VendorLoginController> {
   VendorLoginView({super.key});
 
-  final VendorLoginController controller = Get.find<VendorLoginController>(); //instance
-
+  final _formKey = GlobalKey<FormState>();
+  final VendorLoginController controller =
+      Get.find<VendorLoginController>(); //instance
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CommonAppBar(title: " ", showBack: false,),
+      appBar: const CommonAppBar(title: " ", showBack: false),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: ListView(
           children: [
-            Center(child: Image.asset(AppAssets.economic, height: 50,)),
+            Center(child: Image.asset(AppAssets.economic, height: 50)),
             const SizedBox(height: 10),
             Text(
               "Welcome Back, Vendor",
@@ -51,47 +52,89 @@ class VendorLoginView extends GetView<VendorLoginController> {
 
             const SizedBox(height: 20),
 
-            CustomTextField(
-              controller: controller.emailController.value,
-                hint: "Email Address", icon: Icons.email_outlined
-            ),
+            Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  /// EMAIL
+                  CustomTextField(
+                    controller: controller.emailController.value,
+                    hint: "Email Address",
+                    icon: Icons.email_outlined,
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return "Email is required";
+                      }
+                      if (!GetUtils.isEmail(value.trim())) {
+                        return "Enter a valid email";
+                      }
+                      return null;
+                    },
+                  ),
 
-            const SizedBox(height: 12),
+                  const SizedBox(height: 12),
 
-            Obx(
-              () => CustomTextField(
-                controller: controller.passwordController.value,
-                hint: "Password",
-                icon: Icons.lock_outline,
-                obscure: controller.obscure.value,
-                suffix: IconButton(
-                  icon: Icon(controller.obscure.value ? Icons.visibility_off : Icons.visibility),
-                  onPressed: controller.togglePassword,
-                ),
+                  /// PASSWORD
+                  Obx(
+                        () => CustomTextField(
+                      controller: controller.passwordController.value,
+                      hint: "Password",
+                      icon: Icons.lock_outline,
+                      obscure: controller.obscure.value,
+                      suffix: IconButton(
+                        icon: Icon(
+                          controller.obscure.value
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                        ),
+                        onPressed: controller.togglePassword,
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Password required";
+                        }
+                        if (value.length < 6) {
+                          return "Minimum 6 characters";
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+
+                  /// FORGOT PASSWORD
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () {
+                        Get.toNamed(
+                          AppRoutes.VENDOR_FORGOT_PASSWORD,
+                          arguments: UserRole.user,
+                        );
+                      },
+                      child: const Text(
+                        "Forgot Password?",
+                        style: TextStyle(color: AppColor.primary),
+                      ),
+                    ),
+                  ),
+
+                  /// LOGIN BUTTON
+                  Obx(() {
+                    return AppButton(
+                      text: "Log in",
+                      loading: controller.loading.value,
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          controller.loginApi();
+                        }
+                      },
+                    );
+                  }),
+                ],
               ),
             ),
 
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: () {
-                  Get.toNamed(
-                    AppRoutes.VENDOR_FORGOT_PASSWORD,
-                    arguments: UserRole.user, // or UserRole.vendor
-                  );
-                },
-                child: const Text("Forgot Password?", style: TextStyle(color: AppColor.primary)),
-              ),
-            ),
-
-            AppButton(
-              text: "Log in",
-              onPressed: () {
-                // TODO: call login API
-                controller.loginApi();
-                // Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR);
-              },
-            ),
 
             const SizedBox(height: 20),
 
@@ -113,11 +156,17 @@ class VendorLoginView extends GetView<VendorLoginController> {
               child: Row(
                 children: const [
                   Expanded(
-                    child: SocialButton(text: "Google", iconPath: AppAssets.google),
+                    child: SocialButton(
+                      text: "Google",
+                      iconPath: AppAssets.google,
+                    ),
                   ),
                   SizedBox(width: 12),
                   Expanded(
-                    child: SocialButton(text: "Apple", iconPath: AppAssets.apple),
+                    child: SocialButton(
+                      text: "Apple",
+                      iconPath: AppAssets.apple,
+                    ),
                   ),
                 ],
               ),
