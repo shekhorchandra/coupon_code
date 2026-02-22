@@ -13,6 +13,7 @@ class AppButton extends StatelessWidget {
   final double width;
   final double height;
   final IconData? icon;
+  final bool loading;
 
   const AppButton({
     super.key,
@@ -25,6 +26,7 @@ class AppButton extends StatelessWidget {
     this.width = double.infinity,
     this.height = 52,
     this.icon,
+    this.loading = false,
   });
 
   @override
@@ -33,7 +35,7 @@ class AppButton extends StatelessWidget {
       width: width,
       height: height,
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: loading ? null : onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: backgroundColor,
           foregroundColor: textColor,
@@ -47,23 +49,35 @@ class AppButton extends StatelessWidget {
           ),
           padding: EdgeInsets.zero,
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (leading != null) ...[
-              leading!,
-              const SizedBox(width: 8),
-            ] else if (icon != null) ...[
-              Icon(icon, size: 18, color: textColor),
-              const SizedBox(width: 6),
-            ],
-            Text(
-              text,
-              overflow: TextOverflow.ellipsis,
-              style: AppTextStyles.TextButton.copyWith(color: textColor),
+        child: Center(
+          child: loading
+              ? const SizedBox(
+            height: 22,
+            width: 22,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              color: AppColor.titleColor,
             ),
-          ],
+          )
+              : Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (leading != null) ...[
+                leading!,
+                const SizedBox(width: 8),
+              ] else if (icon != null) ...[
+                Icon(icon, size: 18, color: textColor),
+                const SizedBox(width: 6),
+              ],
+              Text(
+                text,
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyles.TextButton
+                    .copyWith(color: textColor),
+              ),
+            ],
+          ),
         ),
       ),
     );
