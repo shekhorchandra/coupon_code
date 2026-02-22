@@ -22,169 +22,169 @@ class DiscoverView extends GetView<DiscoverController> {
     final navController = Get.find<UserNavigationBarController>();
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            // HEADER
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Explore Nearby", style: AppTextStyles.HeaderTitle),
-                  // IconButton(
-                  //   icon: const Icon(Icons.notifications_none),
-                  //   onPressed: controller.onNotificationPressed,
-                  // ),
-                  IconButton(
-                      icon: Badge.count(
-                          count: 9,
-                        child: const Icon(Icons.notifications_none),
-                      ),
-                    onPressed: () {},
-                  ),
-                ],
-              ),
-            ),
-
-            // SEARCH + ZIP + LOCATION
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: CustomTextField(
-                          hint: "Search for deals",
-                          icon: Icons.search,
-                          onChanged: controller.onSearch,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      AppButton(
-                        text: "ZIP Code",
-                        width: 100,
-                        height: 40,
-                        icon: Icons.location_on_outlined,
-                        onPressed: controller.onZipPressed,
-                        backgroundColor: Colors.white,
-                        textColor: AppColor.primary,
-                        borderColor: AppColor.primary,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-
-                  InkWell(
-                    borderRadius: BorderRadius.circular(20),
-                    onTap: controller.onLocationPressed,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.location_on, color: AppColor.primary),
-                        const SizedBox(width: 4),
-                        Text(
-                          "New York, United States",
-                          style: AppTextStyles.Text,
-                        ),
-                        const SizedBox(width: 4),
-                        const Icon(Icons.keyboard_arrow_down, size: 18),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 6),
-
-            // POPULAR CATEGORIES
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              color: Colors.grey.shade100,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  AppTextStyle.Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Popular Categories", style: AppTextStyles.Title),
-                        TextButton(
-                          onPressed: () {
-                            final navController = Get.find<UserNavigationBarController>();
-                            navController.changeTab(1);
-                          },
-                          child: Text(
-                            "See All",
-                            style: AppTextStyles.TextButton,
-                          ),
-                        ),
-
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    height: 80,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 6,
-                      itemBuilder: (_, index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 6),
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(40),
-                            onTap: () {
-                              final navController = Get.find<UserNavigationBarController>();
-
-                              navController.changeTab(1);
-                              navController.openOverlayPage(CategotyDetails());
-                            },
-
-                            child: Column(
-                              children: [
-                                CircleAvatar(
-                                  radius: 28,
-                                  backgroundColor: AppColor.secondary
-                                      .withOpacity(0.2),
-                                  child: Image.asset(AppAssets.food, width: 38),
-                                ),
-                                const SizedBox(height: 4),
-                                const Text(
-                                  "Food & Drink",
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            // DEALS GRID
-            Expanded(
-              child: Padding(
+          child: Column(
+            children: [
+              // HEADER
+              Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: MasonryGridView.count(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 12,
-                  crossAxisSpacing: 12,
-                  itemCount: 6,
-                  itemBuilder: (_, index) => DealCard(index: index),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Explore Nearby", style: AppTextStyles.HeaderTitle),
+                    // IconButton(
+                    //   icon: const Icon(Icons.notifications_none),
+                    //   onPressed: controller.onNotificationPressed,
+                    // ),
+                    IconButton(
+                        icon: Badge.count(
+                            count: 9,
+                          child: const Icon(Icons.notifications_none),
+                        ),
+                      onPressed: () {},
+                    ),
+                  ],
                 ),
               ),
-            ),
-          ],
-        ),
+
+              // SEARCH + ZIP + LOCATION
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: CustomTextField(
+                            hint: "Search for deals",
+                            icon: Icons.search,
+                            onChanged: controller.onSearch,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        AppButton(
+                          text: "ZIP Code",
+                          width: 100,
+                          height: 40,
+                          icon: Icons.location_on_outlined,
+                          onPressed: controller.onZipPressed,
+                          backgroundColor: Colors.white,
+                          textColor: AppColor.primary,
+                          borderColor: AppColor.primary,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+
+                    InkWell(
+                      borderRadius: BorderRadius.circular(20),
+                      onTap: controller.onLocationPressed,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.location_on, color: AppColor.primary),
+                          const SizedBox(width: 4),
+                          Text(
+                            "New York, United States",
+                            style: AppTextStyles.Text,
+                          ),
+                          const SizedBox(width: 4),
+                          const Icon(Icons.keyboard_arrow_down, size: 18),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 6),
+
+              // POPULAR CATEGORIES
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                color: Colors.grey.shade100,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppTextStyle.Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Popular Categories", style: AppTextStyles.Title),
+                          TextButton(
+                            onPressed: () {
+                              final navController = Get.find<UserNavigationBarController>();
+                              navController.changeTab(1);
+                            },
+                            child: Text(
+                              "See All",
+                              style: AppTextStyles.TextButton,
+                            ),
+                          ),
+
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    SizedBox(
+                      height: 80,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 6,
+                        itemBuilder: (_, index) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 6),
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(40),
+                              onTap: () {
+                                final navController = Get.find<UserNavigationBarController>();
+
+                                navController.changeTab(1);
+                                navController.openOverlayPage(CategotyDetails());
+                              },
+
+                              child: Column(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 28,
+                                    backgroundColor: AppColor.secondary
+                                        .withOpacity(0.2),
+                                    child: Image.asset(AppAssets.food, width: 38),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  const Text(
+                                    "Food & Drink",
+                                    style: TextStyle(fontSize: 12),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 16),
+
+              // DEALS GRID
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: MasonryGridView.count(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 12,
+                    crossAxisSpacing: 12,
+                    itemCount: 6,
+                    itemBuilder: (_, index) => DealCard(index: index),
+                  ),
+                ),
+              ),
+            ],
+          ),
       ),
     );
   }
