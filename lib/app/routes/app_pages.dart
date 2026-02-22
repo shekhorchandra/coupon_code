@@ -158,7 +158,7 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.VENDOR_SIGNUP,
-      page: () => const VendorSignupView(),
+      page: () => VendorSignupView(),
       binding: VendorSignupBinding(),
     ),
     GetPage(name: AppRoutes.ADD_DEAL, page: () => AddDealView(), binding: VendorDealsBinding()),
