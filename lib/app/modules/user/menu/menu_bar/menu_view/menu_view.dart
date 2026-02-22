@@ -109,7 +109,7 @@ class MenuView extends GetView<MenuController> {
       children: [
         ListTile(
           contentPadding: EdgeInsets.zero,
-          leading: Icon(icon, color: AppColor.primary),
+          leading: Icon(icon, color: AppColor.bw.s700),
           title: Text(title, style: AppTextStyles.MenuButtonText),
           trailing: const Icon(Icons.arrow_forward_ios, size: 14),
           onTap: onTap,
