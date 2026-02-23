@@ -32,7 +32,7 @@ class OnboardingView extends GetView<OnboardingController> {
                         fit: BoxFit.contain,
                       ),
 
-                      const SizedBox(height: 20), // ✅ image → title gap
+                      const SizedBox(height: 20),
 
                       Text(
                         page['title']!,
@@ -44,7 +44,7 @@ class OnboardingView extends GetView<OnboardingController> {
                         ),
                       ),
 
-                      const SizedBox(height: 20), // ✅ title → subtitle gap
+                      const SizedBox(height: 20),
 
                       Text(
                         page['subtitle']!,
@@ -85,7 +85,7 @@ class OnboardingView extends GetView<OnboardingController> {
             const SizedBox(height: 20),
 
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16,),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               child: SizedBox(
                 width: double.infinity,
                 height: 52,
@@ -109,6 +109,7 @@ class OnboardingView extends GetView<OnboardingController> {
                       ),
                     ),
                   ),
+
                 ),
               ),
             ),

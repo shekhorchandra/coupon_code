@@ -1,7 +1,7 @@
+import 'package:coupon_code/app/core/values/app_assets.dart';
 import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:flutter/material.dart' hide MenuController;
 import 'package:get/get.dart';
-
 import '../../../../../core/values/app_color.dart';
 import '../../../../../core/values/app_text_styles.dart';
 import '../../../../../core/widgets/App_button.dart';
@@ -35,22 +35,33 @@ class MenuView extends GetView<MenuController> {
                 child: Row(
                   children: [
                     CircleAvatar(
-                      radius: 28,
+                      radius: 30,
                       backgroundColor: AppColor.primary.withOpacity(0.1),
-                      child: const Icon(Icons.person, color: AppColor.primary, size: 28),
+                      child: Image.asset(
+                        AppAssets.vendor,
+                        height: 50,
+                        width: 50,
+                        fit: BoxFit.contain,
+                      ),
                     ),
+
+
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
-                            "Login / Sign Up",
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        children: [
+                          Row(
+                            children: [
+                              const Text(
+                                "Switch to vendor",
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                            ],
                           ),
-                          SizedBox(height: 4),
-                          Text(
-                            "Sign in to save deals and track your favorites",
+                          const SizedBox(height: 4),
+                          const Text(
+                            "Continue as a vendor",
                             style: TextStyle(fontSize: 13, color: Colors.grey),
                           ),
                         ],
@@ -62,6 +73,7 @@ class MenuView extends GetView<MenuController> {
               ),
             ),
 
+
             const SizedBox(height: 24),
 
             Text("Settings", style: AppTextStyles.MenuTitle),
@@ -70,7 +82,7 @@ class MenuView extends GetView<MenuController> {
             // _menuItem(Icons.info_outline, "About Us", controller.goToAbout),
             _menuItem(Icons.info_outline, "About Us", () => Get.toNamed(AppRoutes.ABOUT)),
 
-            _menuItem(Icons.campaign_outlined, 'Advertise on App', controller.onAdvertiseTap),
+            // _menuItem(Icons.campaign_outlined, 'Advertise on App', controller.onAdvertiseTap),
             _menuItem(Icons.contact_support_outlined, "Contact Us", controller.onContactUsTap),
             _menuItem(Icons.emergency, "Help & Support", controller.onHelpSupportTap),
             const SizedBox(height: 24),
@@ -81,11 +93,11 @@ class MenuView extends GetView<MenuController> {
 
             const SizedBox(height: 24),
 
-            SizedBox(
-              width: double.infinity,
-              height: 52,
-              child: AppButton(text: 'Logout', onPressed: controller.onLogoutTap),
-            ),
+            // SizedBox(
+            //   width: double.infinity,
+            //   height: 52,
+            //   child: AppButton(text: 'Logout', onPressed: controller.onLogoutTap),
+            // ),
           ],
         ),
       ),
@@ -97,7 +109,7 @@ class MenuView extends GetView<MenuController> {
       children: [
         ListTile(
           contentPadding: EdgeInsets.zero,
-          leading: Icon(icon, color: AppColor.primary),
+          leading: Icon(icon, color: AppColor.bw.s700),
           title: Text(title, style: AppTextStyles.MenuButtonText),
           trailing: const Icon(Icons.arrow_forward_ios, size: 14),
           onTap: onTap,
