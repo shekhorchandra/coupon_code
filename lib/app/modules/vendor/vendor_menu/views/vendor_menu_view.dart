@@ -70,7 +70,7 @@ class VendorMenuPage extends GetView<VendorAccountController> {
 
               // Logout
               const SizedBox(height: 20),
-              AppButton(text: 'Logout', onPressed: () => Get.toNamed(AppRoutes.USER_LOGIN)),
+              AppButton(text: 'Logout', onPressed: () => Get.toNamed(AppRoutes.USER_BOTTOM_NAV)),
             ],
           ),
         ),

@@ -7,7 +7,7 @@ class MenuController extends GetxController {
   final navController = Get.find<UserNavigationBarController>();
   // Profile/Login
   void onLoginTap() {
-    Get.offAllNamed(AppRoutes.USER_LOGIN);
+    Get.offAllNamed(AppRoutes.VENDOR_LOGIN);
   }
 
   void goToAbout() {

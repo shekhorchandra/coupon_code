@@ -48,10 +48,18 @@ dependencies:
   qr_flutter: ^4.1.0
   dotted_border: ^3.1.0
   flutter_credit_card: ^4.1.0
+  http: ^1.6.0
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.14.4
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/yepp.png"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
