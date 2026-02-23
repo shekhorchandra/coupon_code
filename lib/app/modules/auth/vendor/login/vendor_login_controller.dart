@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:coupon_code/app/data/services/fcm_service.dart';
 import 'package:coupon_code/app/modules/services/Helper_status_code/HttpStatusHandler.dart';
 import 'package:coupon_code/app/modules/services/contants/api_constants.dart';
 import 'package:coupon_code/app/routes/app_routes.dart';
@@ -20,10 +21,7 @@ class VendorLoginController extends GetxController {
     try {
       final response = await http.post(
         Uri.parse(ApiConstants.baseUrl + ApiConstants.vendorLogin),
-        body: {
-          "email": emailController.value.text,
-          "password": passwordController.value.text,
-        },
+        body: {"email": emailController.value.text, "password": passwordController.value.text},
       );
 
       var data = jsonDecode(response.body);
@@ -31,14 +29,18 @@ class VendorLoginController extends GetxController {
       print(data);
 
       if (response.statusCode == 200) {
-        Get.snackbar("Login Successful", "Congratulation");
+        // Register FCM
+        final result = await FCMService().initFCM();
 
-        Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR);
+        if (!result) {
+          Get.snackbar('Error', 'An error occured!');
+        } else {
+          Get.snackbar("Login Successful", "");
+
+          Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR);
+        }
       } else {
-        Get.snackbar(
-          "Login Failed",
-          HttpStatusHandler.getMessage(response.statusCode),
-        );
+        Get.snackbar("Login Failed", HttpStatusHandler.getMessage(response.statusCode));
       }
     } catch (e, stackTrace) {
       // Debug console (full error)
