@@ -38,16 +38,37 @@ class _AddDealViewState extends State<AddDealView> {
 
   void _prefillData() {
     final deal = widget.deal;
-    if (deal == null) return;
 
-    controller.titleController.text = deal.title;
-    controller.selectedCategory.value = deal.category;
-    controller.highlightController.text = deal.highlights;
-    controller.descController.text = deal.description;
-    controller.couponController.text = deal.couponCode;
-    controller.priceController.text = deal.regularPrice.toString();
-    controller.discountController.text = deal.discountPercentage.toStringAsFixed(2);
-    controller.finalPriceController.text = deal.afterDiscountPrice.toStringAsFixed(2);
+    // If no deal is provided (Add New Deal), clear all fields
+    if (deal == null) {
+      controller.titleController.clear();
+      controller.selectedCategory.value = DealCategoryModel(
+        id: -1,
+        name: '',
+      ); // Assuming -1 is default invalid category ID
+      controller.highlightController.clear();
+      controller.descController.clear();
+      controller.couponController.clear();
+      controller.priceController.clear();
+      controller.discountController.clear();
+      controller.finalPriceController.clear();
+      controller.selectedValidityRange.value = DateTimeRange(
+        start: DateTime.now(),
+        end: DateTime.now(),
+      ); // Default date range
+      controller.acceptedTnC.value = false;
+      controller.selectedDealPlan.value = null;
+    } else {
+      // Prefill data for updating
+      controller.titleController.text = deal.title;
+      controller.selectedCategory.value = deal.category;
+      controller.highlightController.text = deal.highlights;
+      controller.descController.text = deal.description;
+      controller.couponController.text = deal.couponCode;
+      controller.priceController.text = deal.regularPrice.toString();
+      controller.discountController.text = deal.discountPercentage.toStringAsFixed(2);
+      controller.finalPriceController.text = deal.afterDiscountPrice.toStringAsFixed(2);
+    }
   }
 
   @override
