@@ -19,6 +19,19 @@ class ResetPasswordController extends GetxController {
     super.onInit();
   }
 
+  // Obscure toggle observables
+  var obscureNewPassword = true.obs;
+  var obscureConfirmPassword = true.obs;
+
+  // Toggle functions
+  void toggleNewPassword() {
+    obscureNewPassword.value = !obscureNewPassword.value;
+  }
+
+  void toggleConfirmPassword() {
+    obscureConfirmPassword.value = !obscureConfirmPassword.value;
+  }
+
   void resetPassword() async {
     final newPassword = newPasswordController.text.trim();
     final confirmPassword = confirmPasswordController.text.trim();
