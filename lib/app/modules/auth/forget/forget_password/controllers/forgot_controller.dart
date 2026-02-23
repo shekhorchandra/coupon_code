@@ -36,7 +36,7 @@ class ForgotPasswordController extends GetxController {
       Get.toNamed(AppRoutes.OTP_VERIFY, arguments: email);
 
     } catch (e) {
-      Get.snackbar("Error", "Failed to send OTP");
+      Get.snackbar("Error", "Invalid email, Failed to send OTP");
     } finally {
       isLoading.value = false;
     }

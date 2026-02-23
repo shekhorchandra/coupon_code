@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import '../../../services/Helper_status_code/HttpStatusHandler.dart';
 import '../../../services/contants/api_constants.dart';
 
 class AuthService {
-  // static const String baseUrl = "https://gastrotomic-squirrelly-yuonne.ngrok-free.dev/api/v1";
 
   /// Send OTP to email
   static Future<void> forgetPassword(String email) async {
@@ -32,8 +32,14 @@ class AuthService {
     if (res.statusCode == 200 && body["success"] == true) {
       return body["data"]; // TOKEN
     } else {
-      throw Exception(body["message"] ?? "OTP verification failed");
+      throw Exception(
+        HttpStatusHandler.getMessage(
+          res.statusCode,
+          fallback: body["message"],
+        ),
+      );
     }
+
   }
 
   ///  Reset Password
@@ -54,7 +60,12 @@ class AuthService {
     final body = jsonDecode(res.body);
 
     if (res.statusCode != 200 || body["success"] != true) {
-      throw Exception(body["message"] ?? "Reset password failed");
+      throw Exception(
+        HttpStatusHandler.getMessage(
+          res.statusCode,
+          fallback: body["message"],
+        ),
+      );
     }
   }
 }

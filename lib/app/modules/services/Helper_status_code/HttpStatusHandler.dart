@@ -1,13 +1,13 @@
 class HttpStatusHandler {
   /// Map HTTP status code to user-friendly message
-  static String getMessage(int statusCode) {
+  static String getMessage(int statusCode, {String? fallback}) {
     switch (statusCode) {
       case 200:
         return "Success";
       case 201:
         return "Created successfully";
       case 400:
-        return "User already exist. Please login!";
+        return fallback ?? "Bad request.";
       case 401:
       case 403:
         return "You are not authorized to access this content.";
@@ -20,7 +20,7 @@ class HttpStatusHandler {
       case 503:
         return "Service unavailable. Try again later.";
       default:
-        return "Unexpected error occurred. Please try again.";
+        return fallback ?? "Unexpected error occurred. Please try again.";
     }
   }
 }

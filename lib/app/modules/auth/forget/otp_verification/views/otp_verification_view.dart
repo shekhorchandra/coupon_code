@@ -31,18 +31,6 @@ class OtpVerificationView extends GetView<OtpController> {
 
             const SizedBox(height: 24),
 
-            // Obx(() => SizedBox(
-            //   width: double.infinity,
-            //   height: 50,
-            //   child: ElevatedButton(
-            //     onPressed:
-            //     controller.isLoading.value ? null : controller.verifyOtp,
-            //     child: controller.isLoading.value
-            //         ? const CircularProgressIndicator(color: Colors.white)
-            //         : const Text("Verify OTP"),
-            //   ),
-            // )),
-
             Obx(() => AppButton(
               text: "Verify OTP",
               loading: controller.isLoading.value,
