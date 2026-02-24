@@ -1,57 +1,140 @@
-import 'dart:convert';
+import 'dart:io';
 
+import 'package:coupon_code/app/data/network/dio_client.dart';
+import 'package:coupon_code/app/data/services/device_info_service.dart';
+import 'package:coupon_code/app/data/services/fcm_service.dart';
+import 'package:coupon_code/app/data/services/storage_service.dart';
 import 'package:coupon_code/app/modules/services/Helper_status_code/HttpStatusHandler.dart';
 import 'package:coupon_code/app/modules/services/contants/api_constants.dart';
 import 'package:coupon_code/app/routes/app_routes.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
+import 'package:get/get.dart' hide Response;
 
 class VendorLoginController extends GetxController {
   final obscure = true.obs;
 
-  /// By default
-  final emailController = TextEditingController(text: "shekhor@gmail.com").obs; // By default
+  /// Default values for email and password
+  final emailController = TextEditingController(text: "shekhor@gmail.com").obs;
   final passwordController = TextEditingController(text: "nayem@@Ahmed017").obs;
   RxBool loading = false.obs;
 
+  final DioClient _dioClient = DioClient();
+  final DeviceInfoService _deviceInfoService = DeviceInfoService();
+  final StorageService _storageService = StorageService();
+
+  /// Login API call
   Future<void> loginApi() async {
     loading.value = true;
     try {
-      final response = await http.post(
-        Uri.parse(ApiConstants.baseUrl + ApiConstants.vendorLogin),
-        body: {
-          "email": emailController.value.text,
-          "password": passwordController.value.text,
-        },
-      );
-
-      var data = jsonDecode(response.body);
-      print(response.statusCode);
-      print(data);
+      final response = await _performLoginRequest();
 
       if (response.statusCode == 200) {
-        Get.snackbar("Login Successful", "Congratulation");
+        // Handle successful login response
+        var data = response.data;
+        _storeLoginTokens(data);
 
+        // Register FCM and Device
+        bool fcmRegistered = await _registerFCM();
+        if (!fcmRegistered) {
+          Get.snackbar('Error', 'An error occurred while initializing notifications!');
+          return;
+        }
+
+        bool deviceRegistered = await _registerDevice(data);
+        if (!deviceRegistered) {
+          Get.snackbar('Error', 'An error occurred while registering the device.');
+          return;
+        }
+
+        // Proceed to the next screen
+        Get.snackbar("Login Successful", "");
         Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR);
       } else {
-        Get.snackbar(
-          "Login Failed",
-          HttpStatusHandler.getMessage(response.statusCode),
-        );
+        _handleError(response.statusCode ?? 0);
       }
     } catch (e, stackTrace) {
-      // Debug console (full error)
-      debugPrint("Login Error: $e");
-      debugPrint("StackTrace: $stackTrace");
-
-      // User-friendly message
-      Get.snackbar("Error", "Something went wrong. Please try again.");
+      _handleException(e, stackTrace);
     } finally {
       loading.value = false;
     }
   }
 
+  /// Perform login request
+  Future<Response<dynamic>> _performLoginRequest() {
+    return _dioClient.client.post(
+      ApiConstants.vendorLogin,
+      data: {"email": emailController.value.text, "password": passwordController.value.text},
+    );
+  }
+
+  /// Register FCM
+  Future<bool> _registerFCM() async {
+    final result = await FCMService().initFCM();
+    return result;
+  }
+
+  /// Register device
+  Future<bool> _registerDevice(Map<String, dynamic> data) async {
+    try {
+      // Device and Token
+      var deviceInfo = await _deviceInfoService.getDeviceInfo();
+      final deviceId = deviceInfo['deviceId'];
+      final token = _storageService.read('fcm_token');
+      final platform = Platform.isAndroid ? 'ANDROID' : 'IOS';
+      final deviceName = deviceInfo['deviceName'];
+
+      // Send to the backend
+      final response = await _dioClient.client.post(
+        ApiConstants.fcmRegister,
+        data: {
+          "deviceId": deviceId,
+          "token": token,
+          "platform": platform,
+          "deviceName": deviceName,
+        },
+      );
+
+      if (response.statusCode == 400) {
+        Get.snackbar('Error', 'You are not verified! Contact with the administrator.');
+
+        return false;
+      }
+
+      if (response.statusCode != 200 && response.statusCode != 400) {
+        Get.snackbar(
+          "Notification Initialization Failed",
+          HttpStatusHandler.getMessage(response.statusCode ?? 0),
+        );
+        return false;
+      }
+
+      return true;
+    } catch (e) {
+      debugPrint("Device Registration Error: $e");
+      return false;
+    }
+  }
+
+  /// Store login tokens in local storage
+  void _storeLoginTokens(Map<String, dynamic> data) {
+    _storageService.setAccessToken(data['data']['accessToken']);
+    _storageService.setRefreshToken(data['data']['refreshToken']);
+  }
+
+  /// Handle error based on HTTP status code
+  void _handleError(int statusCode) {
+    Get.snackbar("Login Failed", HttpStatusHandler.getMessage(statusCode));
+  }
+
+  /// Handle exception during login process
+  void _handleException(dynamic e, StackTrace stackTrace) {
+    debugPrint("Login Error: $e");
+    debugPrint("StackTrace: $stackTrace");
+    Get.snackbar("Error", "Something went wrong. Please try again.");
+  }
+
+  /// Toggle password visibility
   void togglePassword() {
     obscure.value = !obscure.value;
   }
