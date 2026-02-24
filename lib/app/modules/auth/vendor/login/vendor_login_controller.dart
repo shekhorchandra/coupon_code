@@ -23,6 +23,20 @@ class VendorLoginController extends GetxController {
   final DeviceInfoService _deviceInfoService = DeviceInfoService();
   final StorageService _storageService = StorageService();
 
+  @override
+  void onInit() {
+    Future.microtask(() => _checkAuthentication());
+    super.onInit();
+  }
+
+  void _checkAuthentication() async {
+    final accessToken = _storageService.accessToken;
+
+    if (accessToken != null) {
+      Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR);
+    }
+  }
+
   /// Login API call
   Future<void> loginApi() async {
     loading.value = true;
@@ -83,6 +97,9 @@ class VendorLoginController extends GetxController {
       final token = _storageService.read('fcm_token');
       final platform = Platform.isAndroid ? 'ANDROID' : 'IOS';
       final deviceName = deviceInfo['deviceName'];
+
+      // Save to the local storage
+      _storageService.write('device_id', deviceId);
 
       // Send to the backend
       final response = await _dioClient.client.post(
