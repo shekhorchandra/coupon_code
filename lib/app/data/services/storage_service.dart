@@ -8,18 +8,32 @@ class StorageService {
 
   StorageService._internal();
 
-  final GetStorage _box = GetStorage();
+  static const String _accessTokenKey = 'access_token';
+  static const String _refreshTokenKey = 'refresh_token';
+
+  late final GetStorage _box;
 
   // Initialize the storage
   Future<void> init() async {
-    final status = await _box.initStorage;
+    await GetStorage.init();
+    _box = GetStorage();
 
-    if (status) {
-      log('Get Storage Box Initialized');
-    } else {
-      log('Failed to initialize Get Storage');
-    }
+    log('======= GetStorage Initialized =======');
   }
+
+  // Access token
+  Future<void> setAccessToken(String token) async {
+    await _box.write(_accessTokenKey, token);
+  }
+
+  String? get accessToken => _box.read<String>(_accessTokenKey);
+
+  // Refresh token
+  Future<void> setRefreshToken(String token) async {
+    await _box.write(_refreshTokenKey, token);
+  }
+
+  String? get refreshToken => _box.read<String>(_refreshTokenKey);
 
   // Read data
   T? read<T>(String key) {

@@ -1,5 +1,6 @@
 import 'package:coupon_code/app/core/theme/checkbox_theme.dart';
 import 'package:coupon_code/app/data/services/notification_service.dart';
+import 'package:coupon_code/app/data/services/storage_service.dart';
 import 'package:coupon_code/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -15,6 +16,9 @@ void main() async {
 
   // Firebase initialization
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // Get Storage initialization
+  StorageService().init();
 
   // Handle FCM messages while in background
   FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
