@@ -16,13 +16,17 @@ class VendorMenuController extends GetxController {
     loading.value = true;
 
     try {
-      // Remove tokens
-      await _storageService.clear();
-
       // Remove FCM
-      final response = await _dioClient.client.post(ApiConstants.fcmUnregister);
+      final deviceId = _storageService.read('device_id');
+      final response = await _dioClient.client.patch(
+        ApiConstants.fcmUnregister,
+        data: {"deviceId": deviceId},
+      );
 
       if (response.statusCode == 200) {
+        // Remove tokens
+        await _storageService.clear();
+
         Get.toNamed(AppRoutes.USER_BOTTOM_NAV);
       } else {
         Get.snackbar('Error', 'Failed to log out!');

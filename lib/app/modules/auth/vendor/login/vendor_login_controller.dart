@@ -84,6 +84,9 @@ class VendorLoginController extends GetxController {
       final platform = Platform.isAndroid ? 'ANDROID' : 'IOS';
       final deviceName = deviceInfo['deviceName'];
 
+      // Save to the local storage
+      _storageService.write('device_id', deviceId);
+
       // Send to the backend
       final response = await _dioClient.client.post(
         ApiConstants.fcmRegister,
