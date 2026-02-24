@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:coupon_code/app/data/network/dio_client.dart';
 import 'package:coupon_code/app/data/services/storage_service.dart';
 import 'package:coupon_code/app/modules/services/contants/api_constants.dart';
@@ -32,6 +34,7 @@ class VendorMenuController extends GetxController {
         Get.snackbar('Error', 'Failed to log out!');
       }
     } catch (e) {
+      log(e.toString());
       Get.snackbar('Error', 'An unexpected error occured: $e');
     } finally {
       loading.value = false;

@@ -23,6 +23,20 @@ class VendorLoginController extends GetxController {
   final DeviceInfoService _deviceInfoService = DeviceInfoService();
   final StorageService _storageService = StorageService();
 
+  @override
+  void onInit() {
+    Future.microtask(() => _checkAuthentication());
+    super.onInit();
+  }
+
+  void _checkAuthentication() async {
+    final accessToken = _storageService.accessToken;
+
+    if (accessToken != null) {
+      Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR);
+    }
+  }
+
   /// Login API call
   Future<void> loginApi() async {
     loading.value = true;
