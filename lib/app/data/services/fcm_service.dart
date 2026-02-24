@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:coupon_code/app/data/services/notification_service.dart';
 import 'package:coupon_code/app/data/services/storage_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -17,31 +19,31 @@ class FCMService {
     // Generate FCM token
     try {
       _fcmToken = await _generateFCMToken();
-      print('FCM Token: $_fcmToken');
+      log('FCM Token: $_fcmToken');
 
       if (_fcmToken == null) {
         return false;
       }
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
 
     // Save FCM token
-    StorageService().write('fcmToken', _fcmToken);
+    StorageService().write('fcm_token', _fcmToken);
 
     // Initialize notifications
     await _notificationService.initialize();
 
     // Notification settings
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('Title: ${message.notification!.title}');
-      print('Body: ${message.notification!.body}');
+      log('Title: ${message.notification!.title}');
+      log('Body: ${message.notification!.body}');
       _notificationService.showNotification(message);
     });
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Title: ${message.notification!.title}');
-      print('Body: ${message.notification!.body}');
+      log('Title: ${message.notification!.title}');
+      log('Body: ${message.notification!.body}');
       _notificationService.showNotification(message);
     });
 
