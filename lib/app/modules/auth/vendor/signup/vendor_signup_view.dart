@@ -1,3 +1,4 @@
+import 'package:coupon_code/app/modules/vendor/vendor_account/views/widgets/location_picker_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -114,12 +115,18 @@ class VendorSignupView extends GetView<VendorSignupController> {
             //   },
             // ),
 
-            Obx(() => AppButton(
+            // Obx(() => AppButton(
+            //   text: "Next",
+            //   loading: controller.isSubmitting.value,
+            //   onPressed: controller.registerVendor,
+            // )),
+            AppButton(
               text: "Next",
-              loading: controller.isSubmitting.value,
-              onPressed: controller.registerVendor,
-            )),
-
+              // onPressed: () => Get.toNamed(AppRoutes.CREATE_VENDOR_ACCOUNT),
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => LocationPickerScreen()),
+              ),
+            ),
 
             const SizedBox(height: 20),
 
