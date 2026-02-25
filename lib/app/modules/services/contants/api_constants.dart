@@ -17,4 +17,8 @@ class ApiConstants {
 
   static const String fcmRegister = '/user/register_fcm';
   static const String fcmUnregister = '/user/unregister_fcm';
+
+
+  //user category
+  static const String category = "/category";
 }
