@@ -52,13 +52,11 @@ class CategoriesView extends GetView<CategoriesController> {
                   itemBuilder: (context, index) {
                     final item = controller.filteredCategories[index];
                     return _categoryItem(
-                      iconPath: AppAssets.food,
-                      title: item["title"]!,
+                      imageUrl: item.image,
+                      title: item.name,
                       onTap: () {
-                        final navController = Get.find<UserNavigationBarController>();
-                        navController.openOverlayPage(const CategotyDetails());
+                        // navController.openOverlayPage(const CategotyDetails());
                       },
-
                     );
                   },
                 ),
@@ -71,7 +69,7 @@ class CategoriesView extends GetView<CategoriesController> {
   }
 
   Widget _categoryItem({
-    required String iconPath,
+    required String imageUrl,
     required String title,
     required VoidCallback onTap,
   }) {
@@ -84,9 +82,15 @@ class CategoriesView extends GetView<CategoriesController> {
           CircleAvatar(
             radius: 40,
             backgroundColor: AppColor.primary.withOpacity(0.15),
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Image.asset(iconPath, width: 46, height: 57),
+            child: ClipOval(
+              child: Image.network(
+                imageUrl,
+                width: 60,
+                height: 60,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) =>
+                const Icon(Icons.image_not_supported),
+              ),
             ),
           ),
           const SizedBox(height: 4),
