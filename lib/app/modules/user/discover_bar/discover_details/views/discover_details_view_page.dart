@@ -175,24 +175,38 @@ class ServiceDetailsPage extends StatelessWidget {
 
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SvgPicture.asset(
-                        AppAssets.category,
-                        width: 14,
-                        height: 14,
-                        colorFilter: const ColorFilter.mode(
-                          Colors.grey,
-                          BlendMode.srcIn,
-                        ),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(8), // optional for ripple effect
+                    onTap: () {
+                      // Add your button action here
+                      print("Glamour Glow Salon button tapped!");
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200, // optional background
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      const SizedBox(width: 4),
-                      const Text(
-                        "Glamour Glow Salon",
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SvgPicture.asset(
+                            AppAssets.category,
+                            width: 14,
+                            height: 14,
+                            colorFilter: const ColorFilter.mode(
+                              Colors.grey,
+                              BlendMode.srcIn,
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          const Text(
+                            "Glamour Glow Salon",
+                            style: TextStyle(fontSize: 12, color: Colors.grey),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
 
