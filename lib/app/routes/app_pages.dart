@@ -1,4 +1,6 @@
 import 'package:coupon_code/app/data/models/deal_model.dart';
+import 'package:coupon_code/app/modules/auth/vendor/verification/vendor_verification_binding.dart';
+import 'package:coupon_code/app/modules/auth/vendor/verification/vendor_verification_view.dart';
 import 'package:coupon_code/app/modules/vendor/payment_method/bindings/payment_method_binding.dart';
 import 'package:coupon_code/app/modules/vendor/payment_method/view/add_new_card_view.dart';
 import 'package:coupon_code/app/modules/vendor/payment_method/view/payment_methods_view.dart';
@@ -196,6 +198,11 @@ class AppPages {
       binding: VendorAccountBinding(),
     ),
     GetPage(
+      name: AppRoutes.VENDOR_VERIFICATION,
+      page: () => VendorVerificationView(),
+      binding: VendorVerificationBinding(),
+    ),
+    GetPage(
       name: AppRoutes.ADD_DEAL,
       page: () => AddDealView(),
       binding: VendorDealsBinding(),
@@ -265,7 +272,6 @@ class AppPages {
       page: () => const ResetPasswordView(),
       binding: ResetPasswordBinding(),
     ),
-
 
     /// About Us
     GetPage(

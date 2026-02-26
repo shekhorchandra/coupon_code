@@ -167,4 +167,34 @@ class VendorLoginController extends GetxController {
   void togglePassword() {
     obscure.value = !obscure.value;
   }
+
+  /// Login flow
+  Future<void> isVerifiedOrIsShopCreated() async {
+    try {
+      final response = await _dioClient.client.get(ApiConstants.getMe);
+
+      if (response.statusCode == 200) {
+        var data = response.data;
+
+        // Check verification
+        final isVerified = data['data']['isVerified'];
+
+        if (isVerified) {
+          // Check shop creation status
+          final isShopCreated = data['data']['isShopCreated'];
+
+          if (isShopCreated) {
+            Get.offAll(AppRoutes.VENDOR_DASHBOARD);
+          } else {
+            Get.offAll(AppRoutes.CREATE_VENDOR_ACCOUNT);
+          }
+        }
+      } else {
+        Get.offAllNamed(
+          AppRoutes.VENDOR_VERIFICATION,
+          arguments: {emailController.value.text},
+        );
+      }
+    } catch (e) {}
+  }
 }
