@@ -1,5 +1,9 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:coupon_code/app/data/network/dio_client.dart';
+import 'package:coupon_code/app/modules/services/contants/api_constants.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -116,5 +120,63 @@ class VendorAccountController extends GetxController {
       outlets[i]['name'] = 'Outlet ${i + 1}';
     }
     outlets.refresh();
+  }
+
+  /// Submit the form
+  Future<void> submitForApproval() async {
+    final DioClient _dioClient = DioClient();
+
+    if (selectedImage.value == null) {
+      Get.snackbar("Error", "Please upload a business logo");
+      return;
+    }
+
+    try {
+      Get.dialog(const Center(child: CircularProgressIndicator()), barrierDismissible: false);
+
+      Map<String, dynamic> shopData = {
+        "business_name": businessNameController.text,
+        "business_email": emailController.text,
+        // "business_phone": // TODO: Fix this
+        "description": businessDescriptionController.text,
+        "coord": [pickedLat.value, pickedLng.value],
+        "zip_code": zipCodeController.text,
+        "website": websiteLinkController.text,
+      };
+
+      // Outlet Data
+      List<Map<String, dynamic>> outletData = outlets.map((item) {
+        return {
+          "address": item['address'],
+          "zip_code": zipCodeController.text,
+          "coordinates": [double.parse(item['lng']!), double.parse(item['lat']!)],
+        };
+      }).toList();
+
+      // Create FormData
+      dio.FormData formData = dio.FormData.fromMap({
+        "shop": jsonEncode(shopData),
+        "outlet": jsonEncode(outletData),
+
+        // Logo file
+        "file": await dio.MultipartFile.fromFile(
+          selectedImage.value!.path,
+          filename: selectedImage.value!.path.split('/').last,
+        ),
+      });
+
+      // Send Request
+      final response = await _dioClient.client.post(ApiConstants.createShop, data: formData);
+
+      Get.back(); // Close loading
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // TODO: Send to success page
+      }
+    } catch (e) {
+      Get.back();
+      print("Error: $e");
+      Get.snackbar("Error", "Submission failed");
+    }
   }
 }

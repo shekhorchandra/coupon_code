@@ -1,5 +1,6 @@
 class ApiConstants {
-  static const String baseUrl = "https://gastrotomic-squirrelly-yuonne.ngrok-free.dev/api/v1";
+  static const String baseUrl =
+      "https://gastrotomic-squirrelly-yuonne.ngrok-free.dev/api/v1";
 
   // Define endpoints
 
@@ -18,7 +19,9 @@ class ApiConstants {
   static const String fcmRegister = '/user/register_fcm';
   static const String fcmUnregister = '/user/unregister_fcm';
 
-
   //user category
   static const String category = "/category";
+
+  // Shop
+  static const String createShop = '/shop/create_shop';
 }

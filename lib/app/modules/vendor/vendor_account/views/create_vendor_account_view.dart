@@ -77,7 +77,7 @@ class CreateVendorAccountPage extends GetView<VendorAccountController> {
               const SizedBox(height: 5),
               CustomTextField(
                 hint: 'Enter your email address',
-                controller: controller.businessDescriptionController,
+                controller: controller.emailController,
                 icon: Icons.email_outlined,
               ),
               const SizedBox(height: 10),
@@ -86,7 +86,7 @@ class CreateVendorAccountPage extends GetView<VendorAccountController> {
               const SizedBox(height: 5),
               CustomTextField(
                 hint: 'Enter your phone number',
-                controller: controller.businessDescriptionController,
+                controller: controller.phoneNumberController,
                 icon: Iconsax.call_copy,
               ),
               const SizedBox(height: 10),
