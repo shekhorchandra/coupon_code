@@ -17,7 +17,6 @@ class CategoriesView extends GetView<CategoriesController> {
 
   @override
   Widget build(BuildContext context) {
-    final navController = Get.find<UserNavigationBarController>();
     return Scaffold(
       appBar: const CommonAppBar(
         title: "Categories",
@@ -39,11 +38,23 @@ class CategoriesView extends GetView<CategoriesController> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Obx(
-                    () => GridView.builder(
+              child: Obx(() {
+                // Loading state
+                if (controller.isLoading.value) {
+                  return const Center(
+                    child: CircularProgressIndicator(color: AppColor.primary),
+                  );
+                }
+
+                // Empty state
+                if (controller.categories.isEmpty) {
+                  return const Center(child: Text("No categories"));
+                }
+
+                // Grid view
+                return GridView.builder(
                   itemCount: controller.filteredCategories.length,
-                  gridDelegate:
-                  const SliverGridDelegateWithFixedCrossAxisCount(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
                     mainAxisSpacing: 2,
                     crossAxisSpacing: 16,
@@ -55,12 +66,12 @@ class CategoriesView extends GetView<CategoriesController> {
                       imageUrl: item.image,
                       title: item.name,
                       onTap: () {
-                        // navController.openOverlayPage(const CategotyDetails());
+                        // navController.openOverlayPage(const CategoryDetails());
                       },
                     );
                   },
-                ),
-              ),
+                );
+              }),
             ),
           ),
         ],
