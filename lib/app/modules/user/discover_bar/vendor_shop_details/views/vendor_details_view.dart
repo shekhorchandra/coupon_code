@@ -15,46 +15,48 @@ class VendorDetailsView extends GetView<VendorDetailsController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CommonAppBar(title: 'Vendor Details'),
-      body: Column(
-        children: [
-          // Vendor Info
-          const CircleAvatar(
-            radius: 45,
-            backgroundImage: NetworkImage("https://e7.pngegg.com/pngimages/975/385/png-clipart-partnership-business-logo-marketing-business-service-people.png"),
-          ),
-          const SizedBox(height: 6),
-          Text("Glamour Glow Salon", style: AppTextStyles.MenuTitle.copyWith()),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Text(
-              "Glamour Glow Salon is a modern beauty studio offering expert hair styling, skincare, makeup, and grooming services. Our skilled professionals use premium products to help you look and feel your best. Whether it’s a quick refresh or a special occasion makeover, we bring out your natural glow with care and creativity.",
-              style: AppTextStyles.Text.copyWith(),
-              textAlign: TextAlign.start,
+    return SafeArea(
+      child: Scaffold(
+        appBar: CommonAppBar(title: 'Vendor Details'),
+        body: Column(
+          children: [
+            // Vendor Info
+            const CircleAvatar(
+              radius: 45,
+              backgroundImage: NetworkImage("https://e7.pngegg.com/pngimages/975/385/png-clipart-partnership-business-logo-marketing-business-service-people.png"),
             ),
-          ),
-
-          // Tabs
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _tabButton("Active Deals", 0),
-              _tabButton("Address & Location", 1),
-            ],
-          ),
-
-          const SizedBox(height: 10),
-
-          // Tab Content
-          Expanded(
-            child: Obx(
-              () => controller.selectedTab.value == 0
-                  ? _activeDeals()
-                  : _addressLocation(),
+            const SizedBox(height: 6),
+            Text("Glamour Glow Salon", style: AppTextStyles.MenuTitle.copyWith()),
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Text(
+                "Glamour Glow Salon is a modern beauty studio offering expert hair styling, skincare, makeup, and grooming services. Our skilled professionals use premium products to help you look and feel your best. Whether it’s a quick refresh or a special occasion makeover, we bring out your natural glow with care and creativity.",
+                style: AppTextStyles.Text.copyWith(),
+                textAlign: TextAlign.start,
+              ),
             ),
-          ),
-        ],
+      
+            // Tabs
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _tabButton("Active Deals", 0),
+                _tabButton("Address & Location", 1),
+              ],
+            ),
+      
+            const SizedBox(height: 10),
+      
+            // Tab Content
+            Expanded(
+              child: Obx(
+                () => controller.selectedTab.value == 0
+                    ? _activeDeals()
+                    : _addressLocation(),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -209,6 +211,8 @@ class VendorDetailsView extends GetView<VendorDetailsController> {
                   ],
                 ),
               ),
+
+              SizedBox(height: 10,),
 
               AppButton(
                 text: "Redeem Now",

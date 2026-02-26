@@ -19,9 +19,9 @@ class VendorDetailsController extends GetxController {
 
   // Dummy outlets
   var outlets = [
-    {"name": "Outlet 1 - Dhanmondi", "lat": 23.746, "lng": 90.376},
-    {"name": "Outlet 2 - Gulshan", "lat": 23.780, "lng": 90.419},
-    {"name": "Outlet 3 - Uttara", "lat": 23.880, "lng": 90.396},
+    {"name": "Outlet 1 - Dhanmondi, B block, Dhaka, Bangladesh", "lat": 23.746, "lng": 90.376},
+    {"name": "Outlet 2 - Gulshan, G block, Dhaka, Bangladesh", "lat": 23.780, "lng": 90.419},
+    {"name": "Outlet 3 - Uttara, D block, Dhaka, Bangladesh", "lat": 23.880, "lng": 90.396},
   ].obs;
 
   // Currently selected outlet
