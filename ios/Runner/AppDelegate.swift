@@ -15,7 +15,8 @@ import GoogleMaps
       UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
     }
 
-    GMSServices.provideAPIKey("AIzaSyBU6apS6bCfXAcAeNmP6uvCjVwsurlzG-I")
+    // GMSServices.provideAPIKey("AIzaSyBU6apS6bCfXAcAeNmP6uvCjVwsurlzG-I")
+    GMSServices.provideAPIKey("AIzaSyC-2HKwdQBQmiJHC-5MpTh_u8Ia1HdYf3s")
     
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }

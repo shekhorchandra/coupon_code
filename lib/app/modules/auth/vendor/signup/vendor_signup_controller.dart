@@ -8,13 +8,12 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class VendorSignupController extends GetxController {
-  
   ///Text controllers
   final userNameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
-  
+
   ///UI Part
   final obscurePassword = true.obs;
   final obscureConfirmPassword = true.obs;
@@ -55,17 +54,16 @@ class VendorSignupController extends GetxController {
       return "Confirm your password";
     }
 
-    if (passwordController.text.trim() !=
-        confirmPasswordController.text.trim()) {
+    if (passwordController.text.trim() != confirmPasswordController.text.trim()) {
       return "Passwords do not match";
     }
 
     return null;
   }
-  
+
   /// SignUp API call
   Future<void> registerVendor() async {
-    if(isSubmitting.value) return;
+    if (isSubmitting.value) return;
 
     /// validation
     final error = validateForm();
@@ -76,12 +74,10 @@ class VendorSignupController extends GetxController {
 
     isSubmitting.value = true;
 
-    try{
+    try {
       final response = await http.post(
         Uri.parse(ApiConstants.baseUrl + ApiConstants.vendorRegister),
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "user_name": userNameController.text,
           "email": emailController.text,
@@ -91,28 +87,25 @@ class VendorSignupController extends GetxController {
 
       final data = jsonDecode(response.body);
 
-      if(response.statusCode == 201 && data["success"] == true ){
+      if (response.statusCode == 201 && data["success"] == true) {
         Get.snackbar("Success", data["message"] ?? "User created!!");
 
         ///Navigate part
-        Get.offAllNamed(AppRoutes.VENDOR_LOGIN);
-      }else
-        Get.snackbar(
-          "Registration Failed",
-          HttpStatusHandler.getMessage(response.statusCode),
-        );
-    }catch (e, stackTrace){
+        Get.offAllNamed(AppRoutes.CREATE_VENDOR_ACCOUNT);
+      } else
+        Get.snackbar("Registration Failed", HttpStatusHandler.getMessage(response.statusCode));
+    } catch (e, stackTrace) {
       debugPrint("Register Error: $e");
       debugPrint("StackTrace: $stackTrace");
 
       Get.snackbar("Error", "Unable to register. Please try again");
-    }finally{
+    } finally {
       isSubmitting.value = false;
     }
-      
   }
+
   @override
-  void onClose(){
+  void onClose() {
     userNameController.dispose();
     emailController.dispose();
     passwordController.dispose();

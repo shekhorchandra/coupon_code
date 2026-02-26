@@ -1,5 +1,6 @@
 import 'package:coupon_code/app/core/values/app_color.dart';
 import 'package:coupon_code/app/core/values/app_text.dart';
+import 'package:coupon_code/app/core/widgets/App_button.dart';
 import 'package:coupon_code/app/core/widgets/common_app_bar.dart';
 import 'package:coupon_code/app/core/widgets/custom_text_field.dart';
 import 'package:coupon_code/app/core/widgets/section_heading.dart';
@@ -16,10 +17,7 @@ class CreateVendorAccountPage extends GetView<VendorAccountController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(
-        title: 'Create Your Vendor Account',
-        showBack: false,
-      ),
+      appBar: CommonAppBar(title: 'Create Your Vendor Account', showBack: false),
 
       body: SafeArea(
         child: SingleChildScrollView(
@@ -104,10 +102,7 @@ class CreateVendorAccountPage extends GetView<VendorAccountController> {
                     GestureDetector(
                       onTap: () => controller.setTab(0),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 10,
-                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                         decoration: BoxDecoration(
                           color: controller.selectedTab.value == 0
                               ? AppColor.vividSky.s300
@@ -136,10 +131,7 @@ class CreateVendorAccountPage extends GetView<VendorAccountController> {
                     GestureDetector(
                       onTap: () => controller.setTab(1),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 15,
-                          vertical: 10,
-                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                         decoration: BoxDecoration(
                           color: controller.selectedTab.value == 1
                               ? AppColor.vividSky.s300
@@ -171,10 +163,8 @@ class CreateVendorAccountPage extends GetView<VendorAccountController> {
               Obx(
                 () => Row(
                   children: [
-                    if (controller.selectedTab.value == 0)
-                      Expanded(child: SingleOutletForm()),
-                    if (controller.selectedTab.value == 1)
-                      Expanded(child: MultipleOutletForm()),
+                    if (controller.selectedTab.value == 0) Expanded(child: SingleOutletForm()),
+                    if (controller.selectedTab.value == 1) Expanded(child: MultipleOutletForm()),
                   ],
                 ),
               ),
@@ -188,7 +178,9 @@ class CreateVendorAccountPage extends GetView<VendorAccountController> {
                 controller: controller.websiteLinkController,
                 icon: Icons.language,
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 30),
+
+              AppButton(text: 'Submit for Approval', onPressed: () {}),
             ],
           ),
         ),

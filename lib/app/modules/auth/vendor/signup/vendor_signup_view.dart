@@ -1,4 +1,3 @@
-import 'package:coupon_code/app/modules/vendor/vendor_account/views/widgets/location_picker_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,15 +9,13 @@ import '../../../../core/widgets/auth_toggle.dart';
 import '../../../../core/widgets/common_app_bar.dart';
 import '../../../../core/widgets/custom_text_field.dart';
 import '../../../../core/widgets/social_button.dart';
-import '../../../../core/widgets/switch_role_card.dart';
 import '../../../../routes/app_routes.dart';
 import 'vendor_signup_controller.dart';
 
 class VendorSignupView extends GetView<VendorSignupController> {
   VendorSignupView({super.key});
 
-  late final VendorSignupController controller =
-      Get.find<VendorSignupController>(); //instance
+  late final VendorSignupController controller = Get.find<VendorSignupController>(); //instance
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +28,7 @@ class VendorSignupView extends GetView<VendorSignupController> {
             Center(child: Image.asset(AppAssets.economic, height: 50)),
             const SizedBox(height: 10),
 
-            Text(
-              "Become a Vendor",
-              textAlign: TextAlign.center,
-              style: AppTextStyles.HeaderTitle,
-            ),
+            Text("Become a Vendor", textAlign: TextAlign.center, style: AppTextStyles.HeaderTitle),
 
             Text(
               "Expand your reach and boost your sales.",
@@ -77,9 +70,7 @@ class VendorSignupView extends GetView<VendorSignupController> {
                 obscure: controller.obscurePassword.value,
                 suffix: IconButton(
                   icon: Icon(
-                    controller.obscurePassword.value
-                        ? Icons.visibility_off
-                        : Icons.visibility,
+                    controller.obscurePassword.value ? Icons.visibility_off : Icons.visibility,
                   ),
                   onPressed: controller.togglePassword,
                 ),
@@ -107,24 +98,11 @@ class VendorSignupView extends GetView<VendorSignupController> {
 
             const SizedBox(height: 20),
 
-            // AppButton(
-            //   text: "Next",
-            //   onPressed: () {
-            //     // TODO: call login API
-            //     Get.offAndToNamed(AppRoutes.CREATE_VENDOR_ACCOUNT);
-            //   },
-            // ),
-
-            // Obx(() => AppButton(
-            //   text: "Next",
-            //   loading: controller.isSubmitting.value,
-            //   onPressed: controller.registerVendor,
-            // )),
-            AppButton(
-              text: "Next",
-              // onPressed: () => Get.toNamed(AppRoutes.CREATE_VENDOR_ACCOUNT),
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => LocationPickerScreen()),
+            Obx(
+              () => AppButton(
+                text: "Next",
+                loading: controller.isSubmitting.value,
+                onPressed: controller.registerVendor,
               ),
             ),
 
@@ -148,17 +126,11 @@ class VendorSignupView extends GetView<VendorSignupController> {
               child: Row(
                 children: const [
                   Expanded(
-                    child: SocialButton(
-                      text: "Google",
-                      iconPath: AppAssets.google,
-                    ),
+                    child: SocialButton(text: "Google", iconPath: AppAssets.google),
                   ),
                   SizedBox(width: 12),
                   Expanded(
-                    child: SocialButton(
-                      text: "Apple",
-                      iconPath: AppAssets.apple,
-                    ),
+                    child: SocialButton(text: "Apple", iconPath: AppAssets.apple),
                   ),
                 ],
               ),
