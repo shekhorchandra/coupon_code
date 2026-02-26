@@ -59,6 +59,7 @@ dependencies:
   pretty_dio_logger: ^1.4.0
   google_places_flutter: ^2.1.1
   geocoding: ^4.0.0
+  country_code_picker: ^3.4.1
 
 dev_dependencies:
   flutter_test:

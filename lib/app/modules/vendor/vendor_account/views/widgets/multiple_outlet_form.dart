@@ -49,6 +49,10 @@ class MultipleOutletForm extends GetView<VendorAccountController> {
                                   text: item['address'],
                                   style: const TextStyle(color: Colors.grey),
                                 ),
+                                TextSpan(
+                                  text: ", ${item['zip_code']}",
+                                  style: const TextStyle(color: Colors.grey),
+                                ),
                               ],
                             ),
                           ),

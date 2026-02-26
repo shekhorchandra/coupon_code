@@ -1,3 +1,4 @@
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:coupon_code/app/core/values/app_color.dart';
 import 'package:coupon_code/app/core/values/app_text.dart';
 import 'package:coupon_code/app/core/widgets/App_button.dart';
@@ -84,10 +85,25 @@ class CreateVendorAccountPage extends GetView<VendorAccountController> {
 
               Text('Phone Number', style: AppText.body1.semiBold),
               const SizedBox(height: 5),
-              CustomTextField(
-                hint: 'Enter your phone number',
-                controller: controller.phoneNumberController,
-                icon: Iconsax.call_copy,
+              Row(
+                children: [
+                  CountryCodePicker(
+                    boxDecoration: BoxDecoration(
+                      border: Border.all(color: AppColor.border, width: 2),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    onChanged: (value) {
+                      controller.countryCodeController.text = value.dialCode ?? '';
+                    },
+                  ),
+                  Expanded(
+                    child: CustomTextField(
+                      hint: 'Enter your phone number',
+                      controller: controller.phoneNumberController,
+                      // icon: Iconsax.call_copy,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 10),
 
@@ -183,7 +199,10 @@ class CreateVendorAccountPage extends GetView<VendorAccountController> {
               ),
               const SizedBox(height: 30),
 
-              AppButton(text: 'Submit for Approval', onPressed: () {}),
+              AppButton(
+                text: 'Submit for Approval',
+                onPressed: () => controller.submitForApproval(),
+              ),
             ],
           ),
         ),

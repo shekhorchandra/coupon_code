@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:coupon_code/app/data/network/dio_client.dart';
@@ -16,6 +17,7 @@ class VendorAccountController extends GetxController {
   final businessNameController = TextEditingController(text: '');
   final businessDescriptionController = TextEditingController(text: '');
   final emailController = TextEditingController(text: '');
+  final countryCodeController = TextEditingController(text: '');
   final phoneNumberController = TextEditingController(text: '');
   final websiteLinkController = TextEditingController(text: '');
   final businessAddressController = TextEditingController(text: '');
@@ -102,6 +104,7 @@ class VendorAccountController extends GetxController {
         'address': businessAddressController.text,
         'lat': pickedLat.value.toString(),
         'lng': pickedLng.value.toString(),
+        'zip_code': zipCodeController.text,
       });
 
       // Clear fields after saving
@@ -132,51 +135,92 @@ class VendorAccountController extends GetxController {
     }
 
     try {
-      Get.dialog(const Center(child: CircularProgressIndicator()), barrierDismissible: false);
+      Get.dialog(
+        const Center(child: CircularProgressIndicator.adaptive()),
+        barrierDismissible: false,
+      );
 
+      // Shop part
       Map<String, dynamic> shopData = {
         "business_name": businessNameController.text,
         "business_email": emailController.text,
-        // "business_phone": // TODO: Fix this
+        "business_phone": {
+          "country_code": countryCodeController.text,
+          "phone_number": phoneNumberController.text,
+        },
         "description": businessDescriptionController.text,
-        "coord": [pickedLat.value, pickedLng.value],
+        "coord": [pickedLng.value, pickedLat.value], // [Lng, Lat]
         "zip_code": zipCodeController.text,
         "website": websiteLinkController.text,
       };
 
-      // Outlet Data
-      List<Map<String, dynamic>> outletData = outlets.map((item) {
-        return {
-          "address": item['address'],
-          "zip_code": zipCodeController.text,
-          "coordinates": [double.parse(item['lng']!), double.parse(item['lat']!)],
-        };
-      }).toList();
+      // Outlet list part
+      List<Map<String, dynamic>> outletData = [];
+      if (selectedTab.value == 0) {
+        outletData = [
+          {
+            "address": businessAddressController.text,
+            "zip_code": zipCodeController.text,
+            "coordinates": [pickedLng.value, pickedLat.value],
+          },
+        ];
+      } else {
+        outletData = outlets.map((item) {
+          return {
+            "address": item['address'],
+            "zip_code": item['zip_code'],
+            "coordinates": [double.parse(item['lng']!), double.parse(item['lat']!)],
+          };
+        }).toList();
+      }
 
-      // Create FormData
+      // Combine both
+      Map<String, dynamic> finalPayload = {"shop": shopData, "outlet": outletData};
+
+      // Create formdata
       dio.FormData formData = dio.FormData.fromMap({
-        "shop": jsonEncode(shopData),
-        "outlet": jsonEncode(outletData),
-
-        // Logo file
+        "data": jsonEncode(finalPayload),
         "file": await dio.MultipartFile.fromFile(
           selectedImage.value!.path,
           filename: selectedImage.value!.path.split('/').last,
         ),
       });
 
-      // Send Request
+      log("Payload being sent in 'data': ${jsonEncode(finalPayload)}");
+
+      // Send request
       final response = await _dioClient.client.post(ApiConstants.createShop, data: formData);
 
       Get.back(); // Close loading
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        // TODO: Send to success page
+        Get.snackbar("Success", "Shop created successfully");
       }
+    } on dio.DioException catch (e) {
+      Get.back();
+      String errorMsg = "Server Error";
+
+      if (e.response?.data != null) {
+        if (e.response?.data is Map) {
+          errorMsg =
+              e.response?.data['errorSources'][0]['message']?.toString() ??
+              e.response?.data['message']?.toString() ??
+              e.message ??
+              "Unknown Error";
+        } else {
+          errorMsg = "Server returned an invalid response format.";
+          log("Raw Server Error: ${e.response?.data}");
+        }
+      } else {
+        errorMsg = e.message ?? "No response from server";
+      }
+
+      log("Final Parsed Error: $errorMsg");
+      Get.snackbar("Error", errorMsg);
     } catch (e) {
       Get.back();
-      print("Error: $e");
-      Get.snackbar("Error", "Submission failed");
+      log("General Error: $e");
+      Get.snackbar("Error", "Something went wrong");
     }
   }
 }
