@@ -57,7 +57,7 @@ class _AddDealViewState extends State<AddDealView> {
         end: DateTime.now(),
       ); // Default date range
       controller.acceptedTnC.value = false;
-      controller.selectedDealPlan.value = null;
+      controller.selectedDealPlan.value = dealPlans[2];
     } else {
       // Prefill data for updating
       controller.titleController.text = deal.title;
@@ -66,15 +66,19 @@ class _AddDealViewState extends State<AddDealView> {
       controller.descController.text = deal.description;
       controller.couponController.text = deal.couponCode;
       controller.priceController.text = deal.regularPrice.toString();
-      controller.discountController.text = deal.discountPercentage.toStringAsFixed(2);
-      controller.finalPriceController.text = deal.afterDiscountPrice.toStringAsFixed(2);
+      controller.discountController.text = deal.discountPercentage
+          .toStringAsFixed(2);
+      controller.finalPriceController.text = deal.afterDiscountPrice
+          .toStringAsFixed(2);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(title: widget.deal != null ? 'Update Deal' : 'Add New Deal'),
+      appBar: CommonAppBar(
+        title: widget.deal != null ? 'Update Deal' : 'Add New Deal',
+      ),
 
       body: SafeArea(
         child: SingleChildScrollView(
@@ -100,7 +104,10 @@ class _AddDealViewState extends State<AddDealView> {
 
               Text('Deal Title', style: AppText.body1.semiBold),
               const SizedBox(height: 5),
-              CustomTextField(hint: 'Title', controller: controller.titleController),
+              CustomTextField(
+                hint: 'Title',
+                controller: controller.titleController,
+              ),
               const SizedBox(height: 10),
 
               // TODO: Add Category
@@ -149,7 +156,10 @@ class _AddDealViewState extends State<AddDealView> {
                 style: AppText.body2.medium.copyWith(color: AppColor.bw.s500),
               ),
               const SizedBox(height: 5),
-              CustomTextField(hint: 'Coupon Code', controller: controller.couponController),
+              CustomTextField(
+                hint: 'Coupon Code',
+                controller: controller.couponController,
+              ),
               const SizedBox(height: 20),
 
               // Deal Pricing
@@ -196,7 +206,9 @@ class _AddDealViewState extends State<AddDealView> {
 
               Text('Validity', style: AppText.body1.semiBold),
               const SizedBox(height: 5),
-              CustomDateRangeSelector(selectedRange: controller.selectedValidityRange),
+              CustomDateRangeSelector(
+                selectedRange: controller.selectedValidityRange,
+              ),
               const SizedBox(height: 20),
 
               // Note
@@ -212,26 +224,33 @@ class _AddDealViewState extends State<AddDealView> {
                   children: [
                     Checkbox(
                       value: controller.acceptedTnC.value,
-                      onChanged: (status) => controller.acceptedTnC.value = status ?? false,
+                      onChanged: (status) =>
+                          controller.acceptedTnC.value = status ?? false,
                     ),
 
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: 'I acknowledge and agree to the ',
-                            style: AppText.body2.regular.copyWith(color: AppColor.bw.s800),
-                          ),
+                    Expanded(
+                      child: RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'I acknowledge and agree to the ',
+                              style: AppText.body2.regular.copyWith(
+                                color: AppColor.bw.s800,
+                              ),
+                            ),
 
-                          TextSpan(
-                            text: 'Terms and Conditions.',
-                            style: AppText.body2.regular.copyWith(color: AppColor.primary),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                Get.toNamed(AppRoutes.TERMSCONDITION);
-                              },
-                          ),
-                        ],
+                            TextSpan(
+                              text: 'Terms and Conditions.',
+                              style: AppText.body2.regular.copyWith(
+                                color: AppColor.primary,
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  Get.toNamed(AppRoutes.TERMSCONDITION);
+                                },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -259,7 +278,10 @@ class _AddDealViewState extends State<AddDealView> {
               if (!controller.hasError.value) {
                 Get.toNamed(
                   AppRoutes.DISCOVERDETAILS,
-                  arguments: {'dealItem': controller.deal.value, 'isNetworkImage': false},
+                  arguments: {
+                    'dealItem': controller.deal.value,
+                    'isNetworkImage': false,
+                  },
                 );
               }
             },
@@ -299,7 +321,10 @@ class _AddDealViewState extends State<AddDealView> {
                       children: [
                         Text(dealPlan.name, style: AppText.body2.bold),
                         if (dealPlan.description != null)
-                          Text(dealPlan.description!, style: AppText.body2.medium),
+                          Text(
+                            dealPlan.description!,
+                            style: AppText.body2.medium,
+                          ),
                       ],
                     ),
                   ],
@@ -322,7 +347,11 @@ class _AddDealViewState extends State<AddDealView> {
                         color: isSelected ? color : Colors.transparent,
                       ),
                       child: isSelected
-                          ? const Icon(Icons.check, size: 16, color: Colors.white)
+                          ? const Icon(
+                              Icons.check,
+                              size: 16,
+                              color: Colors.white,
+                            )
                           : null,
                     ),
                   ],

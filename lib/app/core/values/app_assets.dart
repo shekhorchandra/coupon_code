@@ -14,7 +14,7 @@ class AppAssets {
   // discover_bar icons
   static const food = 'assets/icons/food.png';
 
-// Menu page
+  // Menu page
   static const vendor = 'assets/icons/vendor.png';
 
   // bottom nav bar icons
@@ -24,6 +24,9 @@ class AppAssets {
   static const menu = 'assets/icons/menu.svg';
 
   /////////////////// VENDOR ///////////////////
+
+  // Vendor Registration
+  static const hourglassLoading = 'assets/icons/hourglass_loading.png';
 
   // vendor bottom nav bar
   static const dashboard = 'assets/icons/dashboard.svg';
