@@ -51,13 +51,19 @@ class VendorLoginController extends GetxController {
         // Register FCM and Device
         bool fcmRegistered = await _registerFCM();
         if (!fcmRegistered) {
-          Get.snackbar('Error', 'An error occurred while initializing notifications!');
+          Get.snackbar(
+            'Error',
+            'An error occurred while initializing notifications!',
+          );
           return;
         }
 
         bool deviceRegistered = await _registerDevice(data);
         if (!deviceRegistered) {
-          Get.snackbar('Error', 'An error occurred while registering the device.');
+          Get.snackbar(
+            'Error',
+            'An error occurred while registering the device.',
+          );
           return;
         }
 
@@ -78,7 +84,10 @@ class VendorLoginController extends GetxController {
   Future<Response<dynamic>> _performLoginRequest() {
     return _dioClient.client.post(
       ApiConstants.vendorLogin,
-      data: {"email": emailController.value.text, "password": passwordController.value.text},
+      data: {
+        "email": emailController.value.text,
+        "password": passwordController.value.text,
+      },
     );
   }
 
@@ -113,7 +122,10 @@ class VendorLoginController extends GetxController {
       );
 
       if (response.statusCode == 400) {
-        Get.snackbar('Error', 'You are not verified! Contact with the administrator.');
+        Get.snackbar(
+          'Error',
+          'You are not verified! Contact with the administrator.',
+        );
 
         return false;
       }

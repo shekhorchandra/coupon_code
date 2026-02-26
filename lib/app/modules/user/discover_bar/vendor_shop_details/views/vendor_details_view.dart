@@ -28,7 +28,7 @@ class VendorDetailsView extends GetView<VendorDetailsController> {
             const SizedBox(height: 6),
             Text("Glamour Glow Salon", style: AppTextStyles.MenuTitle.copyWith()),
             Padding(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
               child: Text(
                 "Glamour Glow Salon is a modern beauty studio offering expert hair styling, skincare, makeup, and grooming services. Our skilled professionals use premium products to help you look and feel your best. Whether it’s a quick refresh or a special occasion makeover, we bring out your natural glow with care and creativity.",
                 style: AppTextStyles.Text.copyWith(),
@@ -45,7 +45,7 @@ class VendorDetailsView extends GetView<VendorDetailsController> {
               ],
             ),
       
-            const SizedBox(height: 10),
+            // const SizedBox(height: 6),
       
             // Tab Content
             Expanded(
@@ -86,7 +86,7 @@ class VendorDetailsView extends GetView<VendorDetailsController> {
   // Active Deals Tab
   Widget _activeDeals() {
     return ListView.builder(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(6),
       itemCount: controller.deals.length,
       itemBuilder: (_, index) {
         final deal = controller.deals[index];
@@ -231,89 +231,91 @@ class VendorDetailsView extends GetView<VendorDetailsController> {
 
   // Address & Location Tab
   Widget _addressLocation() {
-    return Column(
-      children: [
-        // ================= OUTLETS =================
-        Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start, // aligns text/buttons to start
-            children: [
-              const Text(
-                "Outlets Address",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: AppColor.primary,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Obx(
-                    () => Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: controller.outlets.map((o) {
-                    bool isSelected =
-                        controller.selectedOutlet.value?["name"] == o["name"];
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: AppButton(
-                        onPressed: () => controller.selectOutlet(o),
-                        text: o["name"] as String,
-                        backgroundColor: controller.selectedOutlet.value?["name"] == o["name"]
-                            ? AppColor.primary
-                            : Colors.grey.shade200,
-                        textColor: controller.selectedOutlet.value?["name"] == o["name"]
-                            ? Colors.white
-                            : Colors.black,
-                        height: 40, // optional
-                        width: double.infinity, // optional
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
-            ],
-          ),
-        ),
-
-        const SizedBox(height: 12),
-
-        // ================= MAP =================
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "Map Location",
-                style: TextStyle(
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          // ================= OUTLETS =================
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start, // aligns text/buttons to start
+              children: [
+                const Text(
+                  "Outlets Address",
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: AppColor.primary),
-              ),
-              const SizedBox(height: 8),
-              Obx(() {
-                final outlet = controller.selectedOutlet.value;
-                return Container(
-                  height: 180,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Colors.grey.shade300,
+                    color: AppColor.primary,
                   ),
-                  child: Center(
-                    child: Text(
-                      outlet != null
-                          ? "${outlet['name']} \nLat: ${outlet['lat']}, Lng: ${outlet['lng']}"
-                          : "Select an outlet to view location",
-                      textAlign: TextAlign.center,
-                    ),
+                ),
+                const SizedBox(height: 8),
+                Obx(
+                      () => Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: controller.outlets.map((o) {
+                      bool isSelected =
+                          controller.selectedOutlet.value?["name"] == o["name"];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        child: AppButton(
+                          onPressed: () => controller.selectOutlet(o),
+                          text: o["name"] as String,
+                          backgroundColor: controller.selectedOutlet.value?["name"] == o["name"]
+                              ? AppColor.primary
+                              : Colors.grey.shade200,
+                          textColor: controller.selectedOutlet.value?["name"] == o["name"]
+                              ? Colors.white
+                              : Colors.black,
+                          height: 40, // optional
+                          width: double.infinity, // optional
+                        ),
+                      );
+                    }).toList(),
                   ),
-                );
-              }),
-            ],
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+      
+          const SizedBox(height: 12),
+      
+          // ================= MAP =================
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Map Location",
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: AppColor.primary),
+                ),
+                const SizedBox(height: 8),
+                Obx(() {
+                  final outlet = controller.selectedOutlet.value;
+                  return Container(
+                    height: 180,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: Colors.grey.shade300,
+                    ),
+                    child: Center(
+                      child: Text(
+                        outlet != null
+                            ? "${outlet['name']} \nLat: ${outlet['lat']}, Lng: ${outlet['lng']}"
+                            : "Select an outlet to view location",
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  );
+                }),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
