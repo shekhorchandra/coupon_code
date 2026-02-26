@@ -1,12 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../../../core/values/app_color.dart';
-import '../../../../core/values/app_text_styles.dart';
-import '../../../../core/widgets/common_app_bar.dart';
-import '../../../../core/widgets/custom_text_field.dart';
-import '../../../../routes/app_routes.dart';
+import '../../../../../core/values/app_color.dart';
+import '../../../../../core/values/app_text_styles.dart';
+import '../../../../../core/widgets/App_button.dart';
+import '../../../../../core/widgets/common_app_bar.dart';
+import '../../../../../core/widgets/custom_text_field.dart';
+import '../../../../../routes/app_routes.dart';
 import '../controllers/forgot_controller.dart';
 
 class ForgotPasswordView extends GetView<ForgotPasswordController> {
@@ -54,25 +54,11 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
 
             const SizedBox(height: 24),
 
-            Obx(
-              () => SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: controller.isLoading.value ? null : controller.sendResetLink,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColor.primary,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                  ),
-                  child: controller.isLoading.value
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text(
-                          "Reset Password",
-                          style: TextStyle(fontWeight: FontWeight.bold, color: AppColor.buttonText),
-                        ),
-                ),
-              ),
-            ),
+            Obx(() => AppButton(
+              text: "Send OTP",
+              loading: controller.isLoading.value,
+              onPressed: controller.sendResetLink,
+            )),
 
             const SizedBox(height: 60),
 

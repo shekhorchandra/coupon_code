@@ -7,7 +7,6 @@ class DiscoverController extends GetxController {
     searchQuery.value = value;
   }
 
-
   void onZipPressed() {
     // TODO: open zip selector
   }

@@ -68,7 +68,11 @@ class VendorMenuPage extends GetView<VendorAccountController> {
                   icon: Icons.description_outlined,
                   onTap: () => Get.toNamed(AppRoutes.TERMSCONDITION),
                 ),
-                KMenuItem(title: 'Rate the App', icon: Icons.star_rate_rounded, onTap: () {}),
+                KMenuItem(
+                  title: 'Rate the App',
+                  icon: Icons.star_rate_rounded,
+                  onTap: () {},
+                ),
                 KMenuItem(
                   title: 'Invite Friends',
                   icon: Icons.share_outlined,
@@ -78,7 +82,15 @@ class VendorMenuPage extends GetView<VendorAccountController> {
 
                 // Logout
                 const SizedBox(height: 20),
-                AppButton(text: 'Logout', onPressed: menuController.logout),
+                // AppButton(
+                //     text: 'Logout',
+                //     onPressed: menuController.logout
+                // ),
+
+                AppButton(
+                  text: 'Logout',
+                  onPressed: menuController.showLogoutWarning,
+                ),
               ],
             ),
           ),

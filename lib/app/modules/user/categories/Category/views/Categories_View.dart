@@ -17,7 +17,6 @@ class CategoriesView extends GetView<CategoriesController> {
 
   @override
   Widget build(BuildContext context) {
-    final navController = Get.find<UserNavigationBarController>();
     return Scaffold(
       appBar: const CommonAppBar(
         title: "Categories",
@@ -25,7 +24,7 @@ class CategoriesView extends GetView<CategoriesController> {
       ),
       body: Column(
         children: [
-          // 🔍 Search
+          // Search
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: CustomTextField(
@@ -35,15 +34,27 @@ class CategoriesView extends GetView<CategoriesController> {
             ),
           ),
 
-          // 🟢 Grid
+          // Grid
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Obx(
-                    () => GridView.builder(
+              child: Obx(() {
+                // Loading state
+                if (controller.isLoading.value) {
+                  return const Center(
+                    child: CircularProgressIndicator(color: AppColor.primary),
+                  );
+                }
+
+                // Empty state
+                if (controller.categories.isEmpty) {
+                  return const Center(child: Text("No categories"));
+                }
+
+                // Grid view
+                return GridView.builder(
                   itemCount: controller.filteredCategories.length,
-                  gridDelegate:
-                  const SliverGridDelegateWithFixedCrossAxisCount(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
                     mainAxisSpacing: 2,
                     crossAxisSpacing: 16,
@@ -52,17 +63,15 @@ class CategoriesView extends GetView<CategoriesController> {
                   itemBuilder: (context, index) {
                     final item = controller.filteredCategories[index];
                     return _categoryItem(
-                      iconPath: AppAssets.food,
-                      title: item["title"]!,
+                      imageUrl: item.image,
+                      title: item.name,
                       onTap: () {
-                        final navController = Get.find<UserNavigationBarController>();
-                        navController.openOverlayPage(const CategotyDetails());
+                        // navController.openOverlayPage(const CategoryDetails());
                       },
-
                     );
                   },
-                ),
-              ),
+                );
+              }),
             ),
           ),
         ],
@@ -71,7 +80,7 @@ class CategoriesView extends GetView<CategoriesController> {
   }
 
   Widget _categoryItem({
-    required String iconPath,
+    required String imageUrl,
     required String title,
     required VoidCallback onTap,
   }) {
@@ -84,9 +93,15 @@ class CategoriesView extends GetView<CategoriesController> {
           CircleAvatar(
             radius: 40,
             backgroundColor: AppColor.primary.withOpacity(0.15),
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Image.asset(iconPath, width: 46, height: 57),
+            child: ClipOval(
+              child: Image.network(
+                imageUrl,
+                width: 60,
+                height: 60,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) =>
+                const Icon(Icons.image_not_supported),
+              ),
             ),
           ),
           const SizedBox(height: 4),

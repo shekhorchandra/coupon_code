@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../routes/app_routes.dart';
+import '../../../../../routes/app_routes.dart';
+import '../../forget_auth_service/ForgetPasswordAuthService.dart';
+
+
 
 enum UserRole { vendor, user }
 
@@ -24,22 +27,16 @@ class ForgotPasswordController extends GetxController {
     isLoading.value = true;
 
     try {
-      await Future.delayed(const Duration(seconds: 2)); // simulate API
+      // CALL API
+      await AuthService.forgetPassword(email);
 
-      if (role == UserRole.user) {
-        // TODO: CALL USER FORGOT PASSWORD API
-        print("User forgot password API called");
-      } else {
-        // TODO: CALL VENDOR FORGOT PASSWORD API
-        print("Vendor forgot password API called");
-      }
+      Get.snackbar("Success", "OTP sent to your email");
 
-      Get.snackbar("Success", "Password reset link sent! Check your email.");
+      //  Navigate to OTP screen
+      Get.toNamed(AppRoutes.OTP_VERIFY, arguments: email);
 
-      // Navigate back to correct login
-      Get.offNamed(role == UserRole.user ? AppRoutes.USER_LOGIN : AppRoutes.VENDOR_LOGIN);
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      Get.snackbar("Error", "Invalid email, Failed to send OTP");
     } finally {
       isLoading.value = false;
     }
@@ -51,3 +48,5 @@ class ForgotPasswordController extends GetxController {
     super.onClose();
   }
 }
+
+

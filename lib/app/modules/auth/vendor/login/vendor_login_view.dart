@@ -80,7 +80,7 @@ class VendorLoginView extends GetView<VendorLoginController> {
                         () => CustomTextField(
                       controller: controller.passwordController.value,
                       hint: "Password",
-                      icon: Icons.lock_outline,
+                      icon: Icons.key,
                       obscure: controller.obscure.value,
                       suffix: IconButton(
                         icon: Icon(

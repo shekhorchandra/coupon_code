@@ -13,9 +13,12 @@ import 'package:coupon_code/app/modules/vendor/vendor_menu/views/vendor_menu_vie
 import 'package:coupon_code/app/modules/vendor/vendor_navigation_bar/bindings/vendor_navigation_bar_binding.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_navigation_bar/views/vendor_navigation_bar_view.dart';
 import 'package:get/get.dart';
-
-import '../modules/auth/forget/controllers/forgot_controller.dart';
-import '../modules/auth/forget/views/forgot_view.dart';
+import '../modules/auth/forget/forget_password/controllers/forgot_controller.dart';
+import '../modules/auth/forget/forget_password/views/forgot_view.dart';
+import '../modules/auth/forget/otp_verification/bindings/otp_binding.dart';
+import '../modules/auth/forget/otp_verification/views/otp_verification_view.dart';
+import '../modules/auth/forget/reset_password/bindings/reset_password_binding.dart';
+import '../modules/auth/forget/reset_password/views/reset_password_view.dart';
 import '../modules/auth/user/login/bindings/user_login_binding.dart';
 import '../modules/auth/user/login/views/user_login_view.dart';
 import '../modules/auth/user/signup/bindings/user_signup_binding.dart';
@@ -212,6 +215,20 @@ class AppPages {
         Get.put(ForgotPasswordController(UserRole.vendor));
       }),
     ),
+
+    /// Vendor Forget password OTP Verification
+    GetPage(
+      name: AppRoutes.OTP_VERIFY,
+      page: () => const OtpVerificationView(),
+      binding: OtpBinding(),
+    ),
+
+    GetPage(
+      name: AppRoutes.RESET_PASSWORD,
+      page: () => const ResetPasswordView(),
+      binding: ResetPasswordBinding(),
+    ),
+
 
     /// About Us
     GetPage(name: AppRoutes.ABOUT, page: () => const AboutView(), binding: AboutBinding()),

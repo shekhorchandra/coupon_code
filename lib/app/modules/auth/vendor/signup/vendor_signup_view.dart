@@ -28,7 +28,7 @@ class VendorSignupView extends GetView<VendorSignupController> {
         child: ListView(
           children: [
             Center(child: Image.asset(AppAssets.economic, height: 50)),
-            const SizedBox(height: 16),
+            const SizedBox(height: 10),
 
             Text(
               "Become a Vendor",
@@ -72,7 +72,7 @@ class VendorSignupView extends GetView<VendorSignupController> {
               () => CustomTextField(
                 controller: controller.passwordController,
                 hint: "Password",
-                icon: Icons.lock_outline,
+                icon: Icons.key,
                 obscure: controller.obscurePassword.value,
                 suffix: IconButton(
                   icon: Icon(
@@ -91,7 +91,7 @@ class VendorSignupView extends GetView<VendorSignupController> {
               () => CustomTextField(
                 controller: controller.confirmPasswordController,
                 hint: "Confirm Password",
-                icon: Icons.lock_outline,
+                icon: Icons.key,
                 obscure: controller.obscureConfirmPassword.value,
                 suffix: IconButton(
                   icon: Icon(
