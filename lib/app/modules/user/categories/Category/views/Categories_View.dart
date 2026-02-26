@@ -24,7 +24,7 @@ class CategoriesView extends GetView<CategoriesController> {
       ),
       body: Column(
         children: [
-          // 🔍 Search
+          // Search
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: CustomTextField(
@@ -34,7 +34,7 @@ class CategoriesView extends GetView<CategoriesController> {
             ),
           ),
 
-          // 🟢 Grid
+          // Grid
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
