@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 
 class VendorAccountController extends GetxController {
   VendorAccountController();
@@ -40,6 +43,33 @@ class VendorAccountController extends GetxController {
     outlets.clear();
   }
 
+  /// Business Logo
+  // Variables
+  var selectedImage = Rx<File?>(null);
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> pickImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
+
+    if (image != null) {
+      File file = File(image.path);
+
+      // Size check (10 MB limit)
+      int sizeInBytes = await file.length();
+      double sizeInMb = sizeInBytes / (1024 * 1024);
+
+      if (sizeInMb <= 10) {
+        selectedImage.value = file;
+      } else {
+        Get.snackbar("Error", "File size exceeds 10MB");
+      }
+    }
+  }
+
+  void removeImage() {
+    selectedImage.value = null;
+  }
+
   /// Create vendor account - Map
   // Variables
   var pickedLat = 0.0.obs;
@@ -53,7 +83,7 @@ class VendorAccountController extends GetxController {
     pickedLng.value = position.longitude;
 
     // Set the marker on map
-    markers.value = {Marker(markerId: const MarkerId("selected_location"), position: position)};
+    markers = {Marker(markerId: const MarkerId("selected_location"), position: position)}.obs;
   }
 
   void saveOutlet() {

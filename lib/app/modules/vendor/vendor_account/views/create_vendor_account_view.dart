@@ -5,6 +5,7 @@ import 'package:coupon_code/app/core/widgets/common_app_bar.dart';
 import 'package:coupon_code/app/core/widgets/custom_text_field.dart';
 import 'package:coupon_code/app/core/widgets/section_heading.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_account/controllers/vendor_account_controller.dart';
+import 'package:coupon_code/app/modules/vendor/vendor_account/views/widgets/business_logo_upload.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_account/views/widgets/multiple_outlet_form.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_account/views/widgets/single_outlet_form.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +54,7 @@ class CreateVendorAccountPage extends GetView<VendorAccountController> {
 
               Text('Business Logo', style: AppText.body1.semiBold),
               const SizedBox(height: 5),
-
+              BusinessLogoUpload(),
               const SizedBox(height: 10),
 
               Text('Description (Optional)', style: AppText.body1.semiBold),
