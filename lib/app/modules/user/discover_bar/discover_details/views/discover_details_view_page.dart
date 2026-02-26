@@ -17,6 +17,8 @@ import '../../../../../core/values/app_assets.dart';
 import '../../../../../core/values/app_color.dart';
 import '../../../../../core/values/app_text_styles.dart';
 import '../../../../../core/widgets/App_button.dart';
+import '../../vendor_shop_details/bindings/vendor_details_binding.dart';
+import '../../vendor_shop_details/views/vendor_details_view.dart';
 import '../controllers/discover_details_controller.dart';
 
 class ServiceDetailsPage extends StatelessWidget {
@@ -176,13 +178,20 @@ class ServiceDetailsPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: InkWell(
-                    borderRadius: BorderRadius.circular(8), // optional for ripple effect
+                    borderRadius: BorderRadius.circular(
+                      8,
+                    ), // optional for ripple effect
                     onTap: () {
-                      // Add your button action here
-                      print("Glamour Glow Salon button tapped!");
+                      Get.to(
+                        () => const VendorDetailsView(),
+                        binding: VendorDetailsBinding(),
+                      );
                     },
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.grey.shade200, // optional background
                         borderRadius: BorderRadius.circular(8),
@@ -200,9 +209,12 @@ class ServiceDetailsPage extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(width: 4),
-                          const Text(
+                          Text(
                             "Glamour Glow Salon",
-                            style: TextStyle(fontSize: 12, color: Colors.grey),
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: AppColor.bw.s600,
+                            ),
                           ),
                         ],
                       ),
@@ -370,7 +382,8 @@ class ServiceDetailsPage extends StatelessWidget {
                     child: Image.asset(
                       'assets/images/redeem.png', // replace with your infographic image
                       width: double.infinity, // take full width
-                      fit: BoxFit.contain, // or BoxFit.cover depending on your design
+                      fit: BoxFit
+                          .contain, // or BoxFit.cover depending on your design
                     ),
                   ),
                 ),
