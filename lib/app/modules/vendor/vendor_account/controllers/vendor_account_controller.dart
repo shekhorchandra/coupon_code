@@ -74,7 +74,12 @@ class VendorAccountController extends GetxController {
   // Variables
   var pickedLat = 0.0.obs;
   var pickedLng = 0.0.obs;
-  var markers = <Marker>{}.obs;
+  var markers = <Marker>{
+    Marker(
+      markerId: const MarkerId("selected_location"),
+      position: LatLng(43.68235894136127, -79.62811399251223),
+    ),
+  }.obs;
   var outlets = <Map<String, String>>[].obs;
 
   void updateLocation(LatLng position) {
@@ -83,7 +88,7 @@ class VendorAccountController extends GetxController {
     pickedLng.value = position.longitude;
 
     // Set the marker on map
-    markers = {Marker(markerId: const MarkerId("selected_location"), position: position)}.obs;
+    markers.value = {Marker(markerId: const MarkerId("selected_location"), position: position)};
   }
 
   void saveOutlet() {

@@ -13,7 +13,9 @@ import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 class CreateVendorAccountPage extends GetView<VendorAccountController> {
-  const CreateVendorAccountPage({super.key});
+  CreateVendorAccountPage({super.key});
+
+  final controller = Get.put(VendorAccountController());
 
   @override
   Widget build(BuildContext context) {

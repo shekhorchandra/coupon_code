@@ -44,6 +44,7 @@ class AddOutletForm extends GetView<VendorAccountController> {
                 onTap: (LatLng pos) => controller.updateLocation(pos),
                 zoomControlsEnabled: true,
                 zoomGesturesEnabled: true,
+                myLocationButtonEnabled: false,
 
                 // Ensures tap works inside scrollable views
                 gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
