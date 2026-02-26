@@ -4,6 +4,7 @@ import 'package:coupon_code/app/modules/vendor/payment_method/view/add_new_card_
 import 'package:coupon_code/app/modules/vendor/payment_method/view/payment_methods_view.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_account/bindings/vendor_account_binding.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_account/views/create_vendor_account_view.dart';
+import 'package:coupon_code/app/modules/vendor/vendor_account/views/vendor_registration_success_view.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_dashboard/bindings/vendor_dashboard_binding.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_dashboard/views/vendor_dashboard_view.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/bindings/vendor_deals_binding.dart';
@@ -187,6 +188,11 @@ class AppPages {
     GetPage(
       name: AppRoutes.CREATE_VENDOR_ACCOUNT,
       page: () => CreateVendorAccountPage(),
+      binding: VendorAccountBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.VENDOR_REGISTRATION_SUCCESS,
+      page: () => VendorRegistrationSuccessView(),
       binding: VendorAccountBinding(),
     ),
     GetPage(
