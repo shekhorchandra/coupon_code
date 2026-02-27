@@ -91,7 +91,7 @@ class VendorSignupController extends GetxController {
         Get.snackbar("Success", data["message"] ?? "User created!!");
 
         ///Navigate part
-        Get.offAllNamed(AppRoutes.CREATE_VENDOR_ACCOUNT);
+        Get.offAllNamed(AppRoutes.VENDOR_LOGIN);
       } else
         Get.snackbar("Registration Failed", HttpStatusHandler.getMessage(response.statusCode));
     } catch (e, stackTrace) {

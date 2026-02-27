@@ -31,6 +31,7 @@ abstract class AppRoutes {
   // Vendor Part
   static const CREATE_VENDOR_ACCOUNT = '/vendor/account/create';
   static const VENDOR_REGISTRATION_SUCCESS = '/vendor/account/create/success';
+  static const VENDOR_VERIFICATION = '/vendor/account/verification';
   static const VENDOR_DASHBOARD = '/vendor/dashboard';
 
   static const VENDOR_DEALS = '/vendor/deals';

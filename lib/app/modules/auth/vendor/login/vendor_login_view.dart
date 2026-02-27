@@ -10,7 +10,6 @@ import '../../../../core/widgets/auth_toggle.dart';
 import '../../../../core/widgets/common_app_bar.dart';
 import '../../../../core/widgets/custom_text_field.dart';
 import '../../../../core/widgets/social_button.dart';
-import '../../../../core/widgets/switch_role_card.dart';
 import '../../../../data/models/user_role.dart';
 import '../../../../routes/app_routes.dart';
 import 'vendor_login_controller.dart';
@@ -19,8 +18,7 @@ class VendorLoginView extends GetView<VendorLoginController> {
   VendorLoginView({super.key});
 
   final _formKey = GlobalKey<FormState>();
-  final VendorLoginController controller =
-      Get.find<VendorLoginController>(); //instance
+  final VendorLoginController controller = Get.find<VendorLoginController>(); //instance
 
   @override
   Widget build(BuildContext context) {
@@ -77,16 +75,14 @@ class VendorLoginView extends GetView<VendorLoginController> {
 
                   /// PASSWORD
                   Obx(
-                        () => CustomTextField(
+                    () => CustomTextField(
                       controller: controller.passwordController.value,
                       hint: "Password",
                       icon: Icons.key,
                       obscure: controller.obscure.value,
                       suffix: IconButton(
                         icon: Icon(
-                          controller.obscure.value
-                              ? Icons.visibility_off
-                              : Icons.visibility,
+                          controller.obscure.value ? Icons.visibility_off : Icons.visibility,
                         ),
                         onPressed: controller.togglePassword,
                       ),
@@ -107,10 +103,7 @@ class VendorLoginView extends GetView<VendorLoginController> {
                     alignment: Alignment.centerRight,
                     child: TextButton(
                       onPressed: () {
-                        Get.toNamed(
-                          AppRoutes.VENDOR_FORGOT_PASSWORD,
-                          arguments: UserRole.user,
-                        );
+                        Get.toNamed(AppRoutes.VENDOR_FORGOT_PASSWORD, arguments: UserRole.user);
                       },
                       child: const Text(
                         "Forgot Password?",
@@ -124,9 +117,9 @@ class VendorLoginView extends GetView<VendorLoginController> {
                     return AppButton(
                       text: "Log in",
                       loading: controller.loading.value,
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          controller.loginApi();
+                          await controller.loginApi();
                         }
                       },
                     );
@@ -134,7 +127,6 @@ class VendorLoginView extends GetView<VendorLoginController> {
                 ],
               ),
             ),
-
 
             const SizedBox(height: 20),
 
@@ -156,17 +148,11 @@ class VendorLoginView extends GetView<VendorLoginController> {
               child: Row(
                 children: const [
                   Expanded(
-                    child: SocialButton(
-                      text: "Google",
-                      iconPath: AppAssets.google,
-                    ),
+                    child: SocialButton(text: "Google", iconPath: AppAssets.google),
                   ),
                   SizedBox(width: 12),
                   Expanded(
-                    child: SocialButton(
-                      text: "Apple",
-                      iconPath: AppAssets.apple,
-                    ),
+                    child: SocialButton(text: "Apple", iconPath: AppAssets.apple),
                   ),
                 ],
               ),

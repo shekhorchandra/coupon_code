@@ -16,7 +16,8 @@ import GoogleMaps
     }
 
     // GMSServices.provideAPIKey("AIzaSyBU6apS6bCfXAcAeNmP6uvCjVwsurlzG-I")
-    GMSServices.provideAPIKey("AIzaSyC-2HKwdQBQmiJHC-5MpTh_u8Ia1HdYf3s")
+    // GMSServices.provideAPIKey("AIzaSyC-2HKwdQBQmiJHC-5MpTh_u8Ia1HdYf3s")
+    GMSServices.provideAPIKey("AIzaSyCzz34Li0m8Qq_hz3Q5HltABEQa12yPd30")
     
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }

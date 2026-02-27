@@ -6,7 +6,6 @@ class ApiConstants {
 
   // Auth endpoints
   static const String forgetPassword = "/auth/forget_password/";
-  static const String verifyOtp = "/auth/verify_otp";
   static const String resetPassword = "/auth/reset_password";
 
   // vendor login and signup
@@ -15,9 +14,14 @@ class ApiConstants {
   // static const String register = "/auth/register";
   // static const String getProfile = "/user/profile";
   static const String refreshToken = '/auth/generate_token';
+  static const String sendOtp = '/user/verification_otp';
+  static const String verifyOtp = '/user/verify_profile';
 
   static const String fcmRegister = '/user/register_fcm';
   static const String fcmUnregister = '/user/unregister_fcm';
+
+  // User profile
+  static const String getMe = '/user/get_me';
 
   //user category
   static const String category = "/category";

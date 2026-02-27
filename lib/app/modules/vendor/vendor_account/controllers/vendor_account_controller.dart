@@ -3,7 +3,9 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:coupon_code/app/data/network/dio_client.dart';
+import 'package:coupon_code/app/modules/auth/vendor/login/vendor_login_controller.dart';
 import 'package:coupon_code/app/modules/services/contants/api_constants.dart';
+import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -22,6 +24,8 @@ class VendorAccountController extends GetxController {
   final websiteLinkController = TextEditingController(text: '');
   final businessAddressController = TextEditingController(text: '');
   final zipCodeController = TextEditingController(text: '');
+
+  final loginController = VendorLoginController();
 
   @override
   void dispose() {
@@ -135,10 +139,7 @@ class VendorAccountController extends GetxController {
     }
 
     try {
-      Get.dialog(
-        const Center(child: CircularProgressIndicator.adaptive()),
-        barrierDismissible: false,
-      );
+      Center(child: CircularProgressIndicator.adaptive());
 
       // Shop part
       Map<String, dynamic> shopData = {
@@ -151,7 +152,7 @@ class VendorAccountController extends GetxController {
         "description": businessDescriptionController.text,
         "coord": [pickedLng.value, pickedLat.value], // [Lng, Lat]
         "zip_code": zipCodeController.text,
-        "website": websiteLinkController.text,
+        if (websiteLinkController.text.isNotEmpty) "website": websiteLinkController.text,
       };
 
       // Outlet list part
@@ -195,6 +196,8 @@ class VendorAccountController extends GetxController {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         Get.snackbar("Success", "Shop created successfully");
+
+        Get.offAllNamed(AppRoutes.VENDOR_DASHBOARD);
       }
     } on dio.DioException catch (e) {
       Get.back();
@@ -203,8 +206,8 @@ class VendorAccountController extends GetxController {
       if (e.response?.data != null) {
         if (e.response?.data is Map) {
           errorMsg =
-              e.response?.data['errorSources'][0]['message']?.toString() ??
               e.response?.data['message']?.toString() ??
+              e.response?.data['errorSources'][0]['message']?.toString() ??
               e.message ??
               "Unknown Error";
         } else {

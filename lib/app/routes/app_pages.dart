@@ -1,4 +1,6 @@
 import 'package:coupon_code/app/data/models/deal_model.dart';
+import 'package:coupon_code/app/modules/auth/vendor/verification/vendor_verification_binding.dart';
+import 'package:coupon_code/app/modules/auth/vendor/verification/vendor_verification_view.dart';
 import 'package:coupon_code/app/modules/vendor/payment_method/bindings/payment_method_binding.dart';
 import 'package:coupon_code/app/modules/vendor/payment_method/view/add_new_card_view.dart';
 import 'package:coupon_code/app/modules/vendor/payment_method/view/payment_methods_view.dart';
@@ -16,6 +18,7 @@ import 'package:coupon_code/app/modules/vendor/vendor_menu/views/vendor_menu_vie
 import 'package:coupon_code/app/modules/vendor/vendor_navigation_bar/bindings/vendor_navigation_bar_binding.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_navigation_bar/views/vendor_navigation_bar_view.dart';
 import 'package:get/get.dart';
+
 import '../modules/auth/forget/forget_password/controllers/forgot_controller.dart';
 import '../modules/auth/forget/forget_password/views/forgot_view.dart';
 import '../modules/auth/forget/otp_verification/bindings/otp_binding.dart';
@@ -57,11 +60,7 @@ import 'app_routes.dart';
 class AppPages {
   static final pages = [
     /// Splash Screen
-    GetPage(
-      name: AppRoutes.SPLASH,
-      page: () => const SplashView(),
-      binding: SplashBinding(),
-    ),
+    GetPage(name: AppRoutes.SPLASH, page: () => const SplashView(), binding: SplashBinding()),
 
     /// User Bottom Nav Bar
     GetPage(
@@ -70,11 +69,7 @@ class AppPages {
       binding: UserNavigationBinding(),
     ),
 
-    GetPage(
-      name: AppRoutes.DISCOVER,
-      page: () => const DiscoverView(),
-      binding: DiscoverBinding(),
-    ),
+    GetPage(name: AppRoutes.DISCOVER, page: () => const DiscoverView(), binding: DiscoverBinding()),
 
     GetPage(
       name: AppRoutes.DISCOVERDETAILS,
@@ -106,11 +101,7 @@ class AppPages {
 
     GetPage(name: AppRoutes.SAVED, page: () => UserMySavesPage()),
 
-    GetPage(
-      name: AppRoutes.MENU,
-      page: () => const MenuView(),
-      binding: MenuBinding(),
-    ),
+    GetPage(name: AppRoutes.MENU, page: () => const MenuView(), binding: MenuBinding()),
 
     ///Bottom Nav Bar
     GetPage(
@@ -128,10 +119,7 @@ class AppPages {
 
     GetPage(name: AppRoutes.CATEGORIES, page: () => const CategoriesView()),
 
-    GetPage(
-      name: AppRoutes.CATEGORIESDETAILS,
-      page: () => const CategotyDetails(),
-    ),
+    GetPage(name: AppRoutes.CATEGORIESDETAILS, page: () => const CategotyDetails()),
 
     GetPage(
       name: AppRoutes.DISCOVERDETAILS,
@@ -148,10 +136,7 @@ class AppPages {
 
     GetPage(name: AppRoutes.CATEGORIES, page: () => const CategoriesView()),
 
-    GetPage(
-      name: AppRoutes.CATEGORIESDETAILS,
-      page: () => const CategotyDetails(),
-    ),
+    GetPage(name: AppRoutes.CATEGORIESDETAILS, page: () => const CategotyDetails()),
 
     GetPage(name: AppRoutes.MENU, page: () => const MenuView()),
 
@@ -196,10 +181,11 @@ class AppPages {
       binding: VendorAccountBinding(),
     ),
     GetPage(
-      name: AppRoutes.ADD_DEAL,
-      page: () => AddDealView(),
-      binding: VendorDealsBinding(),
+      name: AppRoutes.VENDOR_VERIFICATION,
+      page: () => VendorVerificationView(),
+      binding: VendorVerificationBinding(),
     ),
+    GetPage(name: AppRoutes.ADD_DEAL, page: () => AddDealView(), binding: VendorDealsBinding()),
     GetPage(
       name: AppRoutes.UPDATE_DEAL,
       page: () {
@@ -223,9 +209,7 @@ class AppPages {
       page: () {
         final args = Get.arguments as Map<String, dynamic>? ?? {};
 
-        return PaymentMethodsView(
-          isSelectable: args['isSelectable'] as bool? ?? false,
-        );
+        return PaymentMethodsView(isSelectable: args['isSelectable'] as bool? ?? false);
       },
       binding: PaymentMethodBinding(),
     ),
@@ -266,13 +250,8 @@ class AppPages {
       binding: ResetPasswordBinding(),
     ),
 
-
     /// About Us
-    GetPage(
-      name: AppRoutes.ABOUT,
-      page: () => const AboutView(),
-      binding: AboutBinding(),
-    ),
+    GetPage(name: AppRoutes.ABOUT, page: () => const AboutView(), binding: AboutBinding()),
     GetPage(
       name: AppRoutes.VENDOR_DASHBOARD,
       page: () => VendorDashboardPage(),
@@ -301,15 +280,9 @@ class AppPages {
     GetPage(name: AppRoutes.HELP_SUPPORT, page: () => const HelpSupportView()),
 
     /// Terms and conditions
-    GetPage(
-      name: AppRoutes.TERMSCONDITION,
-      page: () => const TermsConditionView(),
-    ),
+    GetPage(name: AppRoutes.TERMSCONDITION, page: () => const TermsConditionView()),
 
     /// Privacy Policy
-    GetPage(
-      name: AppRoutes.PRIVACYPOLICY,
-      page: () => const PrivacyPolicyView(),
-    ),
+    GetPage(name: AppRoutes.PRIVACYPOLICY, page: () => const PrivacyPolicyView()),
   ];
 }
