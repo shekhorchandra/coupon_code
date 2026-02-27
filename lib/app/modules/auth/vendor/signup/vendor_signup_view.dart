@@ -1,4 +1,3 @@
-import 'package:coupon_code/app/modules/vendor/vendor_account/views/create_vendor_account_view.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -103,10 +102,9 @@ class VendorSignupView extends GetView<VendorSignupController> {
               () => AppButton(
                 text: "Next",
                 loading: controller.isSubmitting.value,
-                // onPressed: controller.registerVendor,
-                onPressed: () => Navigator.of(
-                  context,
-                ).push(MaterialPageRoute(builder: (context) => CreateVendorAccountPage())),
+                onPressed: () async {
+                  await controller.registerVendor();
+                },
               ),
             ),
 

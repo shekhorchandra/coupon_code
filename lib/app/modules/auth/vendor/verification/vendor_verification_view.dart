@@ -42,10 +42,7 @@ class VendorVerificationView extends GetView<VendorVerificationController> {
                   const TextSpan(text: "Enter the code sent to "),
                   TextSpan(
                     text: controller.email,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -54,7 +51,7 @@ class VendorVerificationView extends GetView<VendorVerificationController> {
 
             // OTP Input Field
             Pinput(
-              length: 4,
+              length: 6,
               defaultPinTheme: defaultPinTheme,
               focusedPinTheme: defaultPinTheme.copyDecorationWith(
                 border: Border.all(color: Colors.blue),
@@ -67,23 +64,6 @@ class VendorVerificationView extends GetView<VendorVerificationController> {
             const SizedBox(height: 40),
 
             // Verify Button
-            // SizedBox(
-            //   width: double.infinity,
-            //   height: 55,
-            //   child: ElevatedButton(
-            //     onPressed: controller.verifyOtp,
-            //     style: ElevatedButton.styleFrom(
-            //       backgroundColor: Colors.blueAccent,
-            //       shape: RoundedRectangleBorder(
-            //         borderRadius: BorderRadius.circular(12),
-            //       ),
-            //     ),
-            //     child: const Text(
-            //       "Verify",
-            //       style: TextStyle(color: Colors.white, fontSize: 18),
-            //     ),
-            //   ),
-            // ),
             AppButton(text: 'Verify', onPressed: controller.verifyOtp),
 
             const SizedBox(height: 20),
@@ -95,17 +75,13 @@ class VendorVerificationView extends GetView<VendorVerificationController> {
                 children: [
                   const Text("Didn't receive code? "),
                   TextButton(
-                    onPressed: controller.canResend.value
-                        ? controller.resendOtp
-                        : null,
+                    onPressed: controller.canResend.value ? controller.resendOtp : null,
                     child: Text(
                       controller.canResend.value
                           ? "Resend"
                           : "Resend in ${controller.secondsRemaining.value}s",
                       style: TextStyle(
-                        color: controller.canResend.value
-                            ? Colors.blue
-                            : Colors.grey,
+                        color: controller.canResend.value ? Colors.blue : Colors.grey,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

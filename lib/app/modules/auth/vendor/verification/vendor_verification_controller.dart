@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 class VendorVerificationController extends GetxController {
   VendorVerificationController();
 
-  final String email = Get.arguments;
+  final String email = Get.arguments['email'];
 
   var otpCode = "".obs;
   var secondsRemaining = 30.obs;
@@ -26,10 +26,7 @@ class VendorVerificationController extends GetxController {
   }
 
   Future<void> sendOtp() async {
-    final response = await _dioClient.client.post(
-      ApiConstants.sendOtp,
-      data: {"email": email},
-    );
+    final response = await _dioClient.client.post(ApiConstants.sendOtp, data: {"email": email});
 
     if (response.statusCode == 200) {
       Get.snackbar('Success', 'OTP has been sent successfully!');
@@ -64,25 +61,22 @@ class VendorVerificationController extends GetxController {
     Get.bottomSheet(
       const IntrinsicHeight(
         child: Center(
-          child: Padding(
-            padding: EdgeInsets.all(20),
-            child: Text("Verifying..."),
-          ),
+          child: Padding(padding: EdgeInsets.all(20), child: Text("Verifying...")),
         ),
       ),
       backgroundColor: Colors.white,
     );
 
-    print("Verifying OTP: ${otpCode.value}");
-
     final response = await _dioClient.client.post(
       ApiConstants.verifyOtp,
-      data: {"email": email, "otp": otpCode.value},
+      data: {"otp": int.parse(otpCode.value), "email": email},
     );
 
     if (response.statusCode == 200) {
       final loginController = Get.put(VendorLoginController());
 
+      // Refresh the token as previous token doesn't know the user is verified now
+      await _dioClient.refreshToken();
       loginController.isVerifiedOrIsShopCreated();
     } else {
       Get.snackbar('Failed', response.data['data']['message']);

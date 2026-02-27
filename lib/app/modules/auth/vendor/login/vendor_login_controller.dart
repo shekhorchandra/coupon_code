@@ -51,25 +51,21 @@ class VendorLoginController extends GetxController {
         // Register FCM and Device
         bool fcmRegistered = await _registerFCM();
         if (!fcmRegistered) {
-          Get.snackbar(
-            'Error',
-            'An error occurred while initializing notifications!',
-          );
+          Get.snackbar('Error', 'An error occurred while initializing notifications!');
           return;
         }
 
         bool deviceRegistered = await _registerDevice(data);
         if (!deviceRegistered) {
-          Get.snackbar(
-            'Error',
-            'An error occurred while registering the device.',
-          );
+          Get.snackbar('Error', 'An error occurred while registering the device.');
           return;
         }
 
         // Proceed to the next screen
-        Get.snackbar("Login Successful", "");
-        Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR);
+        isVerifiedOrIsShopCreated();
+
+        // Get.snackbar("Login Successful", "");
+        // Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR);
       } else {
         _handleError(response.statusCode ?? 0);
       }
@@ -84,10 +80,7 @@ class VendorLoginController extends GetxController {
   Future<Response<dynamic>> _performLoginRequest() {
     return _dioClient.client.post(
       ApiConstants.vendorLogin,
-      data: {
-        "email": emailController.value.text,
-        "password": passwordController.value.text,
-      },
+      data: {"email": emailController.value.text, "password": passwordController.value.text},
     );
   }
 
@@ -103,7 +96,7 @@ class VendorLoginController extends GetxController {
       // Device and Token
       var deviceInfo = await _deviceInfoService.getDeviceInfo();
       final deviceId = deviceInfo['deviceId'];
-      final token = _storageService.read('fcm_token');
+      final token = _storageService.read('fcm_token').toString();
       final platform = Platform.isAndroid ? 'ANDROID' : 'IOS';
       final deviceName = deviceInfo['deviceName'];
 
@@ -122,10 +115,7 @@ class VendorLoginController extends GetxController {
       );
 
       if (response.statusCode == 400) {
-        Get.snackbar(
-          'Error',
-          'You are not verified! Contact with the administrator.',
-        );
+        Get.snackbar('Error', 'You are not verified! Contact with the administrator.');
 
         return false;
       }
@@ -184,17 +174,19 @@ class VendorLoginController extends GetxController {
           final isShopCreated = data['data']['isShopCreated'];
 
           if (isShopCreated) {
-            Get.offAll(AppRoutes.VENDOR_DASHBOARD);
+            Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR);
           } else {
-            Get.offAll(AppRoutes.CREATE_VENDOR_ACCOUNT);
+            Get.offAllNamed(AppRoutes.CREATE_VENDOR_ACCOUNT);
           }
+        } else {
+          Get.offAllNamed(
+            AppRoutes.VENDOR_VERIFICATION,
+            arguments: {"email": emailController.value.text},
+          );
         }
-      } else {
-        Get.offAllNamed(
-          AppRoutes.VENDOR_VERIFICATION,
-          arguments: {emailController.value.text},
-        );
       }
-    } catch (e) {}
+    } catch (e) {
+      debugPrint("Error: $e");
+    }
   }
 }

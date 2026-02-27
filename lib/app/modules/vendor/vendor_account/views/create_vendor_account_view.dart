@@ -60,7 +60,7 @@ class CreateVendorAccountPage extends GetView<VendorAccountController> {
               BusinessLogoUpload(),
               const SizedBox(height: 10),
 
-              Text('Description (Optional)', style: AppText.body1.semiBold),
+              Text('Description', style: AppText.body1.semiBold),
               const SizedBox(height: 5),
               CustomTextField(
                 hint: 'Business description',

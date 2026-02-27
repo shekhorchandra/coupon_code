@@ -11,8 +11,9 @@ class VendorDashboardController extends GetxController {
 
   @override
   void onInit() {
-    super.onInit();
     loadDeals();
+
+    super.onInit();
   }
 
   Future<void> loadDeals() async {
