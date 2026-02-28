@@ -31,4 +31,5 @@ class ApiConstants {
 
   // Deal
   static const String myDeals = '/service/my_deals';
+  static String dealDetails(String id) => '/service/$id';
 }

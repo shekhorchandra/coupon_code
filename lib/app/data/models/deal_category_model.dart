@@ -5,15 +5,11 @@ class DealCategoryModel {
   final String id;
   final String categoryName;
   final String? categoryImage;
-  final DateTime createdAt;
-  final DateTime updatedAt;
   final bool isDeleted;
   DealCategoryModel({
     required this.id,
     required this.categoryName,
     this.categoryImage,
-    required this.createdAt,
-    required this.updatedAt,
     required this.isDeleted,
   });
 
@@ -21,16 +17,12 @@ class DealCategoryModel {
     String? id,
     String? categoryName,
     String? categoryImage,
-    DateTime? createdAt,
-    DateTime? updatedAt,
     bool? isDeleted,
   }) {
     return DealCategoryModel(
       id: id ?? this.id,
       categoryName: categoryName ?? this.categoryName,
       categoryImage: categoryImage ?? this.categoryImage,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
       isDeleted: isDeleted ?? this.isDeleted,
     );
   }
@@ -40,8 +32,6 @@ class DealCategoryModel {
       'id': id,
       'categoryName': categoryName,
       'categoryImage': categoryImage,
-      'createdAt': createdAt.millisecondsSinceEpoch,
-      'updatedAt': updatedAt.millisecondsSinceEpoch,
       'isDeleted': isDeleted,
     };
   }
@@ -49,10 +39,8 @@ class DealCategoryModel {
   factory DealCategoryModel.fromMap(Map<String, dynamic> map) {
     return DealCategoryModel(
       id: map['_id'] as String,
-      categoryName: map['categoryName'] as String,
-      categoryImage: map['categoryImage'] != null ? map['categoryImage'] as String : null,
-      createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
-      updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int),
+      categoryName: map['category_name'] as String,
+      categoryImage: map['category_image'] != null ? map['category_image'] as String : null,
       isDeleted: map['isDeleted'] as bool,
     );
   }
@@ -64,7 +52,7 @@ class DealCategoryModel {
 
   @override
   String toString() {
-    return 'DealCategoryModel(id: $id, categoryName: $categoryName, categoryImage: $categoryImage, createdAt: $createdAt, updatedAt: $updatedAt, isDeleted: $isDeleted)';
+    return 'DealCategoryModel(id: $id, categoryName: $categoryName, categoryImage: $categoryImage, isDeleted: $isDeleted)';
   }
 
   @override
@@ -74,18 +62,11 @@ class DealCategoryModel {
     return other.id == id &&
         other.categoryName == categoryName &&
         other.categoryImage == categoryImage &&
-        other.createdAt == createdAt &&
-        other.updatedAt == updatedAt &&
         other.isDeleted == isDeleted;
   }
 
   @override
   int get hashCode {
-    return id.hashCode ^
-        categoryName.hashCode ^
-        categoryImage.hashCode ^
-        createdAt.hashCode ^
-        updatedAt.hashCode ^
-        isDeleted.hashCode;
+    return id.hashCode ^ categoryName.hashCode ^ categoryImage.hashCode ^ isDeleted.hashCode;
   }
 }

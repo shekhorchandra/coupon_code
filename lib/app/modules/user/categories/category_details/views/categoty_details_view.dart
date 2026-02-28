@@ -231,7 +231,7 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                   text: "Redeem Now",
                   height: 32,
                   onPressed: () {
-                    navController.openOverlayPage(ServiceDetailsPage(id: 1));
+                    navController.openOverlayPage(ServiceDetailsPage(id: "1"));
                   },
                 ),
               ],

@@ -1,8 +1,8 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 class DealModel {
   final String id;
   final String shopId;
@@ -20,8 +20,6 @@ class DealModel {
   final String? coupon;
   final int totalViews;
   final int totalImpression;
-  final DateTime createdAt;
-  final DateTime updatedAt;
   DealModel({
     required this.id,
     required this.shopId,
@@ -39,8 +37,6 @@ class DealModel {
     this.coupon,
     required this.totalViews,
     required this.totalImpression,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   DealModel copyWith({
@@ -60,8 +56,6 @@ class DealModel {
     String? coupon,
     int? totalViews,
     int? totalImpression,
-    DateTime? createdAt,
-    DateTime? updatedAt,
   }) {
     return DealModel(
       id: id ?? this.id,
@@ -80,8 +74,6 @@ class DealModel {
       coupon: coupon ?? this.coupon,
       totalViews: totalViews ?? this.totalViews,
       totalImpression: totalImpression ?? this.totalImpression,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
@@ -103,33 +95,30 @@ class DealModel {
       'coupon': coupon,
       'totalViews': totalViews,
       'totalImpression': totalImpression,
-      'createdAt': createdAt.millisecondsSinceEpoch,
-      'updatedAt': updatedAt.millisecondsSinceEpoch,
     };
   }
 
   factory DealModel.fromMap(Map<String, dynamic> map) {
     return DealModel(
       id: map['_id'] as String,
-      shopId: map['shopId'] as String,
-      userId: map['userId'] as String,
-      categoryId: map['categoryId'] as String,
+      shopId: map['shop'] as String,
+      userId: map['user'] as String,
+      categoryId: map['category'] as String,
       activePromotion: map['activePromotion'] != null ? map['activePromotion'] as bool : null,
       title: map['title'] as String,
-      regularPrice: map['regularPrice'] as double,
-      discountPercent: map['discountPercent'] as double,
-      highlights: List<String>.from((map['highlights'] as List<String>)),
+      regularPrice: (map['reguler_price'] as num?)?.toDouble() ?? 0.0,
+      discountPercent: (map['discount'] as num?)?.toDouble() ?? 0.0,
+      highlights: List<String>.from(map['highlight'] ?? []),
       description: map['description'] as String,
-      images: List<String>.from((map['images'] as List<String>)),
+      images: List<String>.from(map['images'] ?? []),
       isPromoted: map['isPromoted'] != null ? map['isPromoted'] as bool : null,
       promotedUntil: map['promotedUntil'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['promotedUntil'] as int)
           : null,
-      coupon: map['coupon'] != null ? map['coupon'] as String : null,
-      totalViews: map['totalViews'] as int,
-      totalImpression: map['totalImpression'] as int,
-      createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
-      updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int),
+      // coupon: map['coupon'] != null ? map['coupon'] as String : null,
+      coupon: map['coupon']['coupon_code'],
+      totalViews: int.tryParse(map['total_views'].toString()) ?? 0,
+      totalImpression: int.tryParse(map['total_impression'].toString()) ?? 0,
     );
   }
 
@@ -140,7 +129,7 @@ class DealModel {
 
   @override
   String toString() {
-    return 'DealModel(id: $id, shopId: $shopId, userId: $userId, categoryId: $categoryId, activePromotion: $activePromotion, title: $title, regularPrice: $regularPrice, discountPercent: $discountPercent, highlights: $highlights, description: $description, images: $images, isPromoted: $isPromoted, promotedUntil: $promotedUntil, coupon: $coupon, totalViews: $totalViews, totalImpression: $totalImpression, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'DealModel(id: $id, shopId: $shopId, userId: $userId, categoryId: $categoryId, activePromotion: $activePromotion, title: $title, regularPrice: $regularPrice, discountPercent: $discountPercent, highlights: $highlights, description: $description, images: $images, isPromoted: $isPromoted, promotedUntil: $promotedUntil, coupon: $coupon, totalViews: $totalViews, totalImpression: $totalImpression)';
   }
 
   @override
@@ -162,9 +151,7 @@ class DealModel {
         other.promotedUntil == promotedUntil &&
         other.coupon == coupon &&
         other.totalViews == totalViews &&
-        other.totalImpression == totalImpression &&
-        other.createdAt == createdAt &&
-        other.updatedAt == updatedAt;
+        other.totalImpression == totalImpression;
   }
 
   @override
@@ -184,9 +171,7 @@ class DealModel {
         promotedUntil.hashCode ^
         coupon.hashCode ^
         totalViews.hashCode ^
-        totalImpression.hashCode ^
-        createdAt.hashCode ^
-        updatedAt.hashCode;
+        totalImpression.hashCode;
   }
 
   static double afterDiscountPrice(double regularPrice, double discountPercent) {

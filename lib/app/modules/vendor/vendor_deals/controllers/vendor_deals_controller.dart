@@ -1,9 +1,12 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:coupon_code/app/core/values/app_color.dart';
 import 'package:coupon_code/app/data/models/deal_category_model.dart';
 import 'package:coupon_code/app/data/models/deal_model.dart';
 import 'package:coupon_code/app/data/models/deal_plan_model.dart';
+import 'package:coupon_code/app/data/network/dio_client.dart';
+import 'package:coupon_code/app/modules/services/contants/api_constants.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/data/deal_plans.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -38,13 +41,38 @@ class VendorDealsController extends GetxController {
   bool _isUpdatingDiscount = false;
   bool _isUpdatingFinalPrice = false;
 
-  @override
-  void onInit() {
-    super.onInit();
+  DioClient _dioClient = DioClient();
 
+  @override
+  void onInit() async {
     priceController.addListener(_calculateFromDiscount);
     discountController.addListener(_calculateFinalPrice);
     finalPriceController.addListener(_calculateDiscount);
+
+    await _fetchCategories();
+    super.onInit();
+  }
+
+  Future<void> _fetchCategories() async {
+    try {
+      final response = await _dioClient.client.get(ApiConstants.category);
+
+      if (response.statusCode == 200) {
+        final data = response.data['data'];
+
+        if (data is List) {
+          categories.value = data.map((e) => DealCategoryModel.fromMap(e)).toList();
+        } else if (data is Map<String, dynamic>) {
+          categories.value = [DealCategoryModel.fromMap(data)];
+        }
+        log(categories.toString());
+      } else {
+        Get.snackbar('Error', 'Couldn\'t fetch categories!');
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Unidentified error occured!');
+      log(e.toString());
+    }
   }
 
   void _calculateFinalPrice() {
@@ -186,7 +214,7 @@ class VendorDealsController extends GetxController {
       return;
     }
     if (highlightController.isEmpty) {
-      _showError("Highlights is required.");
+      _showError("Highlights are required.");
       return;
     }
     if (descController.text.trim().isEmpty) {

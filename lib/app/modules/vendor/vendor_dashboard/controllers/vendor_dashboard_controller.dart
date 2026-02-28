@@ -28,7 +28,7 @@ class VendorDashboardController extends GetxController {
       if (response.statusCode == 200) {
         final List<dynamic> responseData = response.data['data'];
         final List<DealModel> loadedDeals = responseData.map((dealData) {
-          return DealModel.fromJson(dealData);
+          return DealModel.fromMap(dealData);
         }).toList();
 
         deals.assignAll(loadedDeals);

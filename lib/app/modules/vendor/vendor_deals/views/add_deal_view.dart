@@ -105,23 +105,23 @@ class _AddDealViewState extends State<AddDealView> {
               // TODO: Add Category
               Text('Category', style: AppText.body1.semiBold),
               const SizedBox(height: 5),
-              Obx(
-                () => CustomDropdownField<DealCategoryModel>(
+              Obx(() {
+                final selected = controller.categories
+                    .where(
+                      (category) => category.id.toString() == controller.selectedCategory.value,
+                    )
+                    .toList();
+
+                return CustomDropdownField<DealCategoryModel>(
                   hint: 'Select a category',
-                  value: controller.categories.firstWhere(
-                    (category) => category.id.toString() == controller.selectedCategory.value,
-                  ),
+                  value: selected.isNotEmpty ? selected.first : null,
                   items: controller.categories,
-                  itemLabel: (item) =>
-                      item.categoryName, // Assuming the category model has a 'name' field
+                  itemLabel: (item) => item.categoryName,
                   onChanged: (value) {
-                    if (value != null) {
-                      controller.selectedCategory.value = value.id
-                          .toString(); // Assuming category ID is an int
-                    }
+                    controller.selectedCategory.value = value?.id.toString() ?? '';
                   },
-                ),
-              ),
+                );
+              }),
               const SizedBox(height: 10),
 
               // TODO: fix this

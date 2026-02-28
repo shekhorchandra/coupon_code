@@ -75,12 +75,12 @@ class AppPages {
     GetPage(
       name: AppRoutes.DISCOVERDETAILS,
       page: () {
-        final args = Get.arguments as Map<String, dynamic>? ?? {};
+        final args = Get.arguments as Map<String, dynamic>;
 
         return ServiceDetailsPage(
-          id: args['id'] as int?,
-          dealItem: args['dealItem'] as DealModel?,
-          isNetworkImage: args['isNetworkImage'] as bool? ?? true,
+          id: args['id'],
+          dealItem: args['dealItem'],
+          isNetworkImage: args['isNetworkImage'] ?? true,
         );
       },
     ),
@@ -105,35 +105,9 @@ class AppPages {
     GetPage(name: AppRoutes.MENU, page: () => const MenuView(), binding: MenuBinding()),
 
     ///Bottom Nav Bar
-    GetPage(
-      name: AppRoutes.DISCOVERDETAILS,
-      page: () {
-        final args = Get.arguments as Map<String, dynamic>? ?? {};
-
-        return ServiceDetailsPage(
-          id: args['id'] as int,
-          dealItem: args['dealItem'] as DealModel,
-          isNetworkImage: args['isNetworkImage'] as bool? ?? true,
-        );
-      },
-    ),
-
     GetPage(name: AppRoutes.CATEGORIES, page: () => const CategoriesView()),
 
     GetPage(name: AppRoutes.CATEGORIESDETAILS, page: () => const CategotyDetails()),
-
-    GetPage(
-      name: AppRoutes.DISCOVERDETAILS,
-      page: () {
-        final args = Get.arguments as Map<String, dynamic>? ?? {};
-
-        return ServiceDetailsPage(
-          id: args['id'] as int,
-          dealItem: args['dealItem'] as DealModel,
-          isNetworkImage: args['isNetworkImage'] as bool? ?? true,
-        );
-      },
-    ),
 
     GetPage(name: AppRoutes.CATEGORIES, page: () => const CategoriesView()),
 
