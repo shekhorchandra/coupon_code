@@ -17,15 +17,20 @@ class VendorDealsList extends GetView<VendorDashboardController> {
         return const Center(child: CircularProgressIndicator());
       }
 
-      final now = DateTime.now();
       List<DealModel> filteredDeals = [];
 
       if (dealController.selectedTab.value == 0) {
-        filteredDeals = controller.deals
-            .where((deal) => deal.isActive && deal.expireDate.isAfter(now))
-            .toList();
+        filteredDeals = controller.deals.where((deal) {
+          // Ensure that deal.activePromotion is checked and promotedUntil is valid
+          DateTime validPromotedUntil =
+              deal.promotedUntil ?? DateTime.now().subtract(Duration(days: 1));
+          return (deal.activePromotion ?? false) && validPromotedUntil.isAfter(DateTime.now());
+        }).toList();
       } else {
-        filteredDeals = controller.deals.where((deal) => deal.expireDate.isBefore(now)).toList();
+        filteredDeals = controller.deals.where((deal) {
+          // Check if promotedUntil is not null and is before now
+          return deal.promotedUntil != null && deal.promotedUntil!.isBefore(DateTime.now());
+        }).toList();
       }
 
       if (filteredDeals.isEmpty) {

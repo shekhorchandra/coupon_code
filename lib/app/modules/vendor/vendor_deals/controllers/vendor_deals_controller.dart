@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:coupon_code/app/core/values/app_color.dart';
 import 'package:coupon_code/app/data/models/deal_category_model.dart';
-import 'package:coupon_code/app/data/models/deal_media_model.dart';
 import 'package:coupon_code/app/data/models/deal_model.dart';
 import 'package:coupon_code/app/data/models/deal_plan_model.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/data/deal_plans.dart';
@@ -88,20 +87,18 @@ class VendorDealsController extends GetxController {
 
   // Text Controllers
   final titleController = TextEditingController(text: '');
-  final highlightController = TextEditingController(text: '');
   final descController = TextEditingController(text: '');
   final couponController = TextEditingController(text: '');
   final priceController = TextEditingController(text: '');
   final discountController = TextEditingController(text: '');
   final finalPriceController = TextEditingController(text: '');
 
+  RxList<String> highlightController = <String>[].obs;
+
   // Selections
-  Rx<DealCategoryModel> selectedCategory = DealCategoryModel(id: -1, name: '').obs;
+  Rx<String> selectedCategory = ''.obs;
   // TODO: Fetch categories from API
-  RxList<DealCategoryModel> categories = <DealCategoryModel>[
-    DealCategoryModel(id: 1, name: '1st Category'),
-    DealCategoryModel(id: 2, name: '2nd Category'),
-  ].obs;
+  RxList<DealCategoryModel> categories = <DealCategoryModel>[].obs;
   Rx<DealPlanModel?> selectedDealPlan = Rx<DealPlanModel?>(dealPlans[0]);
   Rx<DateTimeRange?> selectedValidityRange = Rx<DateTimeRange?>(null);
   Rx<bool> acceptedTnC = false.obs;
@@ -145,34 +142,32 @@ class VendorDealsController extends GetxController {
     }
   }
 
-  DealModel buildDealModel() {
-    return DealModel(
-      id: DateTime.now().millisecondsSinceEpoch, // temp ID for mock / local
-      media: images
-          .asMap()
-          .entries
-          .map(
-            (entry) => DealMediaModel(
-              id: entry.key,
-              imageUrl: entry.value.path, // local file path
-              isPrimary: entry.key == 0,
-            ),
-          )
-          .toList(),
-      title: titleController.text.trim(),
-      category: selectedCategory.value,
-      highlights: highlightController.text.trim(),
-      description: descController.text.trim(),
-      couponCode: couponController.text.trim(),
-      regularPrice: double.parse(priceController.text),
-      discountPercentage: double.parse(discountController.text),
-      afterDiscountPrice: double.parse(finalPriceController.text),
-      dealPlan: selectedDealPlan.value!,
-      expireDate: selectedValidityRange.value!.end,
-      views: 0,
-      isActive: true,
-    );
-  }
+  // DealModel buildDealModel() {
+  //   return DealModel(
+  //     id: DateTime.now().millisecondsSinceEpoch.toString(), // temporary ID for mock
+  //     shopId: 'some_shop_id', // You may want to use a real shop ID here
+  //     userId: 'some_user_id', // You may want to use a real user ID here
+  //     categoryId: deal.categoryId,
+  //     activePromotion: true, // Assuming default value as true
+  //     title: titleController.text.trim(),
+  //     regularPrice: price,
+  //     discountPercent: discount,
+  //     highlights: highlights,
+  //     description: descController.text.trim(),
+  //     images: images
+  //         .map((image) => image.path)
+  //         .toList(), // Convert image file paths to list of strings
+  //     isPromoted: true, // Assuming default value as true
+  //     promotedUntil: DateTime.now().add(Duration(days: 30)), // Set a default expiration date
+  //     coupon: couponController.text.trim(),
+  //     totalViews: 0,
+  //     totalImpression: 0,
+  //     createdAt: DateTime.now(),
+  //     updatedAt: DateTime.now(),
+  //     dealPlan: selectedDealPlan.value!, // Ensure this is not null
+  //     expireDate: selectedValidityRange.value!.end, // Ensure this is not null
+  //   );
+  // }
 
   void validateAndSubmit() {
     // 1. Check Images
@@ -186,11 +181,11 @@ class VendorDealsController extends GetxController {
       _showError("Deal title is required.");
       return;
     }
-    if (selectedCategory.value.id == -1) {
+    if (selectedCategory.value.isEmpty) {
       _showError("Please select a category.");
       return;
     }
-    if (highlightController.text.trim().isEmpty) {
+    if (highlightController.isEmpty) {
       _showError("Highlights is required.");
       return;
     }
@@ -225,7 +220,7 @@ class VendorDealsController extends GetxController {
     hasError.value = false;
 
     // TODO: Call repository/API here
-    deal.value = buildDealModel();
+    // deal.value = buildDealModel();
     debugPrint("Created Deal: ${deal.value}");
   }
 
@@ -243,7 +238,6 @@ class VendorDealsController extends GetxController {
   @override
   void onClose() {
     titleController.dispose();
-    highlightController.dispose();
     descController.dispose();
     couponController.dispose();
     priceController.dispose();

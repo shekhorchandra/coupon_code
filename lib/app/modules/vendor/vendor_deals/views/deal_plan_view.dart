@@ -38,13 +38,16 @@ class _DealPlanViewState extends State<DealPlanView> {
     if (deal != null) {
       // Prefill data for updating
       controller.titleController.text = deal.title;
-      controller.selectedCategory.value = deal.category;
-      controller.highlightController.text = deal.highlights;
+      controller.selectedCategory.value = deal.categoryId;
+      controller.highlightController.value = deal.highlights;
       controller.descController.text = deal.description;
-      controller.couponController.text = deal.couponCode;
+      controller.couponController.text = deal.coupon ?? '';
       controller.priceController.text = deal.regularPrice.toString();
-      controller.discountController.text = deal.discountPercentage.toStringAsFixed(2);
-      controller.finalPriceController.text = deal.afterDiscountPrice.toStringAsFixed(2);
+      controller.discountController.text = deal.discountPercent.toStringAsFixed(2);
+      controller.finalPriceController.text = DealModel.afterDiscountPrice(
+        deal.regularPrice,
+        deal.discountPercent,
+      ).toStringAsFixed(2);
     }
   }
 

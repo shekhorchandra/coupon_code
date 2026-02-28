@@ -1,137 +1,135 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-import 'package:coupon_code/app/data/models/deal_category_model.dart';
-import 'package:coupon_code/app/data/models/deal_media_model.dart';
-import 'package:coupon_code/app/data/models/deal_plan_model.dart';
 import 'package:flutter/foundation.dart';
-import 'package:intl/intl.dart';
 
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 class DealModel {
-  final int id;
-  final List<DealMediaModel> media;
+  final String id;
+  final String shopId;
+  final String userId;
+  final String categoryId;
+  final bool? activePromotion;
   final String title;
-  final DealCategoryModel category;
-  final String highlights;
-  final String description;
-  final String couponCode;
   final double regularPrice;
-  final double discountPercentage;
-  final double afterDiscountPrice;
-  final DealPlanModel dealPlan;
-  final DateTime expireDate;
-  final int? views;
-  final bool isActive;
-
+  final double discountPercent;
+  final List<String> highlights;
+  final String description;
+  final List<String> images;
+  final bool? isPromoted;
+  final DateTime? promotedUntil;
+  final String? coupon;
+  final int totalViews;
+  final int totalImpression;
+  final DateTime createdAt;
+  final DateTime updatedAt;
   DealModel({
     required this.id,
-    required this.media,
+    required this.shopId,
+    required this.userId,
+    required this.categoryId,
+    this.activePromotion,
     required this.title,
-    required this.category,
+    required this.regularPrice,
+    required this.discountPercent,
     required this.highlights,
     required this.description,
-    required this.couponCode,
-    required this.regularPrice,
-    required this.discountPercentage,
-    required this.afterDiscountPrice,
-    required this.dealPlan,
-    required this.expireDate,
-    this.views,
-    required this.isActive,
+    required this.images,
+    this.isPromoted,
+    this.promotedUntil,
+    this.coupon,
+    required this.totalViews,
+    required this.totalImpression,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   DealModel copyWith({
-    int? id,
-    List<DealMediaModel>? media,
+    String? id,
+    String? shopId,
+    String? userId,
+    String? categoryId,
+    bool? activePromotion,
     String? title,
-    DealCategoryModel? category,
-    String? highlights,
+    double? regularPrice,
+    double? discountPercent,
+    List<String>? highlights,
     String? description,
-    String? couponCode,
-    int? regularPrice,
-    double? discountPercentage,
-    int? afterDiscountPrice,
-    DealPlanModel? dealPlan,
-    DateTime? expireDate,
-    int? views,
-    bool? isActive,
+    List<String>? images,
+    bool? isPromoted,
+    DateTime? promotedUntil,
+    String? coupon,
+    int? totalViews,
+    int? totalImpression,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) {
     return DealModel(
       id: id ?? this.id,
-      media: media ?? this.media,
+      shopId: shopId ?? this.shopId,
+      userId: userId ?? this.userId,
+      categoryId: categoryId ?? this.categoryId,
+      activePromotion: activePromotion ?? this.activePromotion,
       title: title ?? this.title,
-      category: category ?? this.category,
+      regularPrice: regularPrice ?? this.regularPrice,
+      discountPercent: discountPercent ?? this.discountPercent,
       highlights: highlights ?? this.highlights,
       description: description ?? this.description,
-      couponCode: couponCode ?? this.couponCode,
-      regularPrice: regularPrice?.toDouble() ?? this.regularPrice,
-      discountPercentage: discountPercentage ?? this.discountPercentage,
-      afterDiscountPrice: afterDiscountPrice?.toDouble() ?? this.afterDiscountPrice,
-      dealPlan: dealPlan ?? this.dealPlan,
-      expireDate: expireDate ?? this.expireDate,
-      views: views ?? this.views,
-      isActive: isActive ?? this.isActive,
+      images: images ?? this.images,
+      isPromoted: isPromoted ?? this.isPromoted,
+      promotedUntil: promotedUntil ?? this.promotedUntil,
+      coupon: coupon ?? this.coupon,
+      totalViews: totalViews ?? this.totalViews,
+      totalImpression: totalImpression ?? this.totalImpression,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
-      'media': media.map((x) => x.toMap()).toList(),
+      'shopId': shopId,
+      'userId': userId,
+      'categoryId': categoryId,
+      'activePromotion': activePromotion,
       'title': title,
-      'category': category.toMap(),
+      'regularPrice': regularPrice,
+      'discountPercent': discountPercent,
       'highlights': highlights,
       'description': description,
-      'couponCode': couponCode,
-      'regularPrice': regularPrice,
-      'discountPercentage': discountPercentage,
-      'afterDiscountPrice': afterDiscountPrice,
-      'dealPlan': dealPlan.toMap(),
-      'expireDate': expireDate.millisecondsSinceEpoch,
-      'views': views,
-      'isActive': isActive,
+      'images': images,
+      'isPromoted': isPromoted,
+      'promotedUntil': promotedUntil?.millisecondsSinceEpoch,
+      'coupon': coupon,
+      'totalViews': totalViews,
+      'totalImpression': totalImpression,
+      'createdAt': createdAt.millisecondsSinceEpoch,
+      'updatedAt': updatedAt.millisecondsSinceEpoch,
     };
   }
 
   factory DealModel.fromMap(Map<String, dynamic> map) {
-    DateTime parseDate(dynamic dateStr) {
-      if (dateStr == null || dateStr.toString().isEmpty) {
-        // If no date, return a date far in the future or handle accordingly
-        return DateTime.now().add(const Duration(days: 365));
-      }
-      try {
-        // Parse the date (06-Jun-2026)
-        DateTime parsed = DateFormat("dd-MMM-yyyy").parse(dateStr.toString());
-        // Set to end of day: 2026-06-06 23:59:59
-        return DateTime(parsed.year, parsed.month, parsed.day, 23, 59, 59);
-      } catch (e) {
-        debugPrint("Error parsing date: $dateStr - $e");
-        return DateTime.now(); // Fallback
-      }
-    }
-
     return DealModel(
-      id: map['id'] as int,
-      media: (map['media'] as List? ?? [])
-          .map((x) => DealMediaModel.fromMap(x as Map<String, dynamic>))
-          .toList(),
-      title: map['title'] ?? '',
-      category: (map['category'] != null && (map['category'] as List).isNotEmpty)
-          ? DealCategoryModel.fromMap(map['category'][0])
-          : DealCategoryModel(id: 0, name: 'Unknown'),
-      highlights: map['highlights'] ?? '',
-      description: map['description'] ?? '',
-      couponCode: map['couponCode'] ?? '',
-      regularPrice: (map['regularPrice'] as num? ?? 0.0).toDouble(),
-      discountPercentage: (map['discountPercentage'] as num? ?? 0).toDouble(),
-      afterDiscountPrice: (map['afterDiscountPrice'] as num? ?? 0.0).toDouble(),
-      dealPlan: (map['dealPlan'] != null && (map['dealPlan'] as List).isNotEmpty)
-          ? DealPlanModel.fromMap(map['dealPlan'][0])
-          : DealPlanModel(id: 0, name: '', description: '', price: 0.0),
-
-      expireDate: parseDate(map['expireDate']),
-      views: map['views'] as int?,
-      isActive: map['isActive'] as bool,
+      id: map['_id'] as String,
+      shopId: map['shopId'] as String,
+      userId: map['userId'] as String,
+      categoryId: map['categoryId'] as String,
+      activePromotion: map['activePromotion'] != null ? map['activePromotion'] as bool : null,
+      title: map['title'] as String,
+      regularPrice: map['regularPrice'] as double,
+      discountPercent: map['discountPercent'] as double,
+      highlights: List<String>.from((map['highlights'] as List<String>)),
+      description: map['description'] as String,
+      images: List<String>.from((map['images'] as List<String>)),
+      isPromoted: map['isPromoted'] != null ? map['isPromoted'] as bool : null,
+      promotedUntil: map['promotedUntil'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['promotedUntil'] as int)
+          : null,
+      coupon: map['coupon'] != null ? map['coupon'] as String : null,
+      totalViews: map['totalViews'] as int,
+      totalImpression: map['totalImpression'] as int,
+      createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
+      updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int),
     );
   }
 
@@ -142,7 +140,7 @@ class DealModel {
 
   @override
   String toString() {
-    return 'DealModel(id: $id, media: $media, title: $title, category: $category, highlights: $highlights, description: $description, couponCode: $couponCode, regularPrice: $regularPrice, discountPercentage: $discountPercentage, afterDiscountPrice: $afterDiscountPrice, dealPlan: $dealPlan, expireDate: $expireDate, views: $views, isActive: $isActive)';
+    return 'DealModel(id: $id, shopId: $shopId, userId: $userId, categoryId: $categoryId, activePromotion: $activePromotion, title: $title, regularPrice: $regularPrice, discountPercent: $discountPercent, highlights: $highlights, description: $description, images: $images, isPromoted: $isPromoted, promotedUntil: $promotedUntil, coupon: $coupon, totalViews: $totalViews, totalImpression: $totalImpression, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -150,36 +148,48 @@ class DealModel {
     if (identical(this, other)) return true;
 
     return other.id == id &&
-        listEquals(other.media, media) &&
+        other.shopId == shopId &&
+        other.userId == userId &&
+        other.categoryId == categoryId &&
+        other.activePromotion == activePromotion &&
         other.title == title &&
-        other.category == category &&
-        other.highlights == highlights &&
-        other.description == description &&
-        other.couponCode == couponCode &&
         other.regularPrice == regularPrice &&
-        other.discountPercentage == discountPercentage &&
-        other.afterDiscountPrice == afterDiscountPrice &&
-        other.dealPlan == dealPlan &&
-        other.expireDate == expireDate &&
-        other.views == views &&
-        other.isActive == isActive;
+        other.discountPercent == discountPercent &&
+        listEquals(other.highlights, highlights) &&
+        other.description == description &&
+        listEquals(other.images, images) &&
+        other.isPromoted == isPromoted &&
+        other.promotedUntil == promotedUntil &&
+        other.coupon == coupon &&
+        other.totalViews == totalViews &&
+        other.totalImpression == totalImpression &&
+        other.createdAt == createdAt &&
+        other.updatedAt == updatedAt;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-        media.hashCode ^
+        shopId.hashCode ^
+        userId.hashCode ^
+        categoryId.hashCode ^
+        activePromotion.hashCode ^
         title.hashCode ^
-        category.hashCode ^
+        regularPrice.hashCode ^
+        discountPercent.hashCode ^
         highlights.hashCode ^
         description.hashCode ^
-        couponCode.hashCode ^
-        regularPrice.hashCode ^
-        discountPercentage.hashCode ^
-        afterDiscountPrice.hashCode ^
-        dealPlan.hashCode ^
-        expireDate.hashCode ^
-        views.hashCode ^
-        isActive.hashCode;
+        images.hashCode ^
+        isPromoted.hashCode ^
+        promotedUntil.hashCode ^
+        coupon.hashCode ^
+        totalViews.hashCode ^
+        totalImpression.hashCode ^
+        createdAt.hashCode ^
+        updatedAt.hashCode;
+  }
+
+  static double afterDiscountPrice(double regularPrice, double discountPercent) {
+    return regularPrice - (regularPrice * discountPercent / 100);
   }
 }

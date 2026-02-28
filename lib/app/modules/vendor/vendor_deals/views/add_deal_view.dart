@@ -41,10 +41,7 @@ class _AddDealViewState extends State<AddDealView> {
     // If no deal is provided (Add New Deal), clear all fields
     if (deal == null) {
       controller.titleController.clear();
-      controller.selectedCategory.value = DealCategoryModel(
-        id: -1,
-        name: '',
-      ); // Assuming -1 is default invalid category ID
+      controller.selectedCategory.value = '';
       controller.highlightController.clear();
       controller.descController.clear();
       controller.couponController.clear();
@@ -60,13 +57,16 @@ class _AddDealViewState extends State<AddDealView> {
     } else {
       // Prefill data for updating
       controller.titleController.text = deal.title;
-      controller.selectedCategory.value = deal.category;
-      controller.highlightController.text = deal.highlights;
+      controller.selectedCategory.value = deal.categoryId;
+      controller.highlightController.value = deal.highlights;
       controller.descController.text = deal.description;
-      controller.couponController.text = deal.couponCode;
+      controller.couponController.text = deal.coupon ?? '';
       controller.priceController.text = deal.regularPrice.toString();
-      controller.discountController.text = deal.discountPercentage.toStringAsFixed(2);
-      controller.finalPriceController.text = deal.afterDiscountPrice.toStringAsFixed(2);
+      controller.discountController.text = deal.discountPercent.toStringAsFixed(2);
+      controller.finalPriceController.text = DealModel.afterDiscountPrice(
+        deal.regularPrice,
+        deal.discountPercent,
+      ).toStringAsFixed(2);
     }
   }
 
@@ -108,30 +108,32 @@ class _AddDealViewState extends State<AddDealView> {
               Obx(
                 () => CustomDropdownField<DealCategoryModel>(
                   hint: 'Select a category',
-                  value: controller.selectedCategory.value.id == -1
-                      ? null
-                      : controller.selectedCategory.value,
+                  value: controller.categories.firstWhere(
+                    (category) => category.id.toString() == controller.selectedCategory.value,
+                  ),
                   items: controller.categories,
-                  itemLabel: (item) => item.name,
+                  itemLabel: (item) =>
+                      item.categoryName, // Assuming the category model has a 'name' field
                   onChanged: (value) {
                     if (value != null) {
-                      controller.selectedCategory.value = value;
+                      controller.selectedCategory.value = value.id
+                          .toString(); // Assuming category ID is an int
                     }
                   },
                 ),
               ),
               const SizedBox(height: 10),
 
-              Text('Highlights', style: AppText.body1.semiBold),
-              const SizedBox(height: 5),
-              CustomTextField(
-                hint: 'Product Highlights',
-                controller: controller.highlightController,
-                maxLength: 100,
-                maxLines: 5,
-              ),
-              const SizedBox(height: 10),
-
+              // TODO: fix this
+              // Text('Highlights', style: AppText.body1.semiBold),
+              // const SizedBox(height: 5),
+              // CustomTextField(
+              //   hint: 'Product Highlights',
+              //   controller: controller.highlightController,
+              //   maxLength: 100,
+              //   maxLines: 5,
+              // ),
+              // const SizedBox(height: 10),
               Text('Description', style: AppText.body1.semiBold),
               const SizedBox(height: 5),
               CustomTextField(
@@ -148,7 +150,7 @@ class _AddDealViewState extends State<AddDealView> {
                 style: AppText.body2.medium.copyWith(color: AppColor.bw.s500),
               ),
               const SizedBox(height: 5),
-              CustomTextField(hint: 'Coupon Code', controller: controller.couponController,),
+              CustomTextField(hint: 'Coupon Code', controller: controller.couponController),
               const SizedBox(height: 20),
 
               // Deal Pricing

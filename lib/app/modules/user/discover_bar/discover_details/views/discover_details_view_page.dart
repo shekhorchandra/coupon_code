@@ -22,12 +22,7 @@ import '../../vendor_shop_details/views/vendor_details_view.dart';
 import '../controllers/discover_details_controller.dart';
 
 class ServiceDetailsPage extends StatelessWidget {
-  ServiceDetailsPage({
-    super.key,
-    this.id,
-    this.dealItem,
-    this.isNetworkImage = true,
-  });
+  ServiceDetailsPage({super.key, this.id, this.dealItem, this.isNetworkImage = true});
 
   final int? id;
   final DealModel? dealItem;
@@ -78,10 +73,10 @@ class ServiceDetailsPage extends StatelessWidget {
                       /// IMAGE SLIDER
                       PageView.builder(
                         controller: controller.pageController,
-                        itemCount: deal.media.length,
+                        itemCount: deal.images.length,
                         onPageChanged: controller.onPageChanged,
                         itemBuilder: (_, index) {
-                          final imageUrl = deal!.media[index].imageUrl;
+                          final imageUrl = deal!.images[index];
 
                           return isNetworkImage ?? true
                               ? Hero(
@@ -90,11 +85,9 @@ class ServiceDetailsPage extends StatelessWidget {
                                     imageUrl: imageUrl,
                                     fit: BoxFit.cover,
                                     width: double.infinity,
-                                    placeholder: (_, _) => const Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                    errorWidget: (_, _, _) =>
-                                        const Icon(Icons.broken_image),
+                                    placeholder: (_, _) =>
+                                        const Center(child: CircularProgressIndicator()),
+                                    errorWidget: (_, _, _) => const Icon(Icons.broken_image),
                                   ),
                                 )
                               : Image.file(
@@ -124,9 +117,7 @@ class ServiceDetailsPage extends StatelessWidget {
                         right: 12,
                         child: Obx(
                           () => IconButton(
-                            onPressed:
-                                controller.currentImage.value ==
-                                    deal!.media.length - 1
+                            onPressed: controller.currentImage.value == deal!.images.length - 1
                                 ? null
                                 : controller.next,
                             icon: const Icon(Icons.arrow_forward_ios),
@@ -141,16 +132,13 @@ class ServiceDetailsPage extends StatelessWidget {
                         right: 12,
                         child: Obx(
                           () => Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 6,
-                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                             decoration: BoxDecoration(
                               color: Colors.black.withAlpha(128),
                               borderRadius: BorderRadius.circular(16),
                             ),
                             child: Text(
-                              '${controller.currentImage.value + 1} / ${deal!.media.length}',
+                              '${controller.currentImage.value + 1} / ${deal!.images.length}',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 12,
@@ -169,29 +157,19 @@ class ServiceDetailsPage extends StatelessWidget {
                   padding: EdgeInsets.all(8),
                   child: Text(
                     deal.title,
-                    style: AppTextStyles.MenuTitle.copyWith(
-                      color: Colors.black,
-                    ),
+                    style: AppTextStyles.MenuTitle.copyWith(color: Colors.black),
                   ),
                 ),
 
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: InkWell(
-                    borderRadius: BorderRadius.circular(
-                      8,
-                    ), // optional for ripple effect
+                    borderRadius: BorderRadius.circular(8), // optional for ripple effect
                     onTap: () {
-                      Get.to(
-                        () => const VendorDetailsView(),
-                        binding: VendorDetailsBinding(),
-                      );
+                      Get.to(() => const VendorDetailsView(), binding: VendorDetailsBinding());
                     },
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 6,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                       decoration: BoxDecoration(
                         color: Colors.grey.shade200, // optional background
                         borderRadius: BorderRadius.circular(8),
@@ -203,18 +181,12 @@ class ServiceDetailsPage extends StatelessWidget {
                             AppAssets.category,
                             width: 14,
                             height: 14,
-                            colorFilter: const ColorFilter.mode(
-                              Colors.grey,
-                              BlendMode.srcIn,
-                            ),
+                            colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
                           ),
                           const SizedBox(width: 4),
                           Text(
                             "Glamour Glow Salon",
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: AppColor.bw.s600,
-                            ),
+                            style: TextStyle(fontSize: 12, color: AppColor.bw.s600),
                           ),
                         ],
                       ),
@@ -233,9 +205,7 @@ class ServiceDetailsPage extends StatelessWidget {
                           "1234 Streets, New York  ● 1.2 km away",
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: AppTextStyles.MenuButtonText.copyWith(
-                            color: AppColor.titleColor,
-                          ),
+                          style: AppTextStyles.MenuButtonText.copyWith(color: AppColor.titleColor),
                         ),
                       ),
 
@@ -272,11 +242,8 @@ class ServiceDetailsPage extends StatelessWidget {
                             Row(
                               children: [
                                 Text(
-                                  "\$${deal.afterDiscountPrice.toStringAsFixed(2)}",
-                                  style: const TextStyle(
-                                    fontSize: 36,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  "\$${DealModel.afterDiscountPrice(deal.regularPrice, deal.discountPercent).toStringAsFixed(2)}",
+                                  style: const TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
                                 ),
                                 const SizedBox(width: 6),
                                 Text(
@@ -292,16 +259,13 @@ class ServiceDetailsPage extends StatelessWidget {
                             const SizedBox(width: 8),
 
                             Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 4,
-                              ),
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                               decoration: BoxDecoration(
                                 color: AppColor.primary,
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(
-                                "${deal.discountPercentage.toStringAsFixed(0)}% off",
+                                "${DealModel.afterDiscountPrice(deal.regularPrice, deal.discountPercent).toStringAsFixed(0)}% off",
                                 style: const TextStyle(
                                   fontSize: 12,
                                   color: Colors.white,
@@ -320,10 +284,7 @@ class ServiceDetailsPage extends StatelessWidget {
                 Align(
                   alignment: .centerRight,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.orange.withOpacity(0.15),
                       borderRadius: BorderRadius.circular(12),
@@ -352,7 +313,7 @@ class ServiceDetailsPage extends StatelessWidget {
                 _section(
                   title: "Highlights",
                   child: Text(
-                    deal.highlights,
+                    deal.highlights.map((highlight) => "- $highlight\n").join(),
                     style: TextStyle(
                       fontSize: 14,
                       height: 1.5, // better spacing for readability
@@ -382,8 +343,7 @@ class ServiceDetailsPage extends StatelessWidget {
                     child: Image.asset(
                       'assets/images/redeem.png', // replace with your infographic image
                       width: double.infinity, // take full width
-                      fit: BoxFit
-                          .contain, // or BoxFit.cover depending on your design
+                      fit: BoxFit.contain, // or BoxFit.cover depending on your design
                     ),
                   ),
                 ),
@@ -395,13 +355,8 @@ class ServiceDetailsPage extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: InkWell(
                       onTap: () async {
-                        final Uri url = Uri.parse(
-                          "https://www.glamourglowsalon.com",
-                        );
-                        await launchUrl(
-                          url,
-                          mode: LaunchMode.externalApplication,
-                        );
+                        final Uri url = Uri.parse("https://www.glamourglowsalon.com");
+                        await launchUrl(url, mode: LaunchMode.externalApplication);
                       },
                       child: Row(
                         children: [
@@ -409,18 +364,12 @@ class ServiceDetailsPage extends StatelessWidget {
                             "assets/icons/web.svg",
                             width: 18,
                             height: 18,
-                            colorFilter: const ColorFilter.mode(
-                              AppColor.primary,
-                              BlendMode.srcIn,
-                            ),
+                            colorFilter: const ColorFilter.mode(AppColor.primary, BlendMode.srcIn),
                           ),
                           const SizedBox(width: 8),
                           const Text(
                             "www.glamourglowsalon.com ↗",
-                            style: TextStyle(
-                              color: AppColor.primary,
-                              fontSize: 14,
-                            ),
+                            style: TextStyle(color: AppColor.primary, fontSize: 14),
                           ),
                         ],
                       ),
@@ -437,10 +386,7 @@ class ServiceDetailsPage extends StatelessWidget {
                       // Section Title
                       const Text(
                         "Location",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
 
                       const SizedBox(height: 8),
@@ -489,12 +435,7 @@ class ServiceDetailsPage extends StatelessWidget {
           children: [
             Padding(
               // padding: const EdgeInsets.symmetric(horizontal: 16),
-              padding: const EdgeInsetsGeometry.only(
-                top: 1,
-                right: 16,
-                bottom: 20,
-                left: 16,
-              ),
+              padding: const EdgeInsetsGeometry.only(top: 1, right: 16, bottom: 20, left: 16),
               child: Row(
                 children: [
                   if (dealItem != null)
@@ -520,10 +461,7 @@ class ServiceDetailsPage extends StatelessWidget {
                           AppAssets.saved,
                           width: 18,
                           height: 18,
-                          colorFilter: const ColorFilter.mode(
-                            AppColor.primary,
-                            BlendMode.srcIn,
-                          ),
+                          colorFilter: const ColorFilter.mode(AppColor.primary, BlendMode.srcIn),
                         ),
                       ),
                     ),
@@ -551,10 +489,7 @@ class ServiceDetailsPage extends StatelessWidget {
   // ================= COMMON FOLDABLE SECTION =================
   static Widget _section({required String title, required Widget child}) {
     return ExpansionTile(
-      title: Text(
-        title,
-        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-      ),
+      title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
       childrenPadding: const EdgeInsets.symmetric(horizontal: 16),
       children: [child],
     );

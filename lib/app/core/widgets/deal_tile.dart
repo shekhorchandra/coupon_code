@@ -39,7 +39,7 @@ class DealTile extends StatelessWidget {
               child: Hero(
                 tag: 'top-deals-grid-${deal.id}',
                 child: CachedNetworkImage(
-                  imageUrl: deal.media.first.imageUrl,
+                  imageUrl: deal.images.first,
                   width: 100,
                   height: 100,
                   fit: .cover,
@@ -125,7 +125,7 @@ class DealTile extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "\$${deal.afterDiscountPrice.toStringAsFixed(2)}",
+                            "\$${DealModel.afterDiscountPrice(deal.regularPrice, deal.discountPercent).toStringAsFixed(2)}",
                             style: AppText.label.bold.copyWith(fontSize: 15, color: Colors.black),
                           ),
                           Text(
@@ -142,30 +142,34 @@ class DealTile extends StatelessWidget {
                       const Spacer(),
 
                       // Countdown
-                      FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFFF1E5),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                          child: Text(
-                            formatRemainingTime(deal.expireDate),
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.orange,
+                      if (deal.promotedUntil != null)
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFFFF1E5),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                            child: Text(
+                              formatRemainingTime(deal.promotedUntil!),
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.orange,
+                              ),
                             ),
                           ),
                         ),
-                      ),
 
                       const SizedBox(width: 5),
 
                       // Switcher
                       if (dealType == 0)
-                        Switch.adaptive(value: deal.isActive, onChanged: (value) {}),
+                        Switch.adaptive(
+                          value: deal.activePromotion ?? false,
+                          onChanged: (value) {},
+                        ),
                     ],
                   ),
                 ],

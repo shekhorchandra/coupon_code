@@ -33,10 +33,7 @@ class VendorSingleDealView extends StatelessWidget {
                   width: MediaQuery.of(context).size.width * 0.35,
                   child: Hero(
                     tag: 'top-deals-grid-${deal.id}',
-                    child: CachedNetworkImage(
-                      imageUrl: deal.media.first.imageUrl,
-                      fit: BoxFit.cover,
-                    ),
+                    child: CachedNetworkImage(imageUrl: deal.images.first, fit: BoxFit.cover),
                   ),
                 ),
 
@@ -46,7 +43,7 @@ class VendorSingleDealView extends StatelessWidget {
                     mainAxisAlignment: .start,
                     crossAxisAlignment: .start,
                     children: [
-                      AppChip(text: deal.isActive ? 'Active' : 'Expired'),
+                      AppChip(text: deal.activePromotion ?? false ? 'Active' : 'Expired'),
                       const SizedBox(height: 10),
                       Text(deal.title, overflow: .ellipsis, maxLines: 3, style: AppText.body1.bold),
                     ],
@@ -62,7 +59,7 @@ class VendorSingleDealView extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      "\$${deal.afterDiscountPrice.toStringAsFixed(2)}",
+                      "\$${DealModel.afterDiscountPrice(deal.regularPrice, deal.discountPercent).toStringAsFixed(2)}",
                       style: const TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(width: 6),
@@ -100,7 +97,7 @@ class VendorSingleDealView extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    "${deal.discountPercentage.toStringAsFixed(0)}% off",
+                    "${deal.discountPercent.toStringAsFixed(0)}% off",
                     style: const TextStyle(
                       fontSize: 12,
                       color: Colors.white,

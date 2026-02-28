@@ -42,11 +42,11 @@ class DealGrid extends StatelessWidget {
                   aspectRatio: 1.2,
                   child: ClipRRect(
                     borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                    child: deal.media.isNotEmpty
+                    child: deal.images.isNotEmpty
                         ? Hero(
                             tag: 'top-deals-grid-${deal.id}',
                             child: CachedNetworkImage(
-                              imageUrl: deal.media.first.imageUrl,
+                              imageUrl: deal.images.first,
                               fit: BoxFit.cover,
                               placeholder: (context, url) => Container(color: Colors.grey[200]),
                               errorWidget: (context, url, error) => const Icon(Icons.error),
@@ -55,7 +55,7 @@ class DealGrid extends StatelessWidget {
                         : Container(color: Colors.grey[200]),
                   ),
                 ),
-                Positioned(top: 8, left: 8, child: _badge(deal.views?.toString() ?? "0")),
+                Positioned(top: 8, left: 8, child: _badge(deal.totalViews.toString())),
               ],
             ),
 
@@ -83,7 +83,7 @@ class DealGrid extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "\$${deal.afterDiscountPrice}",
+                              "\$${DealModel.afterDiscountPrice(deal.regularPrice, deal.discountPercent)}",
                               style: AppText.label.bold.copyWith(fontSize: 15, color: Colors.black),
                             ),
                             Text(
@@ -99,26 +99,27 @@ class DealGrid extends StatelessWidget {
                       ),
 
                       // Timer Badge
-                      Flexible(
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFFFF1E5),
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                            child: Text(
-                              formatRemainingTime(deal.expireDate),
-                              style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.orange,
+                      if (deal.promotedUntil != null)
+                        Flexible(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFFF1E5),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                              child: Text(
+                                formatRemainingTime(deal.promotedUntil!),
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.orange,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
                     ],
                   ),
                 ],
