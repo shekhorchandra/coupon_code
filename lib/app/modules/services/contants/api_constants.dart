@@ -28,4 +28,7 @@ class ApiConstants {
   // Shop
   static const String createShop = '/shop/create_shop';
   static const String shopDetails = '/shop/shop_details';
+
+  // Deal
+  static const String myDeals = '/service/my_deals';
 }

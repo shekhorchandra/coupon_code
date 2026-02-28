@@ -19,10 +19,10 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 class VendorDashboardPage extends GetView<VendorDashboardController> {
   VendorDashboardPage({super.key});
 
-  final menuController = Get.put(VendorMenuController());
-
   @override
   Widget build(BuildContext context) {
+    final menuController = Get.put(VendorMenuController());
+
     return Scaffold(
       body: SafeArea(
         child: RefreshIndicator.adaptive(

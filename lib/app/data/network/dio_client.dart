@@ -3,6 +3,7 @@ import 'package:coupon_code/app/modules/services/contants/api_constants.dart';
 import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class DioClient {
   final StorageService _storageService = StorageService();
@@ -20,16 +21,41 @@ class DioClient {
   );
 
   DioClient() {
+    // Add PrettyDioLogger for pretty logging
+    _dio.interceptors.add(
+      PrettyDioLogger(
+        requestHeader: true, // Show request headers
+        requestBody: true, // Show request body
+        responseHeader: true, // Show response headers
+        responseBody: true, // Show response body
+        error: true, // Show errors
+        compact: false, // Use compact mode (set to false for pretty print)
+        maxWidth: 90, // Set the maximum width of the log
+      ),
+    );
+
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
+          // Set Authorization header
           options.headers["Accept"] = "application/json";
           String? token = _storageService.accessToken;
           options.headers["Authorization"] = 'Bearer $token';
+
+          print("Request to: ${options.method} ${options.uri}");
+          print("Headers: ${options.headers}");
+          print("Request Body: ${options.data}");
+
           return handler.next(options);
         },
         onError: (error, handler) async {
-          if (error.response?.statusCode == 401) {
+          print("Error Status: ${error.response?.statusCode}");
+          print("Error Message: ${error.message}");
+          if (error.response != null) {
+            print("Error Response Data: ${error.response?.data}");
+          }
+
+          if (error.response?.data['message'] == "jwt expired") {
             final newAccessToken = await refreshToken();
 
             if (newAccessToken != null) {
@@ -52,10 +78,15 @@ class DioClient {
         data: {'refreshToken': refreshToken},
       );
 
-      final newAccessToken = response.data['accessToken'];
-      _storageService.setAccessToken(newAccessToken);
+      if (response.statusCode == 200) {
+        final newAccessToken = response.data['accessToken'];
+        _storageService.setAccessToken(newAccessToken);
 
-      return newAccessToken;
+        return newAccessToken;
+      } else {
+        _storageService.clear();
+        Get.offAllNamed(AppRoutes.VENDOR_LOGIN);
+      }
     } catch (e) {
       _storageService.clear();
       Get.offAllNamed(AppRoutes.VENDOR_LOGIN);
