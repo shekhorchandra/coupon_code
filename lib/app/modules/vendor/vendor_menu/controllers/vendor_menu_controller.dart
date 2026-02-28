@@ -1,11 +1,11 @@
 import 'dart:developer';
 
 import 'package:coupon_code/app/core/values/app_color.dart';
+import 'package:coupon_code/app/data/models/shop_model.dart';
 import 'package:coupon_code/app/data/network/dio_client.dart';
 import 'package:coupon_code/app/data/services/storage_service.dart';
 import 'package:coupon_code/app/modules/services/contants/api_constants.dart';
 import 'package:coupon_code/app/routes/app_routes.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class VendorMenuController extends GetxController {
@@ -13,8 +13,45 @@ class VendorMenuController extends GetxController {
 
   RxBool loading = false.obs;
 
+  final RxString businessName = ''.obs;
+  final RxString businessEmail = ''.obs;
+  final RxString businessLogo = ''.obs;
+
   final DioClient _dioClient = DioClient();
   final StorageService _storageService = StorageService();
+
+  @override
+  void onInit() async {
+    await getShopInfo();
+
+    super.onInit();
+  }
+
+  Future<void> getShopInfo() async {
+    loading.value = true;
+
+    try {
+      final response = await _dioClient.client.get(ApiConstants.shopDetails);
+
+      if (response.statusCode == 201) {
+        final data = ShopModel.fromJson(response.data['data'][0]);
+
+        print(data);
+
+        businessName.value = data.businessName ?? '';
+        businessEmail.value = data.businessEmail ?? '';
+        businessLogo.value = data.businessLogo ?? '';
+      } else {
+        Get.snackbar('Error', 'An error has occured. Status Code: ${response.statusCode}');
+      }
+    } catch (e) {
+      log(e.toString());
+
+      Get.snackbar('Error', 'Unknown error occured: $e');
+    } finally {
+      loading.value = false;
+    }
+  }
 
   void showLogoutWarning() {
     Get.defaultDialog(
@@ -25,7 +62,7 @@ class VendorMenuController extends GetxController {
       confirmTextColor: AppColor.white,
       onConfirm: () {
         Get.back(); // close dialog
-        logout();   // call logout function
+        logout(); // call logout function
       },
     );
   }
@@ -65,7 +102,6 @@ class VendorMenuController extends GetxController {
 
       // Navigate
       Get.offAllNamed(AppRoutes.USER_BOTTOM_NAV);
-
     } catch (e) {
       Get.snackbar('Error', 'Logout failed: $e');
     } finally {

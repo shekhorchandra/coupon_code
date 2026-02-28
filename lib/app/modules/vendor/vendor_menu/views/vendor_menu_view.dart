@@ -1,6 +1,5 @@
 import 'package:coupon_code/app/core/values/app_sizes.dart';
 import 'package:coupon_code/app/core/widgets/App_button.dart';
-import 'package:coupon_code/app/core/widgets/common_app_bar.dart';
 import 'package:coupon_code/app/core/widgets/section_heading.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_account/controllers/vendor_account_controller.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_menu/controllers/vendor_menu_controller.dart';
@@ -23,8 +22,6 @@ class VendorMenuPage extends GetView<VendorAccountController> {
       }
 
       return Scaffold(
-        appBar: CommonAppBar(title: 'Menu', showBack: false),
-
         body: SafeArea(
           child: SingleChildScrollView(
             padding: EdgeInsets.all(AppSizes.screenPadding),
@@ -84,6 +81,13 @@ class VendorMenuPage extends GetView<VendorAccountController> {
                 //     onPressed: menuController.logout
                 // ),
                 AppButton(text: 'Logout', onPressed: menuController.showLogoutWarning),
+
+                const SizedBox(height: 20),
+
+                AppButton(
+                  text: 'Shop Creation Success',
+                  onPressed: () => Get.toNamed(AppRoutes.VENDOR_REGISTRATION_SUCCESS),
+                ), // TODO: remove this debug button
               ],
             ),
           ),

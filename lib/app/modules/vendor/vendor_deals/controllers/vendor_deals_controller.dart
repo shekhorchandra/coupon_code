@@ -198,10 +198,6 @@ class VendorDealsController extends GetxController {
       _showError("Description is required.");
       return;
     }
-    if (couponController.text.trim().isEmpty) {
-      _showError("Coupon code is required.");
-      return;
-    }
 
     // 3. Pricing Validation
     if (priceController.text.isEmpty || finalPriceController.text.isEmpty) {

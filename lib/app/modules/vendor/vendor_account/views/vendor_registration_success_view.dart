@@ -31,7 +31,10 @@ class VendorRegistrationSuccessView extends GetView<VendorAccountController> {
 
                 const SizedBox(height: 30),
 
-                AppButton(text: 'Login', onPressed: () => Get.offAllNamed(AppRoutes.VENDOR_LOGIN)),
+                AppButton(
+                  text: 'Go to Dashboard',
+                  onPressed: () => Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR),
+                ),
               ],
             ),
           ),

@@ -10,13 +10,16 @@ import 'package:coupon_code/app/modules/vendor/vendor_dashboard/views/widgets/ov
 import 'package:coupon_code/app/modules/vendor/vendor_dashboard/views/widgets/overview_chart.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_dashboard/views/widgets/top_viewed_deals_grid.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_dashboard/views/widgets/total_impression_card.dart';
+import 'package:coupon_code/app/modules/vendor/vendor_menu/controllers/vendor_menu_controller.dart';
 import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 class VendorDashboardPage extends GetView<VendorDashboardController> {
-  const VendorDashboardPage({super.key});
+  VendorDashboardPage({super.key});
+
+  final menuController = Get.put(VendorMenuController());
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +35,11 @@ class VendorDashboardPage extends GetView<VendorDashboardController> {
                 Row(
                   children: [
                     // Avatar with circular border
-                    AppCircularAvatar(),
+                    SizedBox(
+                      width: 60,
+                      height: 60,
+                      child: AppCircularAvatar(imageUrl: menuController.businessLogo.value),
+                    ),
 
                     const SizedBox(width: 12),
 

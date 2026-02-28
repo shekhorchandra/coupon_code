@@ -36,6 +36,7 @@ abstract class AppRoutes {
 
   static const VENDOR_DEALS = '/vendor/deals';
   static const ADD_DEAL = '/vendor/deals/add';
+  static const DEAL_PLAN = '/vendor/deals/plan';
   static const UPDATE_DEAL = '/vendor/deals/update';
   static const VENDOR_DEAL_DETAILS = '/vendor/deal_details';
 

@@ -59,10 +59,7 @@ class VendorAccountController extends GetxController {
   final ImagePicker _picker = ImagePicker();
 
   Future<void> pickImage() async {
-    final XFile? image = await _picker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 80,
-    );
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
 
     if (image != null) {
       File file = File(image.path);
@@ -101,9 +98,7 @@ class VendorAccountController extends GetxController {
     pickedLng.value = position.longitude;
 
     // Set the marker on map
-    markers.value = {
-      Marker(markerId: const MarkerId("selected_location"), position: position),
-    };
+    markers.value = {Marker(markerId: const MarkerId("selected_location"), position: position)};
   }
 
   void saveOutlet() {
@@ -157,8 +152,7 @@ class VendorAccountController extends GetxController {
         "description": businessDescriptionController.text,
         "coord": [pickedLng.value, pickedLat.value], // [Lng, Lat]
         "zip_code": zipCodeController.text,
-        if (websiteLinkController.text.isNotEmpty)
-          "website": websiteLinkController.text,
+        if (websiteLinkController.text.isNotEmpty) "website": websiteLinkController.text,
       };
 
       // Outlet list part
@@ -176,19 +170,13 @@ class VendorAccountController extends GetxController {
           return {
             "address": item['address'],
             "zip_code": item['zip_code'],
-            "coordinates": [
-              double.parse(item['lng']!),
-              double.parse(item['lat']!),
-            ],
+            "coordinates": [double.parse(item['lng']!), double.parse(item['lat']!)],
           };
         }).toList();
       }
 
       // Combine both
-      Map<String, dynamic> finalPayload = {
-        "shop": shopData,
-        "outlet": outletData,
-      };
+      Map<String, dynamic> finalPayload = {"shop": shopData, "outlet": outletData};
 
       // Create formdata
       dio.FormData formData = dio.FormData.fromMap({
@@ -200,17 +188,12 @@ class VendorAccountController extends GetxController {
       });
 
       // Send request
-      final response = await _dioClient.client.post(
-        ApiConstants.createShop,
-        data: formData,
-      );
+      final response = await _dioClient.client.post(ApiConstants.createShop, data: formData);
 
       Get.back(); // Close loading
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        Get.snackbar("Success", "Shop created successfully");
-
-        Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR);
+        Get.offAllNamed(AppRoutes.VENDOR_REGISTRATION_SUCCESS);
       }
     } on dio.DioException catch (e) {
       Get.back();
