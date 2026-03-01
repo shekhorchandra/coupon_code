@@ -148,7 +148,7 @@ class DiscoverView extends GetView<DiscoverController> {
                                         height: 56,
                                         fit: BoxFit.cover,
                                         errorBuilder: (_, __, ___) =>
-                                            Image.asset(AppAssets.food, width: 38),
+                                        const Icon(Icons.image_not_supported),
                                       ),
                                     ),
                                   ),
