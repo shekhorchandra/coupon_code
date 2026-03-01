@@ -1,9 +1,7 @@
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coupon_code/app/core/widgets/common_app_bar.dart';
 import 'package:coupon_code/app/data/models/deal_model.dart';
-import 'package:coupon_code/app/modules/user/discover_bar/coupon_code/qr_code.dart';
 import 'package:coupon_code/app/modules/user/discover_bar/discover_details/views/widgets/deal_creation_preview_app_bar.dart';
 import 'package:coupon_code/app/modules/user/discover_bar/discover_details/views/widgets/shop_map.dart';
 import 'package:coupon_code/app/routes/app_routes.dart';
@@ -12,11 +10,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../../../../../core/values/app_assets.dart';
 import '../../../../../core/values/app_color.dart';
 import '../../../../../core/values/app_text_styles.dart';
 import '../../../../../core/widgets/App_button.dart';
+import '../../coupon_code/Controller/coupon_controller.dart';
+import '../../coupon_code/views/coupon_popup_view.dart';
 import '../../vendor_shop_details/bindings/vendor_details_binding.dart';
 import '../../vendor_shop_details/views/vendor_details_view.dart';
 import '../controllers/discover_details_controller.dart';
@@ -515,7 +514,24 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
                     Expanded(
                       child: AppButton(
                         onPressed: () {
-                          showCouponDemoPopup(productId: deal.id);
+                          // Inject controller with productId argument
+                          Get.put(
+                            CouponController(),
+                            permanent: false, // remove when popup closes
+                          );
+
+                          // Pass productId via controller
+                          final controller = Get.find<CouponController>();
+                          controller.productId = deal.id;
+                          controller.couponCode = controller.generateDemoCoupon();
+
+                          // Show the dialog
+                          Get.dialog(const CouponPopupView()).then((_) {
+                            // Optional: remove controller after popup closes
+                            if (Get.isRegistered<CouponController>()) {
+                              Get.delete<CouponController>();
+                            }
+                          });
                         },
                         text: 'Show Coupon',
                       ),
