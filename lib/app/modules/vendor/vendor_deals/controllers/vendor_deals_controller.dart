@@ -200,46 +200,55 @@ class VendorDealsController extends GetxController {
   void validateAndSubmit() {
     // 1. Check Images
     if (images.isEmpty) {
+      hasError.value = true;
       _showError("Please upload at least one image.");
       return;
     }
 
     // 2. Check Text Fields
     if (titleController.text.trim().isEmpty) {
+      hasError.value = true;
       _showError("Deal title is required.");
       return;
     }
     if (selectedCategory.value.isEmpty) {
+      hasError.value = true;
       _showError("Please select a category.");
       return;
     }
-    if (highlightController.isEmpty) {
-      _showError("Highlights are required.");
-      return;
-    }
+    // if (highlightController.isEmpty) {
+    // hasError.value = true;
+    //   _showError("Highlights are required.");
+    //   return;
+    // }
     if (descController.text.trim().isEmpty) {
+      hasError.value = true;
       _showError("Description is required.");
       return;
     }
 
     // 3. Pricing Validation
     if (priceController.text.isEmpty || finalPriceController.text.isEmpty) {
+      hasError.value = true;
       _showError("Please enter pricing details.");
       return;
     }
 
     // 4. Plan and Date Validation
     if (selectedDealPlan.value == null) {
+      hasError.value = true;
       _showError("Please select a deal plan.");
       return;
     }
     if (selectedValidityRange.value == null) {
+      hasError.value = true;
       _showError("Please select the validity date range.");
       return;
     }
 
     // 5. T&C Validation
     if (!acceptedTnC.value) {
+      hasError.value = true;
       _showError("You must accept the Terms and Conditions.");
       return;
     }

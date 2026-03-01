@@ -238,7 +238,7 @@ class _AddDealViewState extends State<AddDealView> {
         child: Obx(() {
           final plan = controller.selectedDealPlan.value;
 
-          final buttonText = widget.deal != null ? 'Update' : 'Next';
+          final buttonText = widget.deal != null ? 'Update' : 'Submit for Approval';
 
           return AppButton(
             text: buttonText,
