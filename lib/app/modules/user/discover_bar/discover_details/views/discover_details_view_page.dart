@@ -1,10 +1,13 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:coupon_code/app/core/widgets/common_app_bar.dart';
 import 'package:coupon_code/app/data/models/deal_model.dart';
+import 'package:coupon_code/app/modules/user/discover_bar/coupon_code/qr_code.dart';
 import 'package:coupon_code/app/modules/user/discover_bar/discover_details/views/widgets/deal_creation_preview_app_bar.dart';
 import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -43,7 +46,28 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
   void initState() {
     super.initState();
 
+    // Set the status bar to be transparent and with white icons
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent, // Make the status bar transparent
+        statusBarIconBrightness: Brightness.light, // Set status bar icons to light color
+      ),
+    );
+
     _fetchDealDetails();
+  }
+
+  @override
+  void dispose() {
+    // Reset the status bar style to default when leaving the page
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.black, // Default status bar color
+        statusBarIconBrightness: Brightness.dark, // Default status bar icon color
+      ),
+    );
+
+    super.dispose();
   }
 
   void _fetchDealDetails() async {
@@ -61,9 +85,15 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
         return const Scaffold(body: Center(child: CircularProgressIndicator()));
       }
 
+      print(widget.id);
+      print(widget.dealItem);
+      print(widget.isNetworkImage);
+
       return SafeArea(
         child: Scaffold(
-          appBar: DealCreationPreviewAppBar(),
+          appBar: widget.dealItem != null
+              ? DealCreationPreviewAppBar()
+              : CommonAppBar(title: 'Deal Details'),
 
           body: SingleChildScrollView(
             child: Padding(
@@ -448,12 +478,12 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
           bottomNavigationBar: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (widget.id == null)
-                Padding(
-                  // padding: const EdgeInsets.symmetric(horizontal: 16),
-                  padding: const EdgeInsetsGeometry.only(top: 1, right: 16, bottom: 20, left: 16),
-                  child: Row(
-                    children: [
+              Padding(
+                // padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsetsGeometry.only(top: 1, right: 16, bottom: 20, left: 16),
+                child: Row(
+                  children: [
+                    if (widget.id == null)
                       Expanded(
                         child: AppButton(
                           text: 'Payment & Publish',
@@ -463,9 +493,36 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
                           ),
                         ),
                       ),
-                    ],
-                  ),
+
+                    Expanded(
+                      child: AppButton(
+                        text: 'Save For Later',
+                        onPressed: () {},
+                        backgroundColor: Colors.white70,
+                        textColor: AppColor.primary,
+                        borderColor: AppColor.primary,
+                        leading: SvgPicture.asset(
+                          AppAssets.saved,
+                          width: 18,
+                          height: 18,
+                          colorFilter: const ColorFilter.mode(AppColor.primary, BlendMode.srcIn),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(width: 16),
+
+                    Expanded(
+                      child: AppButton(
+                        onPressed: () {
+                          showCouponDemoPopup();
+                        },
+                        text: 'Show Coupon',
+                      ),
+                    ),
+                  ],
                 ),
+              ),
             ],
           ),
         ),
