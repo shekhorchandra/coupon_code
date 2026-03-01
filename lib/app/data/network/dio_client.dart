@@ -79,8 +79,11 @@ class DioClient {
       );
 
       if (response.statusCode == 200) {
-        final newAccessToken = response.data['accessToken'];
+        final newAccessToken = response.data['data']['newAccessToken'];
         _storageService.setAccessToken(newAccessToken);
+
+        final newRefreshToken = response.data['data']['newRefreshToken'];
+        _storageService.setRefreshToken(newRefreshToken);
 
         return newAccessToken;
       } else {
