@@ -18,21 +18,17 @@ class VendorDealsList extends GetView<VendorDashboardController> {
       }
 
       List<DealModelDTO> filteredDeals = [];
-
-      // if (dealController.selectedTab.value == 0) {
-      //   filteredDeals = controller.deals.where((deal) {
-      //     // Ensure that deal.activePromotion is checked and promotedUntil is valid
-      //     DateTime validPromotedUntil =
-      //         deal.promotedUntil ?? DateTime.now().subtract(Duration(days: 1));
-      //     return (deal.activePromotion ?? false) && validPromotedUntil.isAfter(DateTime.now());
-      //   }).toList();
-      // } else {
-      //   filteredDeals = controller.deals.where((deal) {
-      //     // Check if promotedUntil is not null and is before now
-      //     return deal.promotedUntil != null && deal.promotedUntil!.isBefore(DateTime.now());
-      //   }).toList();
-      // }
-      filteredDeals = controller.deals; // TODO: fix this
+      if (dealController.selectedTab.value == 0) {
+        filteredDeals = controller.deals.where((deal) {
+          DateTime validPromotedUntil =
+              deal.promotedUntil ?? DateTime.now().subtract(Duration(days: 1));
+          return (deal.activePromotion ?? false) && validPromotedUntil.isAfter(DateTime.now());
+        }).toList();
+      } else {
+        filteredDeals = controller.deals.where((deal) {
+          return deal.promotedUntil != null && deal.promotedUntil!.isBefore(DateTime.now());
+        }).toList();
+      }
 
       if (filteredDeals.isEmpty) {
         return const Center(
