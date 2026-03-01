@@ -106,28 +106,29 @@ class VendorSingleDealView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 5),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.orange.withAlpha(45),
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withAlpha(10),
-                        blurRadius: 4,
-                        offset: Offset(0, 2),
+                if (deal.promotedUntil != null)
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.withAlpha(45),
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withAlpha(10),
+                          blurRadius: 4,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Text(
+                      '${deal.promotedUntil}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.orange,
+                        fontSize: 14,
                       ),
-                    ],
-                  ),
-                  child: const Text(
-                    "10d   08h   54m   23s",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.orange,
-                      fontSize: 14,
                     ),
                   ),
-                ),
               ],
             ),
 
@@ -143,10 +144,10 @@ class VendorSingleDealView extends StatelessWidget {
               crossAxisSpacing: 12,
               mainAxisSpacing: 12,
               childAspectRatio: 1.4,
-              children: const [
-                OverviewCard(title: 'Total Impressions', number: '4,446'),
-                OverviewCard(title: 'Total Views', number: '3,144'),
-                OverviewCard(title: 'CTR', number: '20%'),
+              children: [
+                OverviewCard(title: 'Impressions', number: '${deal.totalImpression}'),
+                OverviewCard(title: 'Views', number: '${deal.totalViews}'),
+                OverviewCard(title: 'CTR', number: '20%'), // TODO: fix this value
               ],
             ),
 

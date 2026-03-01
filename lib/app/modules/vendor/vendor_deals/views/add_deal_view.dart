@@ -8,6 +8,7 @@ import 'package:coupon_code/app/core/widgets/custom_text_field.dart';
 import 'package:coupon_code/app/core/widgets/section_heading.dart';
 import 'package:coupon_code/app/data/models/deal_category_model.dart';
 import 'package:coupon_code/app/data/models/deal_model.dart';
+import 'package:coupon_code/app/data/models/deal_model_dto.dart';
 import 'package:coupon_code/app/data/models/deal_plan_model.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/controllers/vendor_deals_controller.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/data/deal_plans.dart';
@@ -20,7 +21,7 @@ import 'package:get/get.dart';
 class AddDealView extends StatefulWidget {
   const AddDealView({super.key, this.deal});
 
-  final DealModel? deal;
+  final DealModelDTO? deal;
 
   @override
   State<AddDealView> createState() => _AddDealViewState();
@@ -60,7 +61,7 @@ class _AddDealViewState extends State<AddDealView> {
       controller.selectedCategory.value = deal.categoryId;
       controller.highlightController.value = deal.highlights;
       controller.descController.text = deal.description;
-      controller.couponController.text = deal.coupon ?? '';
+      controller.couponController.text = '';
       controller.priceController.text = deal.regularPrice.toString();
       controller.discountController.text = deal.discountPercent.toStringAsFixed(2);
       controller.finalPriceController.text = DealModel.afterDiscountPrice(

@@ -19,9 +19,11 @@ class OverviewCard extends StatelessWidget {
       ),
       padding: EdgeInsets.all(AppSizes.screenPadding),
       child: Column(
+        crossAxisAlignment: .center,
+        mainAxisAlignment: .center,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: .center,
             children: [
               if (icon != null) ...[Image.asset(icon!, height: 34), const SizedBox(width: 5)],
               Flexible(

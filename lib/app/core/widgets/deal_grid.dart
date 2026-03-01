@@ -25,7 +25,7 @@ class DealGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Get.toNamed(AppRoutes.DISCOVERDETAILS, arguments: {'id': deal.id}),
+      onTap: () => Get.toNamed(AppRoutes.VENDOR_DEAL_DETAILS, arguments: {'dealItem': deal}),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
