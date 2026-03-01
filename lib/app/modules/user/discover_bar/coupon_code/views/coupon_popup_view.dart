@@ -23,7 +23,7 @@ class CouponPopupView extends GetView<CouponController> {
           mainAxisSize: MainAxisSize.min,
           children: [
 
-            /// 🔹 Segmented Tabs
+            ///  Segmented Tabs
             Container(
               decoration: BoxDecoration(
                 color: Colors.grey.shade200,
@@ -40,7 +40,7 @@ class CouponPopupView extends GetView<CouponController> {
 
             const SizedBox(height: 20),
 
-            /// 🔹 Dynamic Content
+            ///  Dynamic Content
             if (controller.selectedIndex.value == 0)
               _buildCouponCode(controller.couponCode),
 
@@ -54,7 +54,7 @@ class CouponPopupView extends GetView<CouponController> {
               BarcodeWidget(
                 barcode: Barcode.code128(),
                 data: controller.qrData,
-                width: 250,
+                width: double.infinity,
                 height: 90,
               ),
 
@@ -71,7 +71,7 @@ class CouponPopupView extends GetView<CouponController> {
     );
   }
 
-  /// 🔹 Segmented Button
+  ///  Segmented Button
   Widget _segmentButton(String title, int index) {
     return Expanded(
       child: GestureDetector(
@@ -91,7 +91,7 @@ class CouponPopupView extends GetView<CouponController> {
               color: controller.selectedIndex.value == index
                   ? Colors.white
                   : Colors.black54,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),
@@ -99,7 +99,7 @@ class CouponPopupView extends GetView<CouponController> {
     );
   }
 
-  /// 🔹 Coupon UI
+  ///  Coupon UI
   Widget _buildCouponCode(String code) {
     return Column(
       children: [
@@ -122,7 +122,7 @@ class CouponPopupView extends GetView<CouponController> {
         const SizedBox(height: 12),
         const Text(
           "Show this coupon at the merchant to redeem.",
-          style: TextStyle(fontSize: 12, color: Colors.grey),
+          style: TextStyle(fontSize: 12, color: Colors.black),
           textAlign: TextAlign.center,
         ),
       ],

@@ -12,7 +12,7 @@ class AppAssets {
   static const shirt = 'assets/icons/shirt.jpg';
 
   // discover_bar icons
-  static const food = 'assets/icons/food.png';
+  static const food = 'assets/icons/broken-image.png';
 
   // Menu page
   static const vendor = 'assets/icons/vendor.png';
