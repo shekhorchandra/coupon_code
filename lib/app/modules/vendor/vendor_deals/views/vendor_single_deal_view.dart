@@ -6,7 +6,7 @@ import 'package:coupon_code/app/core/widgets/App_button.dart';
 import 'package:coupon_code/app/core/widgets/app_chip.dart';
 import 'package:coupon_code/app/core/widgets/common_app_bar.dart';
 import 'package:coupon_code/app/core/widgets/section_heading.dart';
-import 'package:coupon_code/app/data/models/deal_model.dart';
+import 'package:coupon_code/app/data/models/deal_model_dto.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_dashboard/views/widgets/overview_card.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_dashboard/views/widgets/overview_chart.dart';
 import 'package:coupon_code/app/routes/app_routes.dart';
@@ -16,7 +16,7 @@ import 'package:get/get.dart';
 class VendorSingleDealView extends StatelessWidget {
   const VendorSingleDealView({super.key, required this.deal});
 
-  final DealModel deal;
+  final DealModelDTO deal;
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +59,7 @@ class VendorSingleDealView extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      "\$${DealModel.afterDiscountPrice(deal.regularPrice, deal.discountPercent).toStringAsFixed(2)}",
+                      "\$${DealModelDTO.afterDiscountPrice(deal.regularPrice, deal.discountPercent).toStringAsFixed(2)}",
                       style: const TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(width: 6),

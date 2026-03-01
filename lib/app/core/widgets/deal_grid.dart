@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coupon_code/app/core/values/app_color.dart';
 import 'package:coupon_code/app/core/values/app_text.dart';
-import 'package:coupon_code/app/data/models/deal_model.dart';
+import 'package:coupon_code/app/data/models/deal_model_dto.dart';
 import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 class DealGrid extends StatelessWidget {
   const DealGrid({super.key, required this.deal});
 
-  final DealModel deal;
+  final DealModelDTO deal;
 
   String formatRemainingTime(DateTime expiryDate) {
     final now = DateTime.now();
@@ -83,7 +83,7 @@ class DealGrid extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "\$${DealModel.afterDiscountPrice(deal.regularPrice, deal.discountPercent)}",
+                              "\$${DealModelDTO.afterDiscountPrice(deal.regularPrice, deal.discountPercent)}",
                               style: AppText.label.bold.copyWith(fontSize: 15, color: Colors.black),
                             ),
                             Text(

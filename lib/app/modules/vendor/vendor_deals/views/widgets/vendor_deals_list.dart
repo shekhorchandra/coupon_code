@@ -1,5 +1,5 @@
 import 'package:coupon_code/app/core/widgets/deal_tile.dart';
-import 'package:coupon_code/app/data/models/deal_model.dart';
+import 'package:coupon_code/app/data/models/deal_model_dto.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_dashboard/controllers/vendor_dashboard_controller.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/controllers/vendor_deals_controller.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +17,7 @@ class VendorDealsList extends GetView<VendorDashboardController> {
         return const Center(child: CircularProgressIndicator());
       }
 
-      List<DealModel> filteredDeals = [];
+      List<DealModelDTO> filteredDeals = [];
 
       if (dealController.selectedTab.value == 0) {
         filteredDeals = controller.deals.where((deal) {

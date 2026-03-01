@@ -1,11 +1,11 @@
-import 'package:coupon_code/app/data/models/deal_model.dart';
+import 'package:coupon_code/app/data/models/deal_model_dto.dart';
 import 'package:coupon_code/app/data/network/dio_client.dart';
 import 'package:coupon_code/app/modules/services/contants/api_constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 class VendorDashboardController extends GetxController {
-  var deals = <DealModel>[].obs;
+  var deals = <DealModelDTO>[].obs;
   var isLoading = true.obs;
 
   DioClient _dioClient = DioClient();
@@ -23,12 +23,11 @@ class VendorDashboardController extends GetxController {
 
       // Fetch deals from API
       final response = await _dioClient.client.get(ApiConstants.myDeals);
-      print(response.statusCode);
 
       if (response.statusCode == 200) {
         final List<dynamic> responseData = response.data['data'];
-        final List<DealModel> loadedDeals = responseData.map((dealData) {
-          return DealModel.fromMap(dealData);
+        final List<DealModelDTO> loadedDeals = responseData.map((dealData) {
+          return DealModelDTO.fromMap(dealData);
         }).toList();
 
         deals.assignAll(loadedDeals);
