@@ -2,10 +2,27 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coupon_code/app/core/values/app_color.dart';
 import 'package:flutter/material.dart';
 
-class AppCircularAvatar extends StatelessWidget {
-  const AppCircularAvatar({super.key, required this.imageUrl});
-
+class AppCircularAvatar extends StatefulWidget {
   final String imageUrl;
+
+  const AppCircularAvatar({Key? key, required this.imageUrl}) : super(key: key);
+
+  @override
+  _AppCircularAvatarState createState() => _AppCircularAvatarState();
+}
+
+class _AppCircularAvatarState extends State<AppCircularAvatar> {
+  late final CachedNetworkImageProvider _cachedImage;
+
+  @override
+  void initState() {
+    super.initState();
+    // Preload image into memory
+    _cachedImage = CachedNetworkImageProvider(widget.imageUrl);
+    _cachedImage
+        .resolve(ImageConfiguration())
+        .addListener(ImageStreamListener((ImageInfo image, bool synchronousCall) {}));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,17 +34,20 @@ class AppCircularAvatar extends StatelessWidget {
       ),
       child: ClipOval(
         child: CachedNetworkImage(
-          imageUrl: imageUrl,
-          progressIndicatorBuilder: (context, url, progress) => Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Center(child: CircularProgressIndicator.adaptive()),
-          ),
-          errorWidget: (context, url, error) => Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Center(child: CircularProgressIndicator.adaptive()),
-          ),
+          imageUrl: widget.imageUrl,
+          fadeInDuration: const Duration(milliseconds: 300),
+          placeholder: (context, url) =>
+              const SizedBox(height: 60, width: 60, child: CircularProgressIndicator.adaptive()),
+          errorWidget: (context, url, error) =>
+              const Padding(padding: EdgeInsets.all(12.0), child: Icon(Icons.error)),
+          fit: BoxFit.cover,
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

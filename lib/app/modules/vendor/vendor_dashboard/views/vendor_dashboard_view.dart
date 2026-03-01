@@ -38,7 +38,9 @@ class VendorDashboardPage extends GetView<VendorDashboardController> {
                     SizedBox(
                       width: 60,
                       height: 60,
-                      child: AppCircularAvatar(imageUrl: menuController.businessLogo.value),
+                      child: Obx(
+                        () => AppCircularAvatar(imageUrl: menuController.businessLogo.value),
+                      ),
                     ),
 
                     const SizedBox(width: 12),
@@ -48,9 +50,11 @@ class VendorDashboardPage extends GetView<VendorDashboardController> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Glamour Glow Salon',
-                            style: AppText.h5.semiBold.copyWith(color: AppColor.bw.s800),
+                          Obx(
+                            () => Text(
+                              menuController.businessName.value,
+                              style: AppText.h5.semiBold.copyWith(color: AppColor.bw.s800),
+                            ),
                           ),
                           const SizedBox(height: 8),
                           AppButton(

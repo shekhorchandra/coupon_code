@@ -85,10 +85,6 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
         return const Scaffold(body: Center(child: CircularProgressIndicator()));
       }
 
-      print(widget.id);
-      print(widget.dealItem);
-      print(widget.isNetworkImage);
-
       return SafeArea(
         child: Scaffold(
           appBar: widget.dealItem != null
