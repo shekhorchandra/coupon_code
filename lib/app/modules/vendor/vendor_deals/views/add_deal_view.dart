@@ -14,7 +14,6 @@ import 'package:coupon_code/app/modules/vendor/vendor_deals/controllers/vendor_d
 import 'package:coupon_code/app/modules/vendor/vendor_deals/data/deal_plans.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/views/widgets/multi_image_uploader.dart';
 import 'package:coupon_code/app/routes/app_routes.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -194,40 +193,6 @@ class _AddDealViewState extends State<AddDealView> {
                 style: AppText.body2.medium,
               ),
               const SizedBox(height: 20),
-
-              // T&C
-              Obx(
-                () => Row(
-                  children: [
-                    Checkbox(
-                      value: controller.acceptedTnC.value,
-                      onChanged: (status) => controller.acceptedTnC.value = status ?? false,
-                    ),
-
-                    Expanded(
-                      child: RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: 'I acknowledge and agree to the ',
-                              style: AppText.body2.regular.copyWith(color: AppColor.bw.s800),
-                            ),
-
-                            TextSpan(
-                              text: 'Terms and Conditions.',
-                              style: AppText.body2.regular.copyWith(color: AppColor.primary),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  Get.toNamed(AppRoutes.TERMSCONDITION);
-                                },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
             ],
           ),
         ),
@@ -238,7 +203,7 @@ class _AddDealViewState extends State<AddDealView> {
         child: Obx(() {
           final plan = controller.selectedDealPlan.value;
 
-          final buttonText = widget.deal != null ? 'Update' : 'Submit for Approval';
+          final buttonText = widget.deal != null ? 'Update' : 'Submit';
 
           return AppButton(
             text: buttonText,

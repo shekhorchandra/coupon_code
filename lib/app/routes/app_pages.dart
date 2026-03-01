@@ -12,6 +12,7 @@ import 'package:coupon_code/app/modules/vendor/vendor_dashboard/views/vendor_das
 import 'package:coupon_code/app/modules/vendor/vendor_deals/bindings/vendor_deals_binding.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/views/add_deal_view.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/views/deal_plan_view.dart';
+import 'package:coupon_code/app/modules/vendor/vendor_deals/views/deal_publish_notice_view.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/views/vendor_deals_view.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/views/vendor_single_deal_view.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_menu/bindings/vendor_menu_binding.dart';
@@ -161,6 +162,11 @@ class AppPages {
       binding: VendorVerificationBinding(),
     ),
     GetPage(name: AppRoutes.ADD_DEAL, page: () => AddDealView(), binding: VendorDealsBinding()),
+    GetPage(
+      name: AppRoutes.DEAL_PUBLISH_NOTICE,
+      page: () => DealPublishNoticeView(),
+      binding: VendorDealsBinding(),
+    ),
     GetPage(
       name: AppRoutes.UPDATE_DEAL,
       page: () {

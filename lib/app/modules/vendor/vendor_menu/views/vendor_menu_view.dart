@@ -85,8 +85,8 @@ class VendorMenuPage extends GetView<VendorAccountController> {
                 const SizedBox(height: 20),
 
                 AppButton(
-                  text: 'Shop Creation Success',
-                  onPressed: () => Get.toNamed(AppRoutes.VENDOR_REGISTRATION_SUCCESS),
+                  text: 'Deal Publish Notice',
+                  onPressed: () => Get.toNamed(AppRoutes.DEAL_PUBLISH_NOTICE),
                 ), // TODO: remove this debug button
               ],
             ),
