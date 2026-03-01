@@ -23,6 +23,9 @@ class AppAssets {
   static const saved = 'assets/icons/saved.svg';
   static const menu = 'assets/icons/menu.svg';
 
+  // Deal details
+  static const shopMapMarker = 'assets/icons/shop_map_marker.png';
+
   /////////////////// VENDOR ///////////////////
 
   // Vendor Registration

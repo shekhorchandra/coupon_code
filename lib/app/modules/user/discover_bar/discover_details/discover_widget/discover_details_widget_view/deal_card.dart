@@ -101,7 +101,7 @@ class DealCard extends StatelessWidget {
                   height: 32,
                   onPressed: () => Get.toNamed(
                     AppRoutes.DISCOVERDETAILS,
-                    arguments: {'id': '69a2f0d7e6bc98e5f88b7dad'},
+                    arguments: {'id': '69a069f4de637553f5ce7f8e'},
                   ),
                 ),
               ],

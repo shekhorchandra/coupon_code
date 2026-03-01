@@ -175,6 +175,8 @@ class DealModel {
   }
 
   static double afterDiscountPrice(double regularPrice, double discountPercent) {
+    print("Regular Price: $regularPrice");
+    print("Discount: $discountPercent");
     return regularPrice - (regularPrice * discountPercent / 100);
   }
 }

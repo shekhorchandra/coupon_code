@@ -5,6 +5,7 @@ import 'package:coupon_code/app/core/widgets/common_app_bar.dart';
 import 'package:coupon_code/app/data/models/deal_model.dart';
 import 'package:coupon_code/app/modules/user/discover_bar/coupon_code/qr_code.dart';
 import 'package:coupon_code/app/modules/user/discover_bar/discover_details/views/widgets/deal_creation_preview_app_bar.dart';
+import 'package:coupon_code/app/modules/user/discover_bar/discover_details/views/widgets/shop_map.dart';
 import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -73,6 +74,14 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
   void _fetchDealDetails() async {
     if (widget.id != null) {
       await controller.getDealDetails(widget.id!);
+
+      _fetchShopDetails();
+    }
+  }
+
+  void _fetchShopDetails() async {
+    if (controller.deal.value?.shopId != null) {
+      await controller.getShopDetails(controller.deal.value!.shopId);
     }
   }
 
@@ -199,7 +208,10 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
                     child: InkWell(
                       borderRadius: BorderRadius.circular(8), // optional for ripple effect
                       onTap: () {
-                        Get.to(() => const VendorDetailsView(), binding: VendorDetailsBinding());
+                        Get.to(
+                          () => const VendorDetailsView(),
+                          binding: VendorDetailsBinding(),
+                        ); // TODO: pass the shop id or details
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
@@ -218,7 +230,7 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              "Glamour Glow Salon",
+                              controller.shop.value?.businessName ?? 'Unknown Business',
                               style: TextStyle(fontSize: 12, color: AppColor.bw.s600),
                             ),
                           ],
@@ -235,7 +247,7 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
                         // Address text
                         Expanded(
                           child: Text(
-                            "1234 Streets, New York  ● 1.2 km away",
+                            "1234 Streets, New York  ● 1.2 km away", // TODO: fix the location
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: AppTextStyles.MenuButtonText.copyWith(
@@ -303,7 +315,7 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Text(
-                                  "${DealModel.afterDiscountPrice(deal.regularPrice, deal.discountPercent).toStringAsFixed(0)}% off",
+                                  "${deal.discountPercent.toStringAsFixed(0)}% off",
                                   style: const TextStyle(
                                     fontSize: 12,
                                     color: Colors.white,
@@ -441,8 +453,8 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
                               color: Colors.grey,
                             ),
                             const SizedBox(width: 6),
-                            const Text(
-                              "Grown Salon",
+                            Text(
+                              controller.shop.value?.businessName ?? 'Unknown Business',
                               style: TextStyle(fontSize: 14, color: Colors.grey),
                             ),
                           ],
@@ -450,16 +462,8 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
 
                         const SizedBox(height: 12),
 
-                        // Map Image
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.network(
-                            "https://static-maps.yandex.ru/1.x/?ll=-74.0060,40.7128&size=400,200&z=14&l=map&pt=-74.0060,40.7128,pm2rdm",
-                            width: double.infinity,
-                            height: 172,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+                        // Location Map
+                        if (controller.shop.value != null) ShopMap(shop: controller.shop.value!),
                       ],
                     ),
                   ),
@@ -511,7 +515,7 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
                     Expanded(
                       child: AppButton(
                         onPressed: () {
-                          showCouponDemoPopup();
+                          showCouponDemoPopup(productId: deal.id);
                         },
                         text: 'Show Coupon',
                       ),

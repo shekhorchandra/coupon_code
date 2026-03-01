@@ -2,17 +2,15 @@ import 'package:flutter/material.dart' as AppTextStyle;
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
+
 import '../../../../../core/values/app_assets.dart';
 import '../../../../../core/values/app_color.dart';
 import '../../../../../core/values/app_text_styles.dart';
 import '../../../../../core/widgets/App_button.dart';
 import '../../../../../core/widgets/custom_text_field.dart';
+import '../../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
 import '../../../categories/Category/controllers/categories_controller.dart';
 import '../../discover_details/discover_widget/discover_details_widget_view/deal_card.dart';
-import '../../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
-import '../../../categories/Category/views/Categories_View.dart';
-import '../../../categories/category_details/views/categoty_details_view.dart';
-
 import '../controllers/discover_controller.dart';
 
 class DiscoverView extends GetView<DiscoverController> {
@@ -38,10 +36,7 @@ class DiscoverView extends GetView<DiscoverController> {
                   //   onPressed: controller.onNotificationPressed,
                   // ),
                   IconButton(
-                    icon: Badge.count(
-                      count: 9,
-                      child: const Icon(Icons.notifications_none),
-                    ),
+                    icon: Badge.count(count: 9, child: const Icon(Icons.notifications_none)),
                     onPressed: () {},
                   ),
                 ],
@@ -86,10 +81,7 @@ class DiscoverView extends GetView<DiscoverController> {
                       children: [
                         const Icon(Icons.location_on, color: AppColor.primary),
                         const SizedBox(width: 4),
-                        Text(
-                          "New York, United States",
-                          style: AppTextStyles.Text,
-                        ),
+                        Text("New York, United States", style: AppTextStyles.Text),
                         const SizedBox(width: 4),
                         const Icon(Icons.keyboard_arrow_down, size: 18),
                       ],
@@ -116,14 +108,10 @@ class DiscoverView extends GetView<DiscoverController> {
                         Text("Popular Categories", style: AppTextStyles.Title),
                         TextButton(
                           onPressed: () {
-                            final navController =
-                                Get.find<UserNavigationBarController>();
+                            final navController = Get.find<UserNavigationBarController>();
                             navController.changeTab(1);
                           },
-                          child: Text(
-                            "See All",
-                            style: AppTextStyles.TextButton,
-                          ),
+                          child: Text("See All", style: AppTextStyles.TextButton),
                         ),
                       ],
                     ),
@@ -133,9 +121,9 @@ class DiscoverView extends GetView<DiscoverController> {
                     height: 80,
                     child: Obx(() {
                       if (controller.isLoading.value) {
-                        return const Center(child: CircularProgressIndicator(
-                          color: AppColor.primary,
-                        ));
+                        return const Center(
+                          child: CircularProgressIndicator(color: AppColor.primary),
+                        );
                       }
 
                       if (controller.categories.isEmpty) {
@@ -160,8 +148,7 @@ class DiscoverView extends GetView<DiscoverController> {
                                 children: [
                                   CircleAvatar(
                                     radius: 28,
-                                    backgroundColor: AppColor.secondary
-                                        .withOpacity(0.2),
+                                    backgroundColor: AppColor.secondary.withOpacity(0.2),
                                     child: ClipOval(
                                       child: Image.network(
                                         category.image, // API image
@@ -169,10 +156,7 @@ class DiscoverView extends GetView<DiscoverController> {
                                         height: 56,
                                         fit: BoxFit.cover,
                                         errorBuilder: (_, __, ___) =>
-                                            Image.asset(
-                                              AppAssets.food,
-                                              width: 38,
-                                            ),
+                                            Image.asset(AppAssets.food, width: 38),
                                       ),
                                     ),
                                   ),
