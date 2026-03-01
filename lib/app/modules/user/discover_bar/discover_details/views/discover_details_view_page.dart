@@ -448,23 +448,24 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
           bottomNavigationBar: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Padding(
-                // padding: const EdgeInsets.symmetric(horizontal: 16),
-                padding: const EdgeInsetsGeometry.only(top: 1, right: 16, bottom: 20, left: 16),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: AppButton(
-                        text: 'Payment & Publish',
-                        onPressed: () => Get.toNamed(
-                          AppRoutes.PAYMENT_METHOD,
-                          arguments: {'isSelectable': true},
+              if (widget.id == null)
+                Padding(
+                  // padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsetsGeometry.only(top: 1, right: 16, bottom: 20, left: 16),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: AppButton(
+                          text: 'Payment & Publish',
+                          onPressed: () => Get.toNamed(
+                            AppRoutes.PAYMENT_METHOD,
+                            arguments: {'isSelectable': true},
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
             ],
           ),
         ),

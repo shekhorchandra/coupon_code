@@ -79,7 +79,7 @@ class AppPages {
         final args = Get.arguments as Map<String, dynamic>;
 
         return ServiceDetailsPage(
-          id: args['id'],
+          id: args['id'] as String,
           dealItem: args['dealItem'],
           isNetworkImage: args['isNetworkImage'] ?? true,
         );

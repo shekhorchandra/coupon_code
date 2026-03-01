@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -103,7 +101,7 @@ class DealCard extends StatelessWidget {
                   height: 32,
                   onPressed: () => Get.toNamed(
                     AppRoutes.DISCOVERDETAILS,
-                    arguments: {'id': Random().nextInt(50) + 1},
+                    arguments: {'id': '69a2f0d7e6bc98e5f88b7dad'},
                   ),
                 ),
               ],
