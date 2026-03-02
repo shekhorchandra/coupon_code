@@ -19,54 +19,147 @@ class CouponPopupView extends GetView<CouponController> {
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),
-        child: Obx(() => Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
+        child: Obx(() {
+          // Loading state
+          if (controller.isLoading.value) {
+            return const SizedBox(
+              height: 200,
+              child: Center(child: CircularProgressIndicator()),
+            );
+          }
 
-            ///  Segmented Tabs
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(30),
+          ///  No coupon state
+          if (controller.couponCode == null || controller.couponCode!.isEmpty) {
+            return const SizedBox(
+              height: 200,
+              child: Center(child: Text("No coupon available")),
+            );
+          }
+
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+
+              ///  (image + title)
+              if (controller.dealTitle != null) ...[
+                Column(
+                  children: [
+                    /// Image
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: controller.dealImage != null
+                          ? Image.network(
+                        controller.dealImage!,
+                        width: double.infinity,
+                        height: 200,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) =>
+                        const Icon(Icons.broken_image, size: 80),
+                      )
+                          : const Icon(Icons.image_not_supported, size: 80),
+                    ),
+
+                    const SizedBox(height: 6),
+
+                    /// Title
+                    Text(
+                      controller.dealTitle!,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: AppColor.titleColor,
+                      ),
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    /// Price & Discount
+                    if (controller.regularPrice != null &&
+                        controller.discountPercent != null)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _priceRow(
+                            title: "Price",
+                            value: "\$${controller.discountedPrice.toStringAsFixed(0)}",
+                            valueColor: AppColor.primary,
+                            isBold: true,
+                          ),
+                          _priceRow(
+                            title: "Regular",
+                            value: "\$${controller.regularPrice!.toStringAsFixed(0)}",
+                            isStrike: true,
+                          ),
+                          _priceRow(
+                            title: "Discount",
+                            value: "${controller.discountPercent!.toStringAsFixed(0)}% OFF",
+                            valueColor: Colors.green,
+                            isBold: true,
+                          ),
+                          const SizedBox(height: 4),
+
+                          /// You Save
+                          Center(
+                            child: Text(
+                              "You save \$${(controller.regularPrice! - controller.discountedPrice).toStringAsFixed(0)}",
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: AppColor.primary,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+              ],
+
+              /// Segmented Tabs
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade200,
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: Row(
+                  children: [
+                    _segmentButton("Coupon", 0),
+                    _segmentButton("QR", 1),
+                    _segmentButton("Barcode", 2),
+                  ],
+                ),
               ),
-              child: Row(
-                children: [
-                  _segmentButton("Coupon", 0),
-                  _segmentButton("QR", 1),
-                  _segmentButton("Barcode", 2),
-                ],
+
+              const SizedBox(height: 20),
+
+              /// Dynamic Content
+              if (controller.selectedIndex.value == 0)
+                Obx(() => _buildCouponCode(controller.couponCode.value)),
+
+              if (controller.selectedIndex.value == 1)
+                QrImageView(data: controller.qrData, size: 220),
+
+              if (controller.selectedIndex.value == 2)
+                BarcodeWidget(
+                  barcode: Barcode.code128(),
+                  data: controller.qrData,
+                  width: double.infinity,
+                  height: 90,
+                ),
+
+              const SizedBox(height: 20),
+
+              /// 🔹 Close Button
+              AppButton(
+                text: "Close",
+                height: 42,
+                onPressed: Get.back,
               ),
-            ),
-
-            const SizedBox(height: 20),
-
-            ///  Dynamic Content
-            if (controller.selectedIndex.value == 0)
-              _buildCouponCode(controller.couponCode),
-
-            if (controller.selectedIndex.value == 1)
-              QrImageView(
-                data: controller.qrData,
-                size: 220,
-              ),
-
-            if (controller.selectedIndex.value == 2)
-              BarcodeWidget(
-                barcode: Barcode.code128(),
-                data: controller.qrData,
-                width: double.infinity,
-                height: 90,
-              ),
-
-            const SizedBox(height: 20),
-
-            AppButton(
-              text: "Close",
-              height: 42,
-              onPressed: Get.back,
-            ),
-          ],
-        )),
+            ],
+          );
+        }),
       ),
     );
   }
@@ -126,6 +219,40 @@ class CouponPopupView extends GetView<CouponController> {
           textAlign: TextAlign.center,
         ),
       ],
+    );
+  }
+
+  Widget _priceRow({
+    required String title,
+    required String value,
+    Color valueColor = Colors.black,
+    bool isBold = false,
+    bool isStrike = false,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            "$title:",
+            style: const TextStyle(
+              fontSize: 13,
+              color: Colors.black,
+            ),
+          ),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+              color: valueColor,
+              decoration:
+              isStrike ? TextDecoration.lineThrough : TextDecoration.none,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
