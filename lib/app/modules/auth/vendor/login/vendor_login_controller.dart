@@ -47,19 +47,20 @@ class VendorLoginController extends GetxController {
         // Handle successful login response
         var data = response.data;
         _storeLoginTokens(data);
+        _storeUserId(data);
 
         // Register FCM and Device
-        bool fcmRegistered = await _registerFCM();
-        if (!fcmRegistered) {
-          Get.snackbar('Error', 'An error occurred while initializing notifications!');
-          return;
-        }
+        // bool fcmRegistered = await _registerFCM();
+        // if (!fcmRegistered) {
+        //   Get.snackbar('Error', 'An error occurred while initializing notifications!');
+        //   return;
+        // }
 
-        bool deviceRegistered = await _registerDevice(data);
-        if (!deviceRegistered) {
-          Get.snackbar('Error', 'An error occurred while registering the device.');
-          return;
-        }
+        // bool deviceRegistered = await _registerDevice(data);
+        // if (!deviceRegistered) {
+        //   Get.snackbar('Error', 'An error occurred while registering the device.');
+        //   return;
+        // }
 
         // Proceed to the next screen
         isVerifiedOrIsShopCreated();
@@ -140,6 +141,21 @@ class VendorLoginController extends GetxController {
   void _storeLoginTokens(Map<String, dynamic> data) {
     _storageService.setAccessToken(data['data']['accessToken']);
     _storageService.setRefreshToken(data['data']['refreshToken']);
+  }
+
+  /// Store user id in local storage
+  void _storeUserId(Map<String, dynamic> data) async {
+    try {
+      final response = await _dioClient.client.get(ApiConstants.getMe);
+
+      if (response.statusCode == 200) {
+        _storageService.setUserId(data['data']['_id']);
+      } else {
+        Get.snackbar('Error', 'Couldn\'t fetch user information!');
+      }
+    } catch (e, st) {
+      _handleException(e, st);
+    }
   }
 
   /// Handle error based on HTTP status code

@@ -15,6 +15,8 @@ import 'package:image_picker/image_picker.dart';
 class VendorAccountController extends GetxController {
   VendorAccountController();
 
+  final isUpdating = false.obs;
+
   // Text Controllers
   final businessNameController = TextEditingController(text: '');
   final businessDescriptionController = TextEditingController(text: '');

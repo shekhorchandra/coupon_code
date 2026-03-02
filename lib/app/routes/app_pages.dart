@@ -4,6 +4,8 @@ import 'package:coupon_code/app/modules/auth/vendor/verification/vendor_verifica
 import 'package:coupon_code/app/modules/vendor/payment_method/bindings/payment_method_binding.dart';
 import 'package:coupon_code/app/modules/vendor/payment_method/view/add_new_card_view.dart';
 import 'package:coupon_code/app/modules/vendor/payment_method/view/payment_methods_view.dart';
+import 'package:coupon_code/app/modules/vendor/profile/bindings/profile_binding.dart';
+import 'package:coupon_code/app/modules/vendor/profile/views/profile_view.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_account/bindings/vendor_account_binding.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_account/views/create_vendor_account_view.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_account/views/vendor_registration_success_view.dart';
@@ -239,6 +241,7 @@ class AppPages {
       page: () => VendorDashboardPage(),
       binding: VendorDashboardBinding(),
     ),
+    GetPage(name: AppRoutes.VENDOR_PROFILE, page: () => ProfileView(), binding: ProfileBinding()),
     GetPage(
       name: AppRoutes.VENDOR_DEALS,
       page: () => VendorDealsPage(),

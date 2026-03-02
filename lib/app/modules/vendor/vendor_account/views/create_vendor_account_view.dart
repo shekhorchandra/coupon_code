@@ -5,6 +5,8 @@ import 'package:coupon_code/app/core/widgets/App_button.dart';
 import 'package:coupon_code/app/core/widgets/common_app_bar.dart';
 import 'package:coupon_code/app/core/widgets/custom_text_field.dart';
 import 'package:coupon_code/app/core/widgets/section_heading.dart';
+import 'package:coupon_code/app/data/models/shop_model.dart';
+import 'package:coupon_code/app/modules/user/discover_bar/discover_details/controllers/discover_details_controller.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_account/controllers/vendor_account_controller.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_account/views/widgets/business_logo_upload.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_account/views/widgets/multiple_outlet_form.dart';
@@ -17,11 +19,24 @@ class CreateVendorAccountPage extends GetView<VendorAccountController> {
   CreateVendorAccountPage({super.key});
 
   final controller = Get.put(VendorAccountController());
+  final serviceDetailsController = Get.put(ServiceDetailsController());
 
   @override
   Widget build(BuildContext context) {
+    String? shopId = (Get.arguments as Map?)?['shopId'] as String?;
+    ShopModel? shop;
+
+    if (shopId != null) {
+      controller.isUpdating.value = true;
+      serviceDetailsController.getShopDetails(shopId);
+      shop = serviceDetailsController.shop.value;
+    }
+
     return Scaffold(
-      appBar: CommonAppBar(title: 'Create Your Vendor Account', showBack: false),
+      appBar: CommonAppBar(
+        title: shopId != null ? 'Update Your Vendor Account' : 'Create Your Vendor Account',
+        showBack: false,
+      ),
 
       body: SafeArea(
         child: SingleChildScrollView(
@@ -30,15 +45,16 @@ class CreateVendorAccountPage extends GetView<VendorAccountController> {
             crossAxisAlignment: .start,
             children: [
               // Subtitle
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 30, right: 30),
-                  child: Text(
-                    'Set up your business profile and start offering amazing deals to customers.',
-                    textAlign: .center,
+              if (shopId == null)
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 30, right: 30),
+                    child: Text(
+                      'Set up your business profile and start offering amazing deals to customers.',
+                      textAlign: .center,
+                    ),
                   ),
                 ),
-              ),
 
               const SizedBox(height: 30),
 
@@ -199,10 +215,17 @@ class CreateVendorAccountPage extends GetView<VendorAccountController> {
               ),
               const SizedBox(height: 30),
 
-              AppButton(
-                text: 'Submit for Approval',
-                onPressed: () => controller.submitForApproval(),
-              ),
+              if (shopId == null)
+                AppButton(
+                  text: 'Submit for Approval',
+                  onPressed: () => controller.submitForApproval(),
+                ),
+
+              if (shopId != null)
+                AppButton(
+                  text: 'Update',
+                  onPressed: () => controller.submitForApproval(), // TODO: fix the method
+                ),
             ],
           ),
         ),

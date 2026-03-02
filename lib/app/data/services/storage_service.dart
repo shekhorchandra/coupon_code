@@ -10,6 +10,7 @@ class StorageService {
 
   static const String _accessTokenKey = 'access_token';
   static const String _refreshTokenKey = 'refresh_token';
+  static const String _userIdKey = 'userId';
 
   late final GetStorage _box;
 
@@ -34,6 +35,13 @@ class StorageService {
   }
 
   String? get refreshToken => _box.read<String>(_refreshTokenKey);
+
+  // User ID
+  Future<void> setUserId(String id) async {
+    await _box.write(_userIdKey, id);
+  }
+
+  String? get userId => _box.read<String>(_userIdKey);
 
   // Read data
   T? read<T>(String key) {

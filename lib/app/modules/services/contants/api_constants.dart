@@ -21,6 +21,7 @@ class ApiConstants {
 
   // User profile
   static const String getMe = '/user/get_me';
+  static const String updateUser = '/user';
 
   //user category
   static const String category = "/category";
