@@ -41,8 +41,8 @@ class VendorMenuController extends GetxController {
         data: {'myId': userId},
       );
 
-      if (response.statusCode == 201) {
-        final data = ShopModel.fromJson(response.data['data'][0]);
+      if (response.statusCode == 200) {
+        final data = ShopModel.fromJson(response.data['data']);
 
         businessId.value = data.sId ?? '';
         businessName.value = data.businessName ?? '';
