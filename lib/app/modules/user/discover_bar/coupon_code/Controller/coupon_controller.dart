@@ -1,6 +1,5 @@
+import 'package:coupon_code/app/data/models/deal_model.dart';
 import 'package:get/get.dart';
-import '../../../../../data/models/deal_model_dto.dart';
-import '../../../../../data/network/dio_client.dart';
 
 class CouponController extends GetxController {
   // ---------------- Deal info ----------------
@@ -14,7 +13,7 @@ class CouponController extends GetxController {
 
   double get discountedPrice {
     if (regularPrice == null || discountPercent == null) return 0;
-    return DealModelDTO.afterDiscountPrice(regularPrice!, discountPercent!);
+    return DealModel.afterDiscountPrice(regularPrice!, discountPercent!);
   }
 
   // ---------------- Coupon info ----------------
@@ -29,7 +28,7 @@ class CouponController extends GetxController {
   void changeTab(int index) => selectedIndex.value = index;
 
   /// Set deal details from API
-  void setDeal(DealModelDTO deal) {
+  void setDeal(DealModel deal) {
     productId = deal.id;
     dealTitle = deal.title;
     dealImage = deal.images.isNotEmpty ? deal.images.first : null;

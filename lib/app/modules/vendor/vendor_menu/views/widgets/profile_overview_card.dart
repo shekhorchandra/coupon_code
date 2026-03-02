@@ -15,7 +15,7 @@ class ProfileOverviewCard extends StatelessWidget {
     return GestureDetector(
       onTap: () => Get.toNamed(
         AppRoutes.CREATE_VENDOR_ACCOUNT,
-        parameters: {'shopId': menuController.businessId.value},
+        parameters: {'shopId': menuController.businessId.value}, // TODO: shop id is not passing
       ),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
