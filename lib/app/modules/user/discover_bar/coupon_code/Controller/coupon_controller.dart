@@ -1,23 +1,41 @@
-import 'dart:math';
 import 'package:get/get.dart';
+import '../../../../../data/models/deal_model_dto.dart';
+import '../../../../../data/network/dio_client.dart';
 
 class CouponController extends GetxController {
-  final selectedIndex = 0.obs;
+  // ---------------- Deal info ----------------
+  String? productId;
+  String? dealTitle;
+  String? dealImage;
 
-  late String productId;
-  late String couponCode;
+  // ---------------- Prices ----------------
+  double? regularPrice;
+  double? discountPercent;
 
-  void changeTab(int index) {
-    selectedIndex.value = index;
+  double get discountedPrice {
+    if (regularPrice == null || discountPercent == null) return 0;
+    return DealModelDTO.afterDiscountPrice(regularPrice!, discountPercent!);
   }
 
-  String get qrData => "$productId|$couponCode";
+  // ---------------- Coupon info ----------------
+  RxString couponCode = "".obs; // Fetched from deal API
+  String get qrData => "$productId|${couponCode.value}";
 
-  String generateDemoCoupon() {
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ123456789';
-    final rand = Random();
+  // ---------------- UI state ----------------
+  RxInt selectedIndex = 0.obs;
+  RxBool isLoading = false.obs;
 
-    return 'GLAM-' +
-        List.generate(5, (_) => chars[rand.nextInt(chars.length)]).join();
+  // ---------------- Methods ----------------
+  void changeTab(int index) => selectedIndex.value = index;
+
+  /// Set deal details from API
+  void setDeal(DealModelDTO deal) {
+    productId = deal.id;
+    dealTitle = deal.title;
+    dealImage = deal.images.isNotEmpty ? deal.images.first : null;
+    regularPrice = deal.regularPrice;
+    discountPercent = deal.discountPercent;
+
+    couponCode.value = deal.coupon ?? "No coupon available";
   }
 }
