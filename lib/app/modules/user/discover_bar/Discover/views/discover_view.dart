@@ -31,14 +31,6 @@ class DiscoverView extends GetView<DiscoverController> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text("Explore Nearby", style: AppTextStyles.HeaderTitle),
-                  // IconButton(
-                  //   icon: const Icon(Icons.notifications_none),
-                  //   onPressed: controller.onNotificationPressed,
-                  // ),
-                  IconButton(
-                    icon: Badge.count(count: 9, child: const Icon(Icons.notifications_none)),
-                    onPressed: () {},
-                  ),
                 ],
               ),
             ),
@@ -156,7 +148,7 @@ class DiscoverView extends GetView<DiscoverController> {
                                         height: 56,
                                         fit: BoxFit.cover,
                                         errorBuilder: (_, __, ___) =>
-                                            Image.asset(AppAssets.food, width: 38),
+                                        const Icon(Icons.image_not_supported),
                                       ),
                                     ),
                                   ),
