@@ -40,7 +40,7 @@ class DioClient {
           // Set Authorization header
           options.headers["Accept"] = "application/json";
           String? token = _storageService.accessToken;
-          options.headers["Authorization"] = 'Bearer $token';
+          if (token != null) options.headers["Authorization"] = 'Bearer $token';
 
           print("Request to: ${options.method} ${options.uri}");
           print("Headers: ${options.headers}");
