@@ -22,9 +22,12 @@ class VendorMenuController extends GetxController {
 
   @override
   void onInit() async {
-    await getShopInfo();
-
     super.onInit();
+
+    final loggedIn = await _storageService.read('loggedIn');
+    if (loggedIn != null && loggedIn == true) {
+      await getShopInfo();
+    }
   }
 
   Future<void> getShopInfo() async {
@@ -99,6 +102,8 @@ class VendorMenuController extends GetxController {
     try {
       // Clear local storage (tokens, user data)
       await _storageService.clear();
+
+      Get.snackbar('Logged out successfully!', '');
 
       // Navigate
       Get.offAllNamed(AppRoutes.USER_BOTTOM_NAV);

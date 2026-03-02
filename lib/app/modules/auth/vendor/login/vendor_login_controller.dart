@@ -49,21 +49,22 @@ class VendorLoginController extends GetxController {
         _storeLoginTokens(data);
 
         // Register FCM and Device
-        bool fcmRegistered = await _registerFCM();
-        if (!fcmRegistered) {
-          Get.snackbar('Error', 'An error occurred while initializing notifications!');
-          return;
-        }
+        // bool fcmRegistered = await _registerFCM();
+        // if (!fcmRegistered) {
+        //   Get.snackbar('Error', 'An error occurred while initializing notifications!');
+        //   return;
+        // }
 
-        bool deviceRegistered = await _registerDevice(data);
-        if (!deviceRegistered) {
-          Get.snackbar('Error', 'An error occurred while registering the device.');
-          return;
-        }
+        // bool deviceRegistered = await _registerDevice(data);
+        // if (!deviceRegistered) {
+        //   Get.snackbar('Error', 'An error occurred while registering the device.');
+        //   return;
+        // }
 
         // Proceed to the next screen
         isVerifiedOrIsShopCreated();
 
+        _storageService.write('loggedIn', true);
         // Get.snackbar("Login Successful", "");
         // Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR);
       } else {
