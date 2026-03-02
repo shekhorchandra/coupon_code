@@ -1,5 +1,6 @@
 import 'package:coupon_code/app/data/models/deal_model.dart';
 import 'package:get/get.dart';
+import '../../../../../data/models/deal_model.dart';
 
 class CouponController extends GetxController {
   // ---------------- Deal info ----------------
