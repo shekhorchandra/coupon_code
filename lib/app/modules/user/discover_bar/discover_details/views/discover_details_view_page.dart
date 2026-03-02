@@ -513,17 +513,14 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
 
                     Expanded(
                       child: AppButton(
-                        onPressed: () {
-                          // Put the controller
-                          final controller = Get.put(CouponController());
+                        onPressed: () async {
+                          final couponController = Get.put(CouponController());
 
-                          // Set the productId and generate coupon
-                          controller.productId = deal.id;
-                          controller.couponCode = controller.generateDemoCoupon();
+                          // Set deal info from the API response
+                          couponController.setDeal(deal);
 
-                          //  Show the dialog
+                          // Open the popup
                           Get.dialog(const CouponPopupView()).then((_) {
-                            // remove controller after popup closes
                             if (Get.isRegistered<CouponController>()) {
                               Get.delete<CouponController>();
                             }
