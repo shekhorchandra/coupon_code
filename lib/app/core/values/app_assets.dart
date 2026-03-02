@@ -11,9 +11,6 @@ class AppAssets {
   static const makeup = 'assets/icons/makeup.jpg';
   static const shirt = 'assets/icons/shirt.jpg';
 
-  // discover_bar icons
-  static const food = 'assets/icons/food.png';
-
   // Menu page
   static const vendor = 'assets/icons/vendor.png';
 
