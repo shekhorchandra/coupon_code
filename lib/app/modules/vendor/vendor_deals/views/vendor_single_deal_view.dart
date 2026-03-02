@@ -6,7 +6,7 @@ import 'package:coupon_code/app/core/widgets/App_button.dart';
 import 'package:coupon_code/app/core/widgets/app_chip.dart';
 import 'package:coupon_code/app/core/widgets/common_app_bar.dart';
 import 'package:coupon_code/app/core/widgets/section_heading.dart';
-import 'package:coupon_code/app/data/models/deal_model_dto.dart';
+import 'package:coupon_code/app/data/models/deal_model.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_dashboard/views/widgets/overview_card.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_dashboard/views/widgets/overview_chart.dart';
 import 'package:coupon_code/app/routes/app_routes.dart';
@@ -16,7 +16,7 @@ import 'package:get/get.dart';
 class VendorSingleDealView extends StatelessWidget {
   const VendorSingleDealView({super.key, required this.deal});
 
-  final DealModelDTO deal;
+  final DealModel deal;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class VendorSingleDealView extends StatelessWidget {
                     mainAxisAlignment: .start,
                     crossAxisAlignment: .start,
                     children: [
-                      AppChip(text: deal.activePromotion ?? false ? 'Active' : 'Expired'),
+                      AppChip(text: deal.activePromotion != null ? 'Active' : 'Expired'),
                       const SizedBox(height: 10),
                       Text(deal.title, overflow: .ellipsis, maxLines: 3, style: AppText.body1.bold),
                     ],
@@ -59,7 +59,7 @@ class VendorSingleDealView extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      "\$${DealModelDTO.afterDiscountPrice(deal.regularPrice, deal.discountPercent).toStringAsFixed(2)}",
+                      "\$${DealModel.afterDiscountPrice(deal.regularPrice, deal.discountPercent).toStringAsFixed(2)}",
                       style: const TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(width: 6),

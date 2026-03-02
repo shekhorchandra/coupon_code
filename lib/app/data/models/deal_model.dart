@@ -8,7 +8,7 @@ class DealModel {
   final String shopId;
   final String userId;
   final String categoryId;
-  final bool? activePromotion;
+  final String? activePromotion;
   final String title;
   final double regularPrice;
   final double discountPercent;
@@ -44,7 +44,7 @@ class DealModel {
     String? shopId,
     String? userId,
     String? categoryId,
-    bool? activePromotion,
+    String? activePromotion,
     String? title,
     double? regularPrice,
     double? discountPercent,
@@ -104,7 +104,7 @@ class DealModel {
       shopId: map['shop'] as String,
       userId: map['user'] as String,
       categoryId: map['category'] as String,
-      activePromotion: map['activePromotion'] != null ? map['activePromotion'] as bool : null,
+      activePromotion: map['activePromotion'] != null ? map['activePromotion'] as String : null,
       title: map['title'] as String,
       regularPrice: (map['reguler_price'] as num?)?.toDouble() ?? 0.0,
       discountPercent: (map['discount'] as num?)?.toDouble() ?? 0.0,
@@ -113,12 +113,12 @@ class DealModel {
       images: List<String>.from(map['images'] ?? []),
       isPromoted: map['isPromoted'] != null ? map['isPromoted'] as bool : null,
       promotedUntil: map['promotedUntil'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['promotedUntil'] as int)
+          ? DateTime.parse(map['promotedUntil'] as String)
           : null,
-      // coupon: map['coupon'] != null ? map['coupon'] as String : null,
-      coupon: map['coupon']['coupon_code'],
-      totalViews: int.tryParse(map['total_views'].toString()) ?? 0,
-      totalImpression: int.tryParse(map['total_impression'].toString()) ?? 0,
+      coupon: map['coupon'] as String? ?? '',
+      // Directly assign the fields as they are integers in the response
+      totalViews: map['total_views'] as int? ?? 0,
+      totalImpression: map['total_impression'] as int? ?? 0,
     );
   }
 

@@ -1,14 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coupon_code/app/core/values/app_color.dart';
 import 'package:coupon_code/app/core/values/app_text.dart';
-import 'package:coupon_code/app/data/models/deal_model_dto.dart';
+import 'package:coupon_code/app/data/models/deal_model.dart';
 import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 class DealTile extends StatelessWidget {
-  final DealModelDTO deal;
+  final DealModel deal;
   final int dealType;
 
   const DealTile({super.key, required this.deal, required this.dealType});
@@ -125,7 +125,7 @@ class DealTile extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "\$${DealModelDTO.afterDiscountPrice(deal.regularPrice, deal.discountPercent).toStringAsFixed(2)}",
+                            "\$${DealModel.afterDiscountPrice(deal.regularPrice, deal.discountPercent).toStringAsFixed(2)}",
                             style: AppText.label.bold.copyWith(fontSize: 15, color: Colors.black),
                           ),
                           Text(
@@ -167,7 +167,7 @@ class DealTile extends StatelessWidget {
                       // Switcher
                       if (dealType == 0)
                         Switch.adaptive(
-                          value: deal.activePromotion ?? false,
+                          value: deal.activePromotion == null ? false : true,
                           onChanged: (value) {},
                         ),
                     ],
