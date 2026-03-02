@@ -1,4 +1,4 @@
-import 'package:coupon_code/app/data/models/deal_model_dto.dart';
+import 'package:coupon_code/app/data/models/deal_model.dart';
 import 'package:coupon_code/app/modules/auth/vendor/verification/vendor_verification_binding.dart';
 import 'package:coupon_code/app/modules/auth/vendor/verification/vendor_verification_view.dart';
 import 'package:coupon_code/app/modules/vendor/payment_method/bindings/payment_method_binding.dart';
@@ -174,7 +174,7 @@ class AppPages {
       page: () {
         final args = Get.arguments as Map<String, dynamic>? ?? {};
 
-        return AddDealView(deal: args['deal'] as DealModelDTO);
+        return AddDealView(deal: args['deal'] as DealModel);
       },
       binding: VendorDealsBinding(),
     ),
@@ -184,7 +184,7 @@ class AppPages {
       page: () {
         final args = Get.arguments as Map<String, dynamic>? ?? {};
 
-        return VendorSingleDealView(deal: args['dealItem'] as DealModelDTO);
+        return VendorSingleDealView(deal: args['dealItem'] as DealModel);
       },
       binding: VendorDealsBinding(),
     ),

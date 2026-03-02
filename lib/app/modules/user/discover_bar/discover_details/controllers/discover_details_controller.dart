@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:coupon_code/app/data/models/deal_model_dto.dart';
+import 'package:coupon_code/app/data/models/deal_model.dart';
 import 'package:coupon_code/app/data/models/shop_model.dart';
 import 'package:coupon_code/app/data/network/dio_client.dart';
 import 'package:coupon_code/app/modules/services/contants/api_constants.dart';
@@ -12,7 +12,7 @@ class ServiceDetailsController extends GetxController {
   final DioClient _dioClient = DioClient();
 
   RxInt currentImage = 0.obs;
-  Rxn<DealModelDTO> deal = Rxn<DealModelDTO>();
+  Rxn<DealModel> deal = Rxn<DealModel>();
   Rxn<ShopModel> shop = Rxn<ShopModel>();
 
   void onPageChanged(int index) {
@@ -36,7 +36,7 @@ class ServiceDetailsController extends GetxController {
       final response = await _dioClient.client.get(ApiConstants.dealDetails(id));
 
       if (response.statusCode == 200) {
-        deal.value = DealModelDTO.fromMap(response.data['data']);
+        deal.value = DealModel.fromMap(response.data['data']);
       } else {
         Get.snackbar('Error', 'Deal not found!');
       }

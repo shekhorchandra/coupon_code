@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:coupon_code/app/core/values/app_assets.dart';
-import 'package:coupon_code/app/data/models/shop_model.dart'; // Assuming ShopModel is imported
+import 'package:coupon_code/app/data/models/shop_model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -12,7 +12,7 @@ class ShopMap extends StatelessWidget {
 
   Future<BitmapDescriptor> _loadShopIcon() async {
     return await BitmapDescriptor.asset(
-      const ImageConfiguration(size: Size(50, 50)), // You can adjust the size here
+      const ImageConfiguration(size: Size(50, 50)),
       AppAssets.shopMapMarker,
     );
   }
@@ -66,7 +66,7 @@ class ShopMap extends StatelessWidget {
                 position: shopLocation,
                 icon: shopIcon!,
                 infoWindow: InfoWindow(
-                  title: outlet.shop,
+                  title: shop.businessName,
                   snippet: outlet.address ?? 'No address available',
                 ),
               ),
