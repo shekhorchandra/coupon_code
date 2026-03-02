@@ -13,6 +13,7 @@ class VendorMenuController extends GetxController {
 
   RxBool loading = false.obs;
 
+  final RxString businessId = ''.obs;
   final RxString businessName = ''.obs;
   final RxString businessEmail = ''.obs;
   final RxString businessLogo = ''.obs;
@@ -32,15 +33,18 @@ class VendorMenuController extends GetxController {
 
   Future<void> getShopInfo() async {
     loading.value = true;
+    final userId = await _storageService.userId;
 
     try {
-      final response = await _dioClient.client.get(ApiConstants.shopDetails);
+      final response = await _dioClient.client.get(
+        ApiConstants.shopDetails,
+        data: {'myId': userId},
+      );
 
       if (response.statusCode == 201) {
         final data = ShopModel.fromJson(response.data['data'][0]);
 
-        print(data);
-
+        businessId.value = data.sId ?? '';
         businessName.value = data.businessName ?? '';
         businessEmail.value = data.businessEmail ?? '';
         businessLogo.value = data.businessLogo ?? '';

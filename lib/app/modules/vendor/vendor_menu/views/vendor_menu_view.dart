@@ -28,12 +28,17 @@ class VendorMenuPage extends GetView<VendorAccountController> {
             child: Column(
               children: [
                 // User Info
-                GestureDetector(onTap: () {}, child: ProfileOverviewCard()),
+                ProfileOverviewCard(),
                 const SizedBox(height: 20),
 
                 // Settings
                 SectionHeading(title: 'Settings'),
 
+                KMenuItem(
+                  title: 'Profile',
+                  icon: Icons.person,
+                  onTap: () => Get.toNamed(AppRoutes.VENDOR_PROFILE),
+                ),
                 KMenuItem(
                   title: 'Payment Methods',
                   icon: Icons.credit_card_rounded,
