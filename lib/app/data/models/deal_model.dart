@@ -20,6 +20,8 @@ class DealModel {
   final String? coupon;
   final int totalViews;
   final int totalImpression;
+  final double? distance;
+
   DealModel({
     required this.id,
     required this.shopId,
@@ -37,6 +39,7 @@ class DealModel {
     this.coupon,
     required this.totalViews,
     required this.totalImpression,
+    this.distance,
   });
 
   DealModel copyWith({
@@ -99,6 +102,7 @@ class DealModel {
   }
 
   factory DealModel.fromMap(Map<String, dynamic> map) {
+
     return DealModel(
       id: map['_id'] as String,
       shopId: map['shop'] as String,
@@ -119,6 +123,7 @@ class DealModel {
       // Directly assign the fields as they are integers in the response
       totalViews: map['total_views'] as int? ?? 0,
       totalImpression: map['total_impression'] as int? ?? 0,
+      distance: (map['distance'] as num?)?.toDouble(),
     );
   }
 

@@ -2,16 +2,15 @@ import 'package:flutter/material.dart' as AppTextStyle;
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
-
-import '../../../../../core/values/app_assets.dart';
 import '../../../../../core/values/app_color.dart';
 import '../../../../../core/values/app_text_styles.dart';
 import '../../../../../core/widgets/App_button.dart';
 import '../../../../../core/widgets/custom_text_field.dart';
 import '../../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
 import '../../../categories/Category/controllers/categories_controller.dart';
-import '../../discover_details/discover_widget/discover_details_widget_view/deal_card.dart';
 import '../controllers/discover_controller.dart';
+import '../discover_widget/discover_details_widget_view/deal_card.dart';
+
 
 class DiscoverView extends GetView<DiscoverController> {
   const DiscoverView({super.key});
@@ -20,6 +19,7 @@ class DiscoverView extends GetView<DiscoverController> {
   Widget build(BuildContext context) {
     final CategoriesController controller = Get.put(CategoriesController());
     final DiscoverController discoverController = Get.find();
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -177,16 +177,34 @@ class DiscoverView extends GetView<DiscoverController> {
             const SizedBox(height: 16),
 
             // DEALS GRID
+
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: MasonryGridView.count(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 12,
-                  crossAxisSpacing: 12,
-                  itemCount: 6,
-                  itemBuilder: (_, index) => DealCard(index: index),
-                ),
+                child: Obx(() {
+                  if (discoverController.isLoading.value) {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: AppColor.primary,
+                      ),
+                    );
+                  }
+
+                  if (discoverController.deals.isEmpty) {
+                    return const Center(child: Text("No deals available"));
+                  }
+
+                  return MasonryGridView.count(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 12,
+                    crossAxisSpacing: 12,
+                    itemCount: discoverController.deals.length,
+                    itemBuilder: (_, index) => DealCard(
+                      index: index,
+                      deal: discoverController.deals[index],
+                    ),
+                  );
+                }),
               ),
             ),
           ],
