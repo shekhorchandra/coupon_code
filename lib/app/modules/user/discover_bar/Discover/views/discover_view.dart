@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart' as AppTextStyle;
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -19,6 +21,7 @@ class DiscoverView extends GetView<DiscoverController> {
   Widget build(BuildContext context) {
     final CategoriesController controller = Get.put(CategoriesController());
     final DiscoverController discoverController = Get.find();
+    Timer? _debounce;
 
     return Scaffold(
       body: SafeArea(
@@ -45,22 +48,29 @@ class DiscoverView extends GetView<DiscoverController> {
                     children: [
                       Expanded(
                         child: CustomTextField(
-                          hint: "Search for deals",
+                          hint: "Search for deals or Zip Code...",
                           icon: Icons.search,
-                          onChanged: controller.onSearch,
-                        ),
+                          onChanged: (value) {
+                            controller.onSearch(value);
+
+                            if (_debounce?.isActive ?? false) _debounce!.cancel();
+                            _debounce = Timer(const Duration(milliseconds: 500), () {
+                              discoverController.fetchDealsWithSearch(searchTerm: value);
+                            });
+                          },
+                        )
                       ),
-                      const SizedBox(width: 8),
-                      AppButton(
-                        text: "ZIP Code",
-                        width: 100,
-                        height: 40,
-                        icon: Icons.location_on_outlined,
-                        onPressed: discoverController.onZipPressed,
-                        backgroundColor: Colors.white,
-                        textColor: AppColor.primary,
-                        borderColor: AppColor.primary,
-                      ),
+                      // const SizedBox(width: 8),
+                      // AppButton(
+                      //   text: "ZIP Code",
+                      //   width: 100,
+                      //   height: 40,
+                      //   icon: Icons.location_on_outlined,
+                      //   onPressed: discoverController.onZipPressed,
+                      //   backgroundColor: Colors.white,
+                      //   textColor: AppColor.primary,
+                      //   borderColor: AppColor.primary,
+                      // ),
                     ],
                   ),
                   const SizedBox(height: 8),
@@ -182,26 +192,34 @@ class DiscoverView extends GetView<DiscoverController> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Obx(() {
-                  if (discoverController.isLoading.value) {
-                    return const Center(
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      await discoverController.fetchDeals();
+                    },
+                    child: discoverController.isLoading.value
+                        ? const Center(
                       child: CircularProgressIndicator(
                         color: AppColor.primary,
                       ),
-                    );
-                  }
-
-                  if (discoverController.deals.isEmpty) {
-                    return const Center(child: Text("No deals available"));
-                  }
-
-                  return MasonryGridView.count(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 12,
-                    crossAxisSpacing: 12,
-                    itemCount: discoverController.deals.length,
-                    itemBuilder: (_, index) => DealCard(
-                      index: index,
-                      deal: discoverController.deals[index],
+                    )
+                        : discoverController.deals.isEmpty
+                        ? ListView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      children: const [
+                        SizedBox(height: 300),
+                        Center(child: Text("No deals available")),
+                      ],
+                    )
+                        : MasonryGridView.count(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 12,
+                      crossAxisSpacing: 12,
+                      itemCount: discoverController.deals.length,
+                      itemBuilder: (_, index) => DealCard(
+                        index: index,
+                        deal: discoverController.deals[index],
+                      ),
                     ),
                   );
                 }),

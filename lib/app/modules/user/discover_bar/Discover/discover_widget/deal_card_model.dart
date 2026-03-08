@@ -24,19 +24,22 @@ class DealCardModel {
   });
 
   factory DealCardModel.fromJson(Map<String, dynamic> json) {
+    final deal = json['deal'] ?? json; // API wraps deal under 'deal'
+    final shop = json['shop'] ?? {};
+
     return DealCardModel(
-      id: json['_id'],
-      shopId: json['shop']['_id'],
-      shopName: json['shop']['business_name'],
-      title: json['title'],
-      regularPrice: (json['reguler_price'] ?? 0).toDouble(), // typo fix
-      discountPercent: (json['discount'] ?? 0).toDouble(),
-      isPromoted: json['isPromoted'] ?? false,
-      promotedUntil: json['promotedUntil'] != null
-          ? DateTime.parse(json['promotedUntil'])
+      id: deal['_id'],
+      shopId: json['_id'] ?? '', // shop id can be top level
+      shopName: shop['business_name'] ?? '',
+      title: deal['title'] ?? '',
+      regularPrice: (deal['reguler_price'] ?? 0).toDouble(),
+      discountPercent: (deal['discount'] ?? 0).toDouble(),
+      isPromoted: deal['isPromoted'] ?? false,
+      promotedUntil: deal['promotedUntil'] != null
+          ? DateTime.parse(deal['promotedUntil'])
           : null,
       distance: (json['distance'] ?? 0).toDouble(),
-      images: List<String>.from(json['images'] ?? []),
+      images: List<String>.from(deal['images'] ?? []),
     );
   }
 

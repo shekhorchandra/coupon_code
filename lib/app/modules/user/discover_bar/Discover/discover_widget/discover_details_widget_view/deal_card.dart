@@ -67,7 +67,7 @@ class DealCard extends StatelessWidget {
                 top: 8,
                 left: 8,
                 child: dealBadge(
-                    "${(deal.distance / 1000).toStringAsFixed(1)} km"), // meters to km
+                    "${(deal.distance / 1000).toStringAsFixed(3)} km"), // meters to km
               ),
               // Discount Badge
               Positioned(
