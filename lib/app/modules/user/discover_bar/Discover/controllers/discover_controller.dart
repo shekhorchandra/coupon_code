@@ -23,7 +23,7 @@ class DiscoverController extends GetxController {
   void onLocationPressed() {}
   void onNotificationPressed() {}
 
-  Future<void> fetchDeals() async {
+  Future<void> fetchDeals({int page = 1}) async {
     try {
       isLoading.value = true;
 
@@ -32,27 +32,31 @@ class DiscoverController extends GetxController {
 
       final response = await Dio().get(
         '${ApiConstants.baseUrl}/service/deals/$lat/$lng',
-        options: Options(
-          headers: {'Content-Type': 'application/json'},
-        ),
+        queryParameters: {
+          "page": page,
+          "limit": 10,
+        },
       );
 
-      final Map<String, dynamic> data = response.data is String
+      final Map<String, dynamic> res = response.data is String
           ? jsonDecode(response.data)
           : response.data;
 
-      if (response.statusCode == 200 && data['success'] == true) {
-        final List items = data['data'];
-        deals.value = items.map((e) => DealCardModel.fromJson(e)).toList();
+      if (response.statusCode == 200 && res['success'] == true) {
+        final List items = res['data']['deals'];
+
+        deals.value =
+            items.map((e) => DealCardModel.fromJson(e)).toList();
+
         print("Deals loaded: ${deals.length}");
       } else {
-        print("Failed to load deals: ${data['message']}");
+        print("Failed: ${res['message']}");
       }
     } catch (e) {
-      if (e is DioError) {
-        print("Dio error: ${e.response?.statusCode} -> ${e.response?.data}");
+      if (e is DioException) {
+        print("Dio error: ${e.response?.data}");
       } else {
-        print("Unexpected error: $e");
+        print("Error: $e");
       }
     } finally {
       isLoading.value = false;
