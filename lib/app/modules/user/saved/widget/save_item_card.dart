@@ -44,12 +44,12 @@ class SaveItemCard extends StatelessWidget {
             ClipRRect(
               borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(12), bottomLeft: Radius.circular(12)),
-              child: Image.asset(
+              child: Image.network(
                 imagePath,
                 width: 100,
                 height: 100,
                 fit: BoxFit.cover,
-              ),
+              )
             ),
 
             // Details section

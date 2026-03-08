@@ -1,59 +1,53 @@
+import 'dart:convert';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 
-class SaveItem {
-  final String imagePath;
-  final String title;
-  final String subtitle;
-  final double price;
-  final double originalPrice;
-  final String duration;
-  final bool isAvailable;
-  final String Status;
-
-  SaveItem({
-    required this.imagePath,
-    required this.title,
-    required this.subtitle,
-    required this.price,
-    required this.originalPrice,
-    required this.duration,
-    required this.isAvailable,
-    required this.Status,
-  });
-}
+import '../models/save_item_model.dart';
 
 class SavesController extends GetxController {
-  SavesController();
-  var selectedTab = 0.obs; // 0 = All, 1 = Available, 2 = Expired
 
-  // Sample data
-  var savesList = <SaveItem>[
-    SaveItem(
-      imagePath: 'assets/images/makeup.jpg',
-      title: 'The Ultimate Radiance Revival: Luxurious Facial...',
-      subtitle: 'Glamour Glow Salon',
-      price: 29,
-      originalPrice: 50,
-      duration: '10d   08h',
-      isAvailable: true,
-        Status: "Available",
-    ),
-    SaveItem(
-      imagePath: 'assets/images/makeup.jpg',
-      title: 'Relaxing Spa Day & Massage Treatment',
-      subtitle: 'Bliss Spa',
-      price: 40,
-      originalPrice: 75,
-      duration: '5d    12h',
-      isAvailable: false,
-      Status: "Expired",
-    ),
-  ].obs;
+  var selectedTab = 0.obs;
+  var savesList = <SaveItem>[].obs;
+  var isLoading = false.obs;
 
-  // Filtered lists
+  final String baseUrl = "https://gastrotomic-squirrelly-yuonne.ngrok-free.dev/api/v1";
+
+  @override
+  void onInit() {
+    fetchSavedDeals();
+    super.onInit();
+  }
+
+  Future<void> fetchSavedDeals() async {
+    try {
+      isLoading.value = true;
+
+      final response = await http.get(
+        Uri.parse("$baseUrl/service/saved?ids=69a6b624bdf4df7b68a74aff&page=1&limit=10"),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        if (data["success"]) {
+          List list = data["data"];
+
+          savesList.value =
+              list.map((e) => SaveItem.fromJson(e)).toList();
+        }
+      }
+    } catch (e) {
+      print("Saved deals error: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   List<SaveItem> get all => savesList;
+
   List<SaveItem> get available =>
       savesList.where((item) => item.isAvailable).toList();
+
   List<SaveItem> get expired =>
       savesList.where((item) => !item.isAvailable).toList();
 

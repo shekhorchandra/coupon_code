@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import '../../../../core/values/app_color.dart';
 import '../../../../core/widgets/common_app_bar.dart';
 import '../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
+import '../models/save_item_model.dart';
 
 class UserMySavesPage extends GetView<SavesController> {
   const UserMySavesPage({super.key});
@@ -37,6 +38,10 @@ class UserMySavesPage extends GetView<SavesController> {
           // --- List of Saved Items ---
           Expanded(
             child: Obx(() {
+
+              if(controller.isLoading.value){
+                return const Center(child: CircularProgressIndicator(color: AppColor.primary,));
+              }
               List<SaveItem> listToShow;
               switch (controller.selectedTab.value) {
                 case 1:
@@ -65,9 +70,9 @@ class UserMySavesPage extends GetView<SavesController> {
                     originalPrice: item.originalPrice,
                     duration: item.duration,
                     isAvailable: item.isAvailable,
-                    Status: item.Status,
+                    Status: item.status,
                     onTap: () {
-                      Get.toNamed(AppRoutes.DISCOVERDETAILS, arguments: {'id': 1});
+                      Get.toNamed(AppRoutes.DISCOVERDETAILS, arguments: {'id': item.id});
                     },
                   );
                 },
