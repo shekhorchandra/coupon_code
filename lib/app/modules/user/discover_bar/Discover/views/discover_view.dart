@@ -24,19 +24,27 @@ class DiscoverView extends GetView<DiscoverController> {
     Timer? _debounce;
 
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            // HEADER
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Explore Nearby", style: AppTextStyles.HeaderTitle),
-                ],
-              ),
-            ),
+        body: SafeArea(
+            child: RefreshIndicator(
+              onRefresh: () async {
+                await discoverController.fetchDeals();
+              },
+              color: AppColor.primary, // loading indicator color
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // HEADER
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Explore Nearby", style: AppTextStyles.HeaderTitle),
+                        ],
+                      ),
+                    ),
 
             // SEARCH + ZIP + LOCATION
             Padding(
@@ -188,46 +196,41 @@ class DiscoverView extends GetView<DiscoverController> {
 
             // DEALS GRID
 
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Obx(() {
-                  return RefreshIndicator(
-                    onRefresh: () async {
-                      await discoverController.fetchDeals();
-                    },
-                    child: discoverController.isLoading.value
-                        ? const Center(
-                      child: CircularProgressIndicator(
-                        color: AppColor.primary,
-                      ),
-                    )
-                        : discoverController.deals.isEmpty
-                        ? ListView(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      children: const [
-                        SizedBox(height: 300),
-                        Center(child: Text("No deals available")),
-                      ],
-                    )
-                        : MasonryGridView.count(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 12,
-                      crossAxisSpacing: 12,
-                      itemCount: discoverController.deals.length,
-                      itemBuilder: (_, index) => DealCard(
-                        index: index,
-                        deal: discoverController.deals[index],
-                      ),
-                    ),
-                  );
-                }),
+                    // DEALS GRID
+                    Obx(() {
+                      if (discoverController.isLoading.value) {
+                        return const Center(
+                          child: CircularProgressIndicator(
+                            color: AppColor.primary,
+                          ),
+                        );
+                      }
+
+                      if (discoverController.deals.isEmpty) {
+                        return SizedBox(
+                          height: 300,
+                          child: const Center(child: Text("No deals available")),
+                        );
+                      }
+
+                      return MasonryGridView.count(
+                        physics: const NeverScrollableScrollPhysics(), // disable inner scroll
+                        shrinkWrap: true,
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 12,
+                        crossAxisSpacing: 12,
+                        itemCount: discoverController.deals.length,
+                        itemBuilder: (_, index) => DealCard(
+                          index: index,
+                          deal: discoverController.deals[index],
+                        ),
+                      );
+                    }),
+          ],
+                ),
               ),
             ),
-          ],
         ),
-      ),
     );
   }
 }
