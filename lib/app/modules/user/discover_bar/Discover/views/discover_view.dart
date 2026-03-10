@@ -10,6 +10,7 @@ import '../../../../../core/widgets/App_button.dart';
 import '../../../../../core/widgets/custom_text_field.dart';
 import '../../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
 import '../../../categories/Category/controllers/categories_controller.dart';
+import '../../../categories/category_details/views/categoty_details_view.dart';
 import '../controllers/discover_controller.dart';
 import '../discover_widget/deal_card.dart';
 
@@ -148,8 +149,13 @@ class DiscoverView extends GetView<DiscoverController> {
                                 child: InkWell(
                                   borderRadius: BorderRadius.circular(40),
                                   onTap: () {
-                                    // navController.changeTab(1);
-                                    // navController.openOverlayPage(CategotyDetails());
+                                    Get.to(
+                                          () => const CategotyDetails(),
+                                      arguments: {
+                                        "id": category.id,     // Pass category ID
+                                        "title": category.name, // Pass category name/title
+                                      },
+                                    );
                                   },
                                   child: Column(
                                     children: [

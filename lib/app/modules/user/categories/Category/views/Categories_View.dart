@@ -62,11 +62,18 @@ class CategoriesView extends GetView<CategoriesController> {
                   ),
                   itemBuilder: (context, index) {
                     final item = controller.filteredCategories[index];
+
                     return _categoryItem(
                       imageUrl: item.image,
                       title: item.name,
                       onTap: () {
-                        // navController.openOverlayPage(const CategoryDetails());
+                        Get.to(
+                              () => const CategotyDetails(),
+                          arguments: {
+                            "id": item.id,
+                            "title": item.name,
+                          },
+                        );
                       },
                     );
                   },

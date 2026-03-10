@@ -121,46 +121,52 @@ class SaveItemCard extends StatelessWidget {
                         ),
 
                         // Right side: Delete button
-                        IconButton(
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (ctx) => AlertDialog(
-                                title: const Text("Delete Saved Deal"),
-                                content: const Text("Are you sure you want to remove this saved deal?"),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(ctx).pop(); // close dialog
-                                    },
-                                    child: const Text("Cancel"),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      // Remove the item using the controller
-                                      Get.find<SavesController>().removeSavedDeal(id);
-                                      Navigator.of(ctx).pop(); // close dialog
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.red.shade100, // background color
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: IconButton(
+                            onPressed: () {
+                              showDialog(
 
-                                      // show confirmation Snackbar
-                                      Get.snackbar(
-                                        "Deleted",
-                                        "The saved deal has been removed",
-                                        backgroundColor: Colors.red.shade100,
-                                        colorText: Colors.red.shade900,
-                                        snackPosition: SnackPosition.BOTTOM,
-                                      );
-                                    },
-                                    child: const Text(
-                                      "Delete",
-                                      style: TextStyle(color: Colors.red),
+                                context: context,
+                                builder: (ctx) => AlertDialog(
+                                  title: const Text("Delete Saved Deal"),
+                                  content: const Text("Are you sure you want to remove this saved deal?"),
+                                  actions: [
+                                    TextButton(
+                                      style: TextButton.styleFrom(
+                                        backgroundColor: Colors.grey.shade300,
+                                        foregroundColor: Colors.black,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                      onPressed: () => Navigator.pop(ctx),
+                                      child: const Text("Cancel"),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                          icon: const Icon(Icons.delete, color: Colors.red),
-                        )
+                                    TextButton(
+                                      style: TextButton.styleFrom(
+                                        backgroundColor: Colors.red,
+                                        foregroundColor: Colors.white,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Get.find<SavesController>().removeSavedDeal(id);
+                                        Navigator.pop(ctx);
+                                      },
+                                      child: const Text("Delete"),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            icon: const Icon(Icons.delete, color: Colors.red),
+                          ),
+                        ),
                       ],
                     )
                   ],

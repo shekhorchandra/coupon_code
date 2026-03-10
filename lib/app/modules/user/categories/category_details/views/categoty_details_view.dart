@@ -6,11 +6,13 @@ import '../../../../../core/values/app_color.dart';
 import '../../../../../core/widgets/App_button.dart';
 import '../../../../../core/widgets/common_app_bar.dart';
 import '../../../../../core/widgets/custom_text_field.dart';
+import '../../../../../routes/app_routes.dart';
 import '../../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
 import '../../../discover_bar/discover_details/views/discover_details_view_page.dart';
 import '../category_details_filter_widget/category_filter_controller/category_filter_controller.dart';
 import '../category_details_filter_widget/category_fliter_view/category_filter_dropdown.dart';
 import '../controllers/category_details_controller.dart';
+import '../model/category_deal_model.dart';
 
 class CategotyDetails extends GetView<CategoryDetailsController> {
   const CategotyDetails({super.key});
@@ -23,11 +25,8 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
 
     return Scaffold(
       appBar: CommonAppBar(
-        title: "Food & Drinks",
+        title: controller.title,
         showBack: true,
-        onBack: () {
-          navController.closeOverlayPage();
-        },
       ),
       body: SafeArea(
         child: Column(
@@ -43,22 +42,26 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                     children: [
                       // Search Field
                       Expanded(
-                        child: CustomTextField(hint: "Search for deals", icon: Icons.search),
+                        child: CustomTextField(
+                          hint: "Search for Deals or Zip Code...",
+                          icon: Icons.search,
+                          onChanged: controller.onSearchDeals, // use controller method
+                        ),
                       ),
 
-                      const SizedBox(width: 4),
-                      AppButton(
-                        text: "ZIP Code",
-                        width: 100,
-                        height: 40,
-                        backgroundColor: Colors.white,
-                        textColor: AppColor.primary,
-                        borderColor: AppColor.primary,
-                        icon: Icons.location_on_outlined,
-                        onPressed: () {
-                          /// open zip selector
-                        },
-                      ),
+                      // const SizedBox(width: 4),
+                      // AppButton(
+                      //   text: "ZIP Code",
+                      //   width: 100,
+                      //   height: 40,
+                      //   backgroundColor: Colors.white,
+                      //   textColor: AppColor.primary,
+                      //   borderColor: AppColor.primary,
+                      //   icon: Icons.location_on_outlined,
+                      //   onPressed: () {
+                      //     /// open zip selector
+                      //   },
+                      // ),
                     ],
                   ),
                   const SizedBox(height: 8),
@@ -124,20 +127,34 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
             const SizedBox(height: 8),
 
             // Deals Grid
+
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: MasonryGridView.count(
+              child: Obx(() {
+                if (controller.isLoading.value) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (controller.deals.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      "No deals found",
+                      style: TextStyle(fontSize: 16, color: Colors.black),
+                    ),
+                  );
+                }
+
+                return MasonryGridView.count(
                   crossAxisCount: 2,
                   mainAxisSpacing: 12,
                   crossAxisSpacing: 12,
-                  itemCount: controller.deals.length, // reactive list
+                  itemCount: controller.deals.length,
                   itemBuilder: (context, index) {
+                    final deal = controller.deals[index];
                     final isShort = index % 2 == 0;
-                    return _dealCard(navController, index, isShort);
+                    return _dealCard(navController, deal, isShort);
                   },
-                ),
-              ),
+                );
+              }),
             ),
           ],
         ),
@@ -145,7 +162,7 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
     );
   }
 
-  Widget _dealCard(UserNavigationBarController navController, int index, bool isShort) {
+  Widget _dealCard(UserNavigationBarController navController, CategoryDealModel deal, bool isShort) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
@@ -165,8 +182,8 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                     topLeft: Radius.circular(16),
                     topRight: Radius.circular(16),
                   ),
-                  image: const DecorationImage(
-                    image: NetworkImage('https://picsum.photos/300'),
+                  image: DecorationImage(
+                    image: NetworkImage(deal.images.first),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -185,8 +202,14 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                   ),
                 ),
               ),
-              Positioned(top: 8, left: 8, child: _badge("55% off")),
-              Positioned(bottom: 8, right: 8, child: _textOverlay("● 1.2 km away")),
+              Positioned(top: 8, left: 8, child: _badge("${deal.discount.toInt()}% off")),
+              Positioned(
+                bottom: 8,
+                right: 8,
+                child: _textOverlay(
+                  "● ${(deal.distance / 1000).toStringAsFixed(1)} km away",
+                ),
+              ),
             ],
           ),
 
@@ -195,43 +218,64 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "The Ultimate Radiance Revival: Luxurious Facial...",
+                Text(
+                  deal.title,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 4),
-                const Text(
-                  "Glamour Glow Salon",
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                Text(
+                  deal.businessName,
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
                 const SizedBox(height: 6),
-                Row(
-                  children: const [
-                    Text("\$20", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                    SizedBox(width: 6),
+
+                // Use Wrap instead of Row
+                Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  spacing: 6, // horizontal spacing
+                  runSpacing: 4, // vertical spacing
+                  children: [
                     Text(
-                      "\$30",
-                      style: TextStyle(
+                      "\$${deal.finalPrice.toStringAsFixed(0)}",
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      "\$${deal.price.toStringAsFixed(0)}",
+                      style: const TextStyle(
                         fontSize: 12,
                         color: Colors.grey,
                         decoration: TextDecoration.lineThrough,
                       ),
                     ),
-                    SizedBox(width: 24),
+                    // _badge("${deal.discount.toInt()}% off"),
+                    // _textOverlay("● ${deal.distance.toStringAsFixed(1)} m away"),
                     Text(
-                      "10d   08h",
-                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange),
+                      deal.promotedUntil != null
+                          ? _formatRemainingTime(deal.promotedUntil!)
+                          : "",
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.orange,
+                      ),
                     ),
                   ],
                 ),
+
                 const SizedBox(height: 8),
                 AppButton(
                   text: "Redeem Now",
                   height: 32,
                   onPressed: () {
-                    navController.openOverlayPage(ServiceDetailsPage(id: "1"));
+                    Get.toNamed(
+                      AppRoutes.DISCOVERDETAILS,
+                      arguments: {
+                        'id': deal.id,
+                        'dealItem': deal,
+                        'isNetworkImage': true, // optional, defaults to true
+                      },
+                    );
                   },
                 ),
               ],
@@ -255,4 +299,17 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
     text,
     style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
   );
+
+  //Helper function to format remaining time
+  String _formatRemainingTime(DateTime endTime) {
+    final now = DateTime.now();
+    if (endTime.isBefore(now)) return "Expired";
+
+    final difference = endTime.difference(now);
+
+    final days = difference.inDays;
+    final hours = difference.inHours % 24;
+
+    return "${days}d ${hours.toString().padLeft(2, '0')}h";
+  }
 }

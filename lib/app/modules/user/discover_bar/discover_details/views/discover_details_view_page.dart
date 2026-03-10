@@ -14,6 +14,7 @@ import '../../../../../core/values/app_assets.dart';
 import '../../../../../core/values/app_color.dart';
 import '../../../../../core/values/app_text_styles.dart';
 import '../../../../../core/widgets/App_button.dart';
+import '../../../categories/category_details/model/category_deal_model.dart';
 import '../../../saved/controllers/save_controller.dart';
 import '../../../saved/models/save_item_model.dart';
 import '../../coupon_code/Controller/coupon_controller.dart';
@@ -26,7 +27,7 @@ class ServiceDetailsPage extends StatefulWidget {
   ServiceDetailsPage({super.key, this.id, this.dealItem, this.isNetworkImage = true});
 
   final String? id;
-  final DealModel? dealItem;
+  final CategoryDealModel? dealItem;
   final bool isNetworkImage;
 
   @override
