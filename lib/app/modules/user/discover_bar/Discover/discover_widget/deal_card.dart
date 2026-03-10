@@ -3,11 +3,11 @@ import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import '../../../../../../core/values/app_assets.dart';
-import '../../../../../../core/widgets/App_button.dart';
-import '../deal_badge.dart';
-import '../deal_card_model.dart';
-import '../deal_overlay_text.dart';
+import '../../../../../core/values/app_assets.dart';
+import '../../../../../core/widgets/App_button.dart';
+import 'deal_badge.dart';
+import '../models/deal_card_model.dart';
+import 'deal_overlay_text.dart';
 
 
 class DealCard extends StatelessWidget {
@@ -105,14 +105,13 @@ class DealCard extends StatelessWidget {
                     const SizedBox(width: 4),
                     GestureDetector(
                       onTap: () {
-                        // Get.toNamed('/shop-details', arguments: {'shopId': deal.shopId});
+                        Get.toNamed(AppRoutes.shopDetails, arguments: {'shopId': deal.shopId});
                       },
                       child: Text(
                         deal.shopName,
                         style: const TextStyle(
                           fontSize: 12,
                           color: Colors.blue, // make it look clickable
-                          decoration: TextDecoration.underline, // optional
                         ),
                       ),
                     ),

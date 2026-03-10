@@ -24,14 +24,12 @@ class SaveItem {
   factory SaveItem.fromJson(Map<String, dynamic> json) {
     return SaveItem(
       id: json['_id'],
-      imagePath: json['images'] != null && json['images'].isNotEmpty
-          ? json['images'][0]
-          : "",
+      imagePath: json['images'] != null && json['images'].isNotEmpty ? json['images'][0] : "",
       title: json['title'] ?? "",
-      subtitle: "Shop", // API didn't return shop name
+      subtitle: "Shop", // API didn't return shop name here
       price: (json['reguler_price'] ?? 0).toDouble(),
       originalPrice: (json['reguler_price'] ?? 0).toDouble(),
-      duration: "Active",
+      duration: "Active", //static
       isAvailable: json['coupon'] != null,
       status: json['coupon'] != null ? "Available" : "Expired",
     );

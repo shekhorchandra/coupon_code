@@ -72,7 +72,11 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
 
   void _fetchDealDetails() async {
     if (widget.id != null) {
-      await controller.getDealDetails(widget.id!);
+      // Use your actual user location here
+      double userLat = 23.7631625;
+      double userLng = 90.4329219;
+
+      await controller.getDealDetails(widget.id!, lat: userLat, lng: userLng);
 
       _fetchShopDetails();
     }
@@ -229,7 +233,7 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              controller.shop.value?.businessName ?? 'Unknown Business',
+                              deal.businessName ?? 'No shop name',
                               style: TextStyle(fontSize: 12, color: AppColor.bw.s600),
                             ),
                           ],
@@ -239,56 +243,53 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
                   ),
 
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Address text
                         Expanded(
-                          child: Text(
-                            "1234 Streets, New York  ● 1.2 km away", // TODO: fix the location
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppTextStyles.MenuButtonText.copyWith(
-                              color: AppColor.titleColor,
-                            ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Address
+                              Text(
+                                deal.address ?? "No address",
+                                style: AppTextStyles.MenuButtonText.copyWith(
+                                  color: AppColor.titleColor,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+
+                              const SizedBox(height: 2),
+
+                              // Distance
+                              Text(
+                                "${deal.distance?.toStringAsFixed(2) ?? '0'} km away",
+                                style: AppTextStyles.MenuButtonText.copyWith(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-
-                        //  Favorite
-                        IconButton(
-                          icon: const Icon(Icons.favorite_border),
-                          color: Colors.grey,
-                          onPressed: () {
-                            // TODO: handle save / favorite
-                          },
-                        ),
-
-                        // Share
-                        IconButton(
-                          icon: const Icon(Icons.share_outlined),
-                          color: AppColor.titleColor,
-                          onPressed: () {
-                            // handle share
-                          },
                         ),
                       ],
                     ),
                   ),
 
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Row(
                       children: [
                         /// LEFT SIDE (prices + discount)
                         Expanded(
                           child: Row(
-                            mainAxisAlignment: .spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
                                 children: [
                                   Text(
-                                    "\$${DealModel.afterDiscountPrice(deal.regularPrice, deal.discountPercent).toStringAsFixed(2)}",
+                                    "\$${DealModel.afterDiscountPrice(deal.reguler_price, deal.discountPercent).toStringAsFixed(2)}",
                                     style: const TextStyle(
                                       fontSize: 36,
                                       fontWeight: FontWeight.bold,
@@ -296,7 +297,7 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
                                   ),
                                   const SizedBox(width: 6),
                                   Text(
-                                    "\$${deal.regularPrice.toStringAsFixed(2)}",
+                                    "\$${deal.reguler_price.toStringAsFixed(2)}",
                                     style: const TextStyle(
                                       fontSize: 20,
                                       color: Colors.grey,
@@ -330,44 +331,81 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
                   ),
 
                   /// Countdown
-                  Align(
-                    alignment: .centerRight,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.orange.withOpacity(0.15),
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 4,
-                            offset: Offset(0, 2),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Row(
+                      children: [
+                        // Countdown on the left
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.orange.withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      child: const Text(
-                        "10d   08h   54m   23s",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.orange,
-                          fontSize: 14,
+                          child: Text(
+                            deal.promotionCountdown,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange,
+                              fontSize: 14,
+                            ),
+                          ),
                         ),
-                      ),
+
+                        const Spacer(), // pushes the icons to the right
+                        // Favorite
+                        IconButton(
+                          icon: const Icon(Icons.favorite_border),
+                          color: Colors.grey,
+                          onPressed: () {},
+                        ),
+
+                        // Share
+                        IconButton(
+                          icon: const Icon(Icons.share_outlined),
+                          color: AppColor.titleColor,
+                          onPressed: () {},
+                        ),
+                      ],
                     ),
                   ),
-
-                  const SizedBox(height: 12),
 
                   // ================= HIGHLIGHTS =================
                   ServiceDetailsPage._section(
                     title: "Highlights",
-                    child: Text(
-                      deal.highlights.map((highlight) => "- $highlight\n").join(),
-                      style: TextStyle(
-                        fontSize: 14,
-                        height: 1.5, // better spacing for readability
-                        color: Colors.black,
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: deal.highlights.map((highlight) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "• ",
+                                style: TextStyle(fontSize: 16, color: Colors.orange),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  highlight,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    height: 1.5,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
                     ),
                   ),
 
@@ -402,30 +440,43 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
                     title: "Website",
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: InkWell(
-                        onTap: () async {
-                          final Uri url = Uri.parse("https://www.glamourglowsalon.com");
-                          await launchUrl(url, mode: LaunchMode.externalApplication);
-                        },
-                        child: Row(
-                          children: [
-                            SvgPicture.asset(
-                              "assets/icons/web.svg",
-                              width: 18,
-                              height: 18,
-                              colorFilter: const ColorFilter.mode(
-                                AppColor.primary,
-                                BlendMode.srcIn,
+                      child: Obx(() {
+                        final website = controller.deal.value?.website ?? '';
+                        final business = controller.deal.value?.businessName ?? 'Website';
+
+                        if (website.isEmpty) {
+                          return const Text("No website available", style: TextStyle(color: Colors.grey));
+                        }
+
+                        return InkWell(
+                          onTap: () async {
+                            try {
+                              await launchUrl(Uri.parse(website.startsWith('http') ? website : 'https://$website'),
+                                  mode: LaunchMode.externalApplication);
+                            } catch (e) {
+                              Get.snackbar("Error", "Could not launch website: $e");
+                            }
+                          },
+                          child: Row(
+                            children: [
+                              SvgPicture.asset(
+                                "assets/icons/web.svg",
+                                width: 18,
+                                height: 18,
+                                colorFilter: const ColorFilter.mode(AppColor.primary, BlendMode.srcIn),
                               ),
-                            ),
-                            const SizedBox(width: 8),
-                            const Text(
-                              "www.glamourglowsalon.com ↗",
-                              style: TextStyle(color: AppColor.primary, fontSize: 14),
-                            ),
-                          ],
-                        ),
-                      ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  business,
+                                  style: const TextStyle(color: AppColor.primary, fontSize: 14),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
                     ),
                   ),
 

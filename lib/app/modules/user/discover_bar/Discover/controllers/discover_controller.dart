@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import '../../../../services/Helper_status_code/HttpStatusHandler.dart';
 import '../../../../services/contants/api_constants.dart';
-import '../discover_widget/deal_card_model.dart';
+import '../models/deal_card_model.dart';
 
 class DiscoverController extends GetxController {
   final searchQuery = ''.obs;
@@ -30,6 +30,7 @@ class DiscoverController extends GetxController {
       fetchDealsWithSearch(searchTerm: term);
     }
   }
+
   /// search for zip code
   void onZipPressed() {
     final zip = searchQuery.value.trim();
@@ -38,13 +39,13 @@ class DiscoverController extends GetxController {
       fetchDealsWithSearch(searchTerm: zip);
     }
   }
+
   void onLocationPressed() {}
   void onNotificationPressed() {}
 
   Future<void> refreshDeals() async {
     await fetchDeals();
   }
-
 
   Future<void> fetchDeals({int page = 1}) async {
     try {
@@ -55,14 +56,12 @@ class DiscoverController extends GetxController {
 
       final response = await Dio().get(
         '${ApiConstants.baseUrl}/service/deals/$lat/$lng',
-        queryParameters: {
-          "page": page,
-          "limit": 10,
-        },
+        queryParameters: {"page": page, "limit": 10},
       );
 
-      final Map<String, dynamic> res =
-      response.data is String ? jsonDecode(response.data) : response.data;
+      final Map<String, dynamic> res = response.data is String
+          ? jsonDecode(response.data)
+          : response.data;
 
       if (response.statusCode == 200 && res['success'] == true) {
         final List items = res['data']['deals'];
@@ -98,22 +97,21 @@ class DiscoverController extends GetxController {
     try {
       isLoading.value = true;
 
-      final double lat = 23.7587992;
-      final double lng = 90.4293804;
+      // final double lat = 23.7587992;
+      // final double lng = 90.4293804;
+      final double lat = 90.4293804;
+      final double lng = 23.7587992;
 
-      final query = {
-        "page": page,
-        "limit": 10,
-        "searchTerm": searchTerm,
-      };
+      final query = {"page": page, "limit": 10, "searchTerm": searchTerm};
 
       final response = await Dio().get(
-        '${ApiConstants.baseUrl}/service/deals/all_deals/$lng/$lat',
+        '${ApiConstants.baseUrl}/service/deals/all_deals/$lat/$lng',
         queryParameters: query,
       );
 
-      final Map<String, dynamic> res =
-      response.data is String ? jsonDecode(response.data) : response.data;
+      final Map<String, dynamic> res = response.data is String
+          ? jsonDecode(response.data)
+          : response.data;
 
       if (response.statusCode == 200 && res['success'] == true) {
         final List items = res['data']['deals'];

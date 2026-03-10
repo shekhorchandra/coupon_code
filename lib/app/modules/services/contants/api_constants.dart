@@ -34,7 +34,8 @@ class ApiConstants {
 
   // Deal
   static const String myDeals = '/service/my_deals';
-  static String dealDetails(String id) => '/service/69a2f0d7e6bc98e5f88b7dad';
+  static String dealDetails(String id) => '/service/$id';
+  static String serviceDetails(String id, double lng, double lat) => '/service/$id/$lng/$lat';
 
   // Deal
   static String getDeals(String longitude, String latitude) =>

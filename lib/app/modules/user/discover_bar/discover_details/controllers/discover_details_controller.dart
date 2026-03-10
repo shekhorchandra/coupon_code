@@ -1,11 +1,11 @@
 import 'dart:developer';
-
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:coupon_code/app/data/models/deal_model.dart';
 import 'package:coupon_code/app/data/models/shop_model.dart';
 import 'package:coupon_code/app/data/network/dio_client.dart';
 import 'package:coupon_code/app/modules/services/contants/api_constants.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class ServiceDetailsController extends GetxController {
   final PageController pageController = PageController();
@@ -15,51 +15,53 @@ class ServiceDetailsController extends GetxController {
   Rxn<DealModel> deal = Rxn<DealModel>();
   Rxn<ShopModel> shop = Rxn<ShopModel>();
 
-  void onPageChanged(int index) {
-    currentImage.value = index;
-  }
+  void onPageChanged(int index) => currentImage.value = index;
 
-  void next() {
-    pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-  }
+  void next() => pageController.nextPage(
+      duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
 
-  void previous() {
-    pageController.previousPage(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
-  }
+  void previous() => pageController.previousPage(
+      duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
 
-  // Single deal details
-  Future<void> getDealDetails(String id) async {
+  // Get Deal Details
+  Future<void> getDealDetails(String id, {required double lat, required double lng}) async {
     try {
-      final response = await _dioClient.client.get(ApiConstants.dealDetails(id));
+      final endpoint = "${ApiConstants.baseUrl}/service/$id/$lng/$lat";
 
-      if (response.statusCode == 200) {
+      final response = await _dioClient.client.get(endpoint);
+
+      if (response.statusCode == 200 && response.data['data'] != null) {
         deal.value = DealModel.fromMap(response.data['data']);
+
+        // After fetching deal, fetch shop info
+        if (deal.value!.shopId.isNotEmpty) {
+          await getShopDetails(deal.value!.shopId);
+        }
       } else {
         Get.snackbar('Error', 'Deal not found!');
       }
-    } catch (e) {
-      log(e.toString());
+    } catch (e, stackTrace) {
+      log("Error fetching deal details: $e", stackTrace: stackTrace);
+      Get.snackbar('Error', 'Failed to fetch deal details');
     }
   }
 
-  // Shop details
-  Future<void> getShopDetails(String id) async {
+  // Get Shop Details
+  Future<void> getShopDetails(String shopId) async {
     try {
-      final response = await _dioClient.client.get(
-        ApiConstants.shopDetails,
-        queryParameters: {'shopId': id},
-      );
+      final url = "${ApiConstants.baseUrl}/shop/$shopId"; // only the ID here
+      final response = await _dioClient.client.get(url);
 
-      if (response.statusCode == 201) {
-        shop.value = ShopModel.fromJson(response.data['data'][0]);
+      if (response.statusCode == 200 && response.data['data'] != null) {
+        shop.value = ShopModel.fromJson(response.data['data']);
       } else {
         Get.snackbar('Error', 'Shop not found!');
       }
-    } catch (e) {
-      log(e.toString());
+    } on DioException catch (e) {
+      print("Dio Error: ${e.response?.statusCode} - ${e.message}");
+    } catch (e, st) {
+      print("Unknown error: $e");
+      print(st);
     }
   }
 

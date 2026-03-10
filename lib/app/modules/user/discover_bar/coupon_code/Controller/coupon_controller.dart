@@ -33,7 +33,7 @@ class CouponController extends GetxController {
     productId = deal.id;
     dealTitle = deal.title;
     dealImage = deal.images.isNotEmpty ? deal.images.first : null;
-    regularPrice = deal.regularPrice;
+    regularPrice = deal.reguler_price;
     discountPercent = deal.discountPercent;
 
     couponCode.value = deal.coupon ?? "No coupon available";

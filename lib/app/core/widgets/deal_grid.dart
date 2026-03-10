@@ -83,11 +83,11 @@ class DealGrid extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "\$${DealModel.afterDiscountPrice(deal.regularPrice, deal.discountPercent)}",
+                              "\$${DealModel.afterDiscountPrice(deal.reguler_price, deal.discountPercent)}",
                               style: AppText.label.bold.copyWith(fontSize: 15, color: Colors.black),
                             ),
                             Text(
-                              "\$${deal.regularPrice}",
+                              "\$${deal.reguler_price}",
                               style: const TextStyle(
                                 fontSize: 11,
                                 color: Colors.grey,

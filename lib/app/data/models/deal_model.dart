@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
+import 'dart:developer';
 
+import 'package:coupon_code/app/data/models/shop_model.dart';
 import 'package:flutter/foundation.dart';
 
 class DealModel {
@@ -10,7 +12,7 @@ class DealModel {
   final String categoryId;
   final String? activePromotion;
   final String title;
-  final double regularPrice;
+  final double reguler_price;
   final double discountPercent;
   final List<String> highlights;
   final String description;
@@ -21,6 +23,9 @@ class DealModel {
   final int totalViews;
   final int totalImpression;
   final double? distance;
+  final String? website;
+  final String? address;
+  final String? businessName;
 
   DealModel({
     required this.id,
@@ -29,7 +34,7 @@ class DealModel {
     required this.categoryId,
     this.activePromotion,
     required this.title,
-    required this.regularPrice,
+    required this.reguler_price,
     required this.discountPercent,
     required this.highlights,
     required this.description,
@@ -40,6 +45,9 @@ class DealModel {
     required this.totalViews,
     required this.totalImpression,
     this.distance,
+    this.website,
+    this.address,
+    this.businessName,
   });
 
   DealModel copyWith({
@@ -50,6 +58,7 @@ class DealModel {
     String? activePromotion,
     String? title,
     double? regularPrice,
+    double? discount,
     double? discountPercent,
     List<String>? highlights,
     String? description,
@@ -59,6 +68,9 @@ class DealModel {
     String? coupon,
     int? totalViews,
     int? totalImpression,
+    String? website,
+    String? address,
+    String? businessName,
   }) {
     return DealModel(
       id: id ?? this.id,
@@ -67,7 +79,7 @@ class DealModel {
       categoryId: categoryId ?? this.categoryId,
       activePromotion: activePromotion ?? this.activePromotion,
       title: title ?? this.title,
-      regularPrice: regularPrice ?? this.regularPrice,
+      reguler_price: regularPrice ?? this.reguler_price,
       discountPercent: discountPercent ?? this.discountPercent,
       highlights: highlights ?? this.highlights,
       description: description ?? this.description,
@@ -77,6 +89,9 @@ class DealModel {
       coupon: coupon ?? this.coupon,
       totalViews: totalViews ?? this.totalViews,
       totalImpression: totalImpression ?? this.totalImpression,
+      website: website ?? this.website,
+      address: address ?? this.address,
+      businessName: businessName ?? this.businessName,
     );
   }
 
@@ -88,7 +103,7 @@ class DealModel {
       'categoryId': categoryId,
       'activePromotion': activePromotion,
       'title': title,
-      'regularPrice': regularPrice,
+      'reguler_price': reguler_price,
       'discountPercent': discountPercent,
       'highlights': highlights,
       'description': description,
@@ -98,32 +113,53 @@ class DealModel {
       'coupon': coupon,
       'totalViews': totalViews,
       'totalImpression': totalImpression,
+      'website': website,
+      'address': address,
+      'businessName': businessName,
     };
   }
 
   factory DealModel.fromMap(Map<String, dynamic> map) {
+    log("Mapping DealModel from map: $map");
+
+    final outlets = map['available_outlet'] as List?;
+
+    String? address;
+    double? distance;
+
+    if (outlets != null && outlets.isNotEmpty) {
+      final firstOutlet = outlets.first;
+
+      address = firstOutlet['address']?.toString();
+
+      distance = firstOutlet['distance'] != null
+          ? (firstOutlet['distance'] as num).toDouble()
+          : null;
+    }
 
     return DealModel(
-      id: map['_id'] as String,
-      shopId: map['shop'] as String,
-      userId: map['user'] as String,
-      categoryId: map['category'] as String,
-      activePromotion: map['activePromotion'] != null ? map['activePromotion'] as String : null,
-      title: map['title'] as String,
-      regularPrice: (map['reguler_price'] as num?)?.toDouble() ?? 0.0,
-      discountPercent: (map['discount'] as num?)?.toDouble() ?? 0.0,
-      highlights: List<String>.from(map['highlight'] ?? []),
-      description: map['description'] as String,
-      images: List<String>.from(map['images'] ?? []),
-      isPromoted: map['isPromoted'] != null ? map['isPromoted'] as bool : null,
+      id: map['_id']?.toString() ?? '',
+      shopId: map['shop']?.toString() ?? '',
+      userId: map['user']?.toString() ?? '',
+      categoryId: map['category']?.toString() ?? '',
+      activePromotion: map['activePromotion']?.toString(),
+      title: map['title']?.toString() ?? '',
+      reguler_price: (map['reguler_price'] ?? 0).toDouble(),
+      discountPercent: (map['discount'] ?? 0).toDouble(),
+      highlights: map['highlight'] != null ? List<String>.from(map['highlight']) : [],
+      description: map['description']?.toString() ?? '',
+      images: map['images'] != null ? List<String>.from(map['images']) : [],
+      isPromoted: map['isPromoted'] as bool?,
       promotedUntil: map['promotedUntil'] != null
-          ? DateTime.parse(map['promotedUntil'] as String)
+          ? DateTime.tryParse(map['promotedUntil'])
           : null,
-      coupon: map['coupon'] as String? ?? '',
-      // Directly assign the fields as they are integers in the response
-      totalViews: map['total_views'] as int? ?? 0,
-      totalImpression: map['total_impression'] as int? ?? 0,
-      distance: (map['distance'] as num?)?.toDouble(),
+      coupon: map['coupon']?.toString() ?? '',
+      totalViews: map['total_views'] ?? 0,
+      totalImpression: map['total_impression'] ?? 0,
+      website: map['shop']?['website']?.toString(),
+      address: address,
+      distance: distance,
+      businessName: map['shop']?['business_name']?.toString(),
     );
   }
 
@@ -134,7 +170,7 @@ class DealModel {
 
   @override
   String toString() {
-    return 'DealModel(id: $id, shopId: $shopId, userId: $userId, categoryId: $categoryId, activePromotion: $activePromotion, title: $title, regularPrice: $regularPrice, discountPercent: $discountPercent, highlights: $highlights, description: $description, images: $images, isPromoted: $isPromoted, promotedUntil: $promotedUntil, coupon: $coupon, totalViews: $totalViews, totalImpression: $totalImpression)';
+    return 'DealModel(id: $id, shopId: $shopId, userId: $userId, categoryId: $categoryId, activePromotion: $activePromotion, title: $title, regularPrice: $reguler_price, discountPercent: $discountPercent, highlights: $highlights, description: $description, images: $images, isPromoted: $isPromoted, promotedUntil: $promotedUntil, coupon: $coupon, totalViews: $totalViews, totalImpression: $totalImpression)';
   }
 
   @override
@@ -147,7 +183,7 @@ class DealModel {
         other.categoryId == categoryId &&
         other.activePromotion == activePromotion &&
         other.title == title &&
-        other.regularPrice == regularPrice &&
+        other.reguler_price == reguler_price &&
         other.discountPercent == discountPercent &&
         listEquals(other.highlights, highlights) &&
         other.description == description &&
@@ -167,7 +203,7 @@ class DealModel {
         categoryId.hashCode ^
         activePromotion.hashCode ^
         title.hashCode ^
-        regularPrice.hashCode ^
+        reguler_price.hashCode ^
         discountPercent.hashCode ^
         highlights.hashCode ^
         description.hashCode ^
@@ -177,6 +213,25 @@ class DealModel {
         coupon.hashCode ^
         totalViews.hashCode ^
         totalImpression.hashCode;
+  }
+
+  // ADD THIS METHOD HERE
+  String get promotionCountdown {
+    if (promotedUntil == null) return '';
+
+    final now = DateTime.now();
+    final difference = promotedUntil!.toLocal().difference(now);
+
+    if (difference.isNegative) {
+      return "Expired";
+    }
+
+    int days = difference.inDays;
+    int hours = difference.inHours.remainder(24);
+    int minutes = difference.inMinutes.remainder(60);
+    int seconds = difference.inSeconds.remainder(60);
+
+    return "${days}d ${hours}h ${minutes}m ${seconds}s";
   }
 
   static double afterDiscountPrice(double regularPrice, double discountPercent) {
