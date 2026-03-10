@@ -50,6 +50,8 @@ import '../modules/user/categories/category_details/views/categoty_details_view.
 import '../modules/user/discover_bar/Discover/bindings/discover_binding.dart';
 import '../modules/user/discover_bar/Discover/views/discover_view.dart';
 import '../modules/user/discover_bar/discover_details/views/discover_details_view_page.dart';
+import '../modules/user/discover_bar/vendor_shop_details/bindings/vendor_details_binding.dart';
+import '../modules/user/discover_bar/vendor_shop_details/views/vendor_details_view.dart';
 import '../modules/user/menu/about_us/bindings/About_Binding.dart';
 import '../modules/user/menu/about_us/views/About_View.dart';
 import '../modules/user/menu/contact_us/contact_view/contact_us_view.dart';
@@ -101,6 +103,12 @@ class AppPages {
         // Inject the controller here
         Get.put(CategoryDetailsController());
       }),
+    ),
+
+    GetPage(
+      name: AppRoutes.shopDetails,
+      page: () => const VendorDetailsView(),
+      binding: VendorDetailsBinding(),
     ),
 
     GetPage(name: AppRoutes.SAVED, page: () => UserMySavesPage()),
