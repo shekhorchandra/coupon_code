@@ -1,57 +1,46 @@
 import 'dart:convert';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
+import 'package:get_storage/get_storage.dart';
 
 import '../models/save_item_model.dart';
 
 class SavesController extends GetxController {
-
   var selectedTab = 0.obs;
   var savesList = <SaveItem>[].obs;
   var isLoading = false.obs;
 
-  final String baseUrl = "https://gastrotomic-squirrelly-yuonne.ngrok-free.dev/api/v1";
+  final _storage = GetStorage(); // local storage
 
   @override
   void onInit() {
-    fetchSavedDeals();
     super.onInit();
+    loadSavedDeals();
   }
 
-  Future<void> fetchSavedDeals() async {
-    try {
-      isLoading.value = true;
+  // Load saved deals from local storage
+  void loadSavedDeals() {
+    final savedJson = _storage.read<String>('savedDeals');
+    if (savedJson != null) {
+      final list = jsonDecode(savedJson) as List;
+      savesList.value = list.map((e) => SaveItem.fromJson(e)).toList();
+    }
+  }
 
-      final response = await http.get(
-        Uri.parse("$baseUrl/service/saved?ids=69a6b624bdf4df7b68a74aff&page=1&limit=10"),
-      );
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-
-        if (data["success"]) {
-          List list = data["data"];
-
-          savesList.value =
-              list.map((e) => SaveItem.fromJson(e)).toList();
-        }
-      }
-    } catch (e) {
-      print("Saved deals error: $e");
-    } finally {
-      isLoading.value = false;
+  // Save an item locally
+  void saveForLater(SaveItem item) {
+    // avoid duplicates
+    if (!savesList.any((e) => e.id == item.id)) {
+      savesList.add(item);
+      _storage.write('savedDeals', jsonEncode(savesList.map((e) => e.toJson()).toList()));
+      Get.snackbar('Saved', '${item.title} has been saved for later');
+    } else {
+      Get.snackbar('Info', '${item.title} is already saved');
     }
   }
 
   List<SaveItem> get all => savesList;
+  List<SaveItem> get available => savesList.where((item) => item.isAvailable).toList();
+  List<SaveItem> get expired => savesList.where((item) => !item.isAvailable).toList();
 
-  List<SaveItem> get available =>
-      savesList.where((item) => item.isAvailable).toList();
-
-  List<SaveItem> get expired =>
-      savesList.where((item) => !item.isAvailable).toList();
-
-  void changeTab(int index) {
-    selectedTab.value = index;
-  }
+  void changeTab(int index) => selectedTab.value = index;
 }

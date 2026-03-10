@@ -14,6 +14,8 @@ import '../../../../../core/values/app_assets.dart';
 import '../../../../../core/values/app_color.dart';
 import '../../../../../core/values/app_text_styles.dart';
 import '../../../../../core/widgets/App_button.dart';
+import '../../../saved/controllers/save_controller.dart';
+import '../../../saved/models/save_item_model.dart';
 import '../../coupon_code/Controller/coupon_controller.dart';
 import '../../coupon_code/views/coupon_popup_view.dart';
 import '../../vendor_shop_details/bindings/vendor_details_binding.dart';
@@ -547,7 +549,23 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
                     Expanded(
                       child: AppButton(
                         text: 'Save For Later',
-                        onPressed: () {},
+                        onPressed: () {
+                          final item = SaveItem(
+                            id: deal.id,
+                            title: deal.title,
+                            subtitle: deal.subtitle,
+                            imagePath: deal.image,
+                            price: deal.price,
+                            originalPrice: deal.originalPrice,
+                            duration: deal.duration,
+                            isAvailable: true,
+                            status: 'active',
+                          );
+
+                          // Save locally using the controller
+                          Get.find<SavesController>().saveForLater(item);
+                          Get.toNamed(AppRoutes.SAVEDLATER);
+                        },
                         backgroundColor: Colors.white70,
                         textColor: AppColor.primary,
                         borderColor: AppColor.primary,

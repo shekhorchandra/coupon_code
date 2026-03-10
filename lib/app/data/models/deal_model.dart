@@ -12,6 +12,11 @@ class DealModel {
   final String categoryId;
   final String? activePromotion;
   final String title;
+  final String subtitle;
+  final String image;
+  final double price;
+  final double originalPrice;
+  final String duration;
   final double reguler_price;
   final double discountPercent;
   final List<String> highlights;
@@ -48,6 +53,11 @@ class DealModel {
     this.website,
     this.address,
     this.businessName,
+    required this.subtitle,
+    required this.image,
+    required this.price,
+    required this.originalPrice,
+    required this.duration,
   });
 
   DealModel copyWith({
@@ -57,11 +67,16 @@ class DealModel {
     String? categoryId,
     String? activePromotion,
     String? title,
+    String? subtitle,
     double? regularPrice,
     double? discount,
     double? discountPercent,
     List<String>? highlights,
     String? description,
+    String? image,
+    double? price,
+    double? originalPrice,
+    String? duration,
     List<String>? images,
     bool? isPromoted,
     DateTime? promotedUntil,
@@ -92,6 +107,11 @@ class DealModel {
       website: website ?? this.website,
       address: address ?? this.address,
       businessName: businessName ?? this.businessName,
+      subtitle: subtitle ?? this.subtitle,
+      image: image ?? this.image,
+      price: price ?? this.price,
+      originalPrice: originalPrice ?? this.originalPrice,
+      duration: duration ?? this.duration,
     );
   }
 
@@ -103,6 +123,11 @@ class DealModel {
       'categoryId': categoryId,
       'activePromotion': activePromotion,
       'title': title,
+      'subtitle': subtitle,
+      'image': image,
+      'price': price,
+      'originalPrice': originalPrice,
+      'duration': duration,
       'reguler_price': reguler_price,
       'discountPercent': discountPercent,
       'highlights': highlights,
@@ -116,6 +141,7 @@ class DealModel {
       'website': website,
       'address': address,
       'businessName': businessName,
+      'distance': distance,
     };
   }
 
@@ -136,6 +162,7 @@ class DealModel {
           ? (firstOutlet['distance'] as num).toDouble()
           : null;
     }
+    final imagesList = map['images'] != null ? List<String>.from(map['images']) : [];
 
     return DealModel(
       id: map['_id']?.toString() ?? '',
@@ -150,9 +177,7 @@ class DealModel {
       description: map['description']?.toString() ?? '',
       images: map['images'] != null ? List<String>.from(map['images']) : [],
       isPromoted: map['isPromoted'] as bool?,
-      promotedUntil: map['promotedUntil'] != null
-          ? DateTime.tryParse(map['promotedUntil'])
-          : null,
+      promotedUntil: map['promotedUntil'] != null ? DateTime.tryParse(map['promotedUntil']) : null,
       coupon: map['coupon']?.toString() ?? '',
       totalViews: map['total_views'] ?? 0,
       totalImpression: map['total_impression'] ?? 0,
@@ -160,6 +185,14 @@ class DealModel {
       address: address,
       distance: distance,
       businessName: map['shop']?['business_name']?.toString(),
+      subtitle: map['description']?.toString() ?? '',
+      image: imagesList.isNotEmpty ? imagesList.first : '',
+      price: DealModel.afterDiscountPrice(
+        (map['reguler_price'] ?? 0).toDouble(),
+        (map['discount'] ?? 0).toDouble(),
+      ),
+      originalPrice: (map['reguler_price'] ?? 0).toDouble(),
+      duration: "N/A",
     );
   }
 
@@ -170,7 +203,7 @@ class DealModel {
 
   @override
   String toString() {
-    return 'DealModel(id: $id, shopId: $shopId, userId: $userId, categoryId: $categoryId, activePromotion: $activePromotion, title: $title, regularPrice: $reguler_price, discountPercent: $discountPercent, highlights: $highlights, description: $description, images: $images, isPromoted: $isPromoted, promotedUntil: $promotedUntil, coupon: $coupon, totalViews: $totalViews, totalImpression: $totalImpression)';
+    return 'DealModel(id: $id, shopId: $shopId, userId: $userId, categoryId: $categoryId, activePromotion: $activePromotion, title: $title, regularPrice: $reguler_price, discountPercent: $discountPercent, highlights: $highlights, description: $description, images: $images, isPromoted: $isPromoted, promotedUntil: $promotedUntil, coupon: $coupon, totalViews: $totalViews, totalImpression: $totalImpression), subtitle: $subtitle, image: $image, price: $price, originalPrice: $originalPrice, duration: $duration)';
   }
 
   @override
@@ -192,6 +225,11 @@ class DealModel {
         other.promotedUntil == promotedUntil &&
         other.coupon == coupon &&
         other.totalViews == totalViews &&
+        other.subtitle == subtitle &&
+        other.image == image &&
+        other.price == price &&
+        other.originalPrice == originalPrice &&
+        other.duration == duration &&
         other.totalImpression == totalImpression;
   }
 
@@ -212,7 +250,12 @@ class DealModel {
         promotedUntil.hashCode ^
         coupon.hashCode ^
         totalViews.hashCode ^
-        totalImpression.hashCode;
+        totalImpression.hashCode ^
+        subtitle.hashCode ^
+        image.hashCode ^
+        price.hashCode ^
+        originalPrice.hashCode ^
+        duration.hashCode;
   }
 
   // ADD THIS METHOD HERE

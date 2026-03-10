@@ -63,6 +63,7 @@ dependencies:
   pinput: ^6.0.2
   barcode_widget: ^2.0.4
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

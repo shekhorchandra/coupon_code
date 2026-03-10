@@ -21,6 +21,7 @@ abstract class AppRoutes {
   static const CATEGORIES = '/category';
   static const CATEGORIESDETAILS = '/category-details';
   static const SAVED = '/save';
+  static const SAVEDLATER = '/my-saves';
   static const MENU = '/menu';
 
   static const ABOUT = '/about';

@@ -60,6 +60,7 @@ import '../modules/user/menu/menu_bar/menu_binding/menu_binding.dart';
 import '../modules/user/menu/menu_bar/menu_view/menu_view.dart';
 import '../modules/user/menu/privacy_policy/privacy_policy_view/Privacy_Policy_View.dart';
 import '../modules/user/menu/terms_condition/terms_condition_view/Terms_Condition_View.dart';
+import '../modules/user/saved/bindings/user_saved_binding.dart';
 import '../modules/user/saved/views/save_view.dart';
 import 'app_routes.dart';
 
@@ -109,6 +110,12 @@ class AppPages {
       name: AppRoutes.shopDetails,
       page: () => const VendorDetailsView(),
       binding: VendorDetailsBinding(),
+    ),
+
+    GetPage(
+      name: AppRoutes.SAVEDLATER, // '/my-saves'
+      page: () => const UserMySavesPage(),
+      binding: UserMenuBinding(), // <-- injects SavesController
     ),
 
     GetPage(name: AppRoutes.SAVED, page: () => UserMySavesPage()),

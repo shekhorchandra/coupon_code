@@ -1,8 +1,8 @@
 class SaveItem {
   final String id;
-  final String imagePath;
   final String title;
   final String subtitle;
+  final String imagePath;
   final double price;
   final double originalPrice;
   final String duration;
@@ -11,9 +11,9 @@ class SaveItem {
 
   SaveItem({
     required this.id,
-    required this.imagePath,
     required this.title,
     required this.subtitle,
+    required this.imagePath,
     required this.price,
     required this.originalPrice,
     required this.duration,
@@ -21,17 +21,33 @@ class SaveItem {
     required this.status,
   });
 
+  // fromJson
   factory SaveItem.fromJson(Map<String, dynamic> json) {
     return SaveItem(
-      id: json['_id'],
-      imagePath: json['images'] != null && json['images'].isNotEmpty ? json['images'][0] : "",
-      title: json['title'] ?? "",
-      subtitle: "Shop", // API didn't return shop name here
-      price: (json['reguler_price'] ?? 0).toDouble(),
-      originalPrice: (json['reguler_price'] ?? 0).toDouble(),
-      duration: "Active", //static
-      isAvailable: json['coupon'] != null,
-      status: json['coupon'] != null ? "Available" : "Expired",
+      id: json['id'] as String,
+      title: json['title'] as String,
+      subtitle: json['subtitle'] as String,
+      imagePath: json['imagePath'] as String,
+      price: (json['price'] as num).toDouble(),
+      originalPrice: (json['originalPrice'] as num).toDouble(),
+      duration: json['duration'] as String,
+      isAvailable: json['isAvailable'] as bool,
+      status: json['status'] as String,
     );
+  }
+
+  // toJson
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'subtitle': subtitle,
+      'imagePath': imagePath,
+      'price': price,
+      'originalPrice': originalPrice,
+      'duration': duration,
+      'isAvailable': isAvailable,
+      'status': status,
+    };
   }
 }
