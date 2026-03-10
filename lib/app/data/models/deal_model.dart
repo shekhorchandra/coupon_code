@@ -184,7 +184,9 @@ class DealModel {
       website: map['shop']?['website']?.toString(),
       address: address,
       distance: distance,
-      businessName: map['shop']?['business_name']?.toString(),
+      businessName: (map['shop'] != null && map['shop']['business_name'] != null)
+          ? map['shop']['business_name'].toString()
+          : '',
       subtitle: map['description']?.toString() ?? '',
       image: imagesList.isNotEmpty ? imagesList.first : '',
       price: DealModel.afterDiscountPrice(

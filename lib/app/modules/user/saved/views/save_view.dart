@@ -63,12 +63,12 @@ class UserMySavesPage extends GetView<SavesController> {
                 itemBuilder: (context, index) {
                   final item = listToShow[index];
                   return SaveItemCard(
+                    id: item.id,
                     imagePath: item.imagePath,
                     title: item.title,
-                    subtitle: item.subtitle,
+                    businessName: item.businessName, // changed
                     price: item.price,
                     originalPrice: item.originalPrice,
-                    duration: item.duration,
                     isAvailable: item.isAvailable,
                     Status: item.status,
                     onTap: () {

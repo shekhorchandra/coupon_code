@@ -17,6 +17,18 @@ class SavesController extends GetxController {
     loadSavedDeals();
   }
 
+  // remove deals
+  void removeSavedDeal(String id) {
+    // Remove from the list
+    savesList.removeWhere((item) => item.id == id);
+
+    // Update local storage
+    _storage.write('savedDeals', jsonEncode(savesList.map((e) => e.toJson()).toList()));
+
+    Get.snackbar('Removed', 'Deal has been removed from saved items');
+  }
+
+
   // Load saved deals from local storage
   void loadSavedDeals() {
     final savedJson = _storage.read<String>('savedDeals');

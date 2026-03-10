@@ -553,11 +553,10 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
                           final item = SaveItem(
                             id: deal.id,
                             title: deal.title,
-                            subtitle: deal.subtitle,
+                            businessName: deal.businessName ?? 'Unknown',
                             imagePath: deal.image,
                             price: deal.price,
                             originalPrice: deal.originalPrice,
-                            duration: deal.duration,
                             isAvailable: true,
                             status: 'active',
                           );

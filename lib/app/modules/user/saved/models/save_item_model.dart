@@ -1,22 +1,20 @@
 class SaveItem {
   final String id;
   final String title;
-  final String subtitle;
+  final String businessName;
   final String imagePath;
   final double price;
   final double originalPrice;
-  final String duration;
   final bool isAvailable;
   final String status;
 
   SaveItem({
     required this.id,
     required this.title,
-    required this.subtitle,
+    required this.businessName,
     required this.imagePath,
     required this.price,
     required this.originalPrice,
-    required this.duration,
     required this.isAvailable,
     required this.status,
   });
@@ -26,11 +24,10 @@ class SaveItem {
     return SaveItem(
       id: json['id'] as String,
       title: json['title'] as String,
-      subtitle: json['subtitle'] as String,
+      businessName: json['businessName'] as String,
       imagePath: json['imagePath'] as String,
       price: (json['price'] as num).toDouble(),
       originalPrice: (json['originalPrice'] as num).toDouble(),
-      duration: json['duration'] as String,
       isAvailable: json['isAvailable'] as bool,
       status: json['status'] as String,
     );
@@ -41,11 +38,10 @@ class SaveItem {
     return {
       'id': id,
       'title': title,
-      'subtitle': subtitle,
+      'businessName': businessName,
       'imagePath': imagePath,
       'price': price,
       'originalPrice': originalPrice,
-      'duration': duration,
       'isAvailable': isAvailable,
       'status': status,
     };
