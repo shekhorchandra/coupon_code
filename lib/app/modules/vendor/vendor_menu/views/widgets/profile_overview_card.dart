@@ -13,10 +13,7 @@ class ProfileOverviewCard extends StatelessWidget {
     final menuController = Get.put(VendorMenuController());
 
     return GestureDetector(
-      onTap: () => Get.toNamed(
-        AppRoutes.CREATE_VENDOR_ACCOUNT,
-        parameters: {'showBack': 'true', 'shopId': menuController.businessId.value},
-      ),
+      onTap: () => Get.toNamed(AppRoutes.UPDATE_SHOP),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         decoration: BoxDecoration(

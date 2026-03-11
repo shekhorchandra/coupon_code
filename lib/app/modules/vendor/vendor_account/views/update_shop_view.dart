@@ -5,8 +5,8 @@ import 'package:coupon_code/app/core/widgets/App_button.dart';
 import 'package:coupon_code/app/core/widgets/common_app_bar.dart';
 import 'package:coupon_code/app/core/widgets/custom_text_field.dart';
 import 'package:coupon_code/app/core/widgets/section_heading.dart';
-import 'package:coupon_code/app/modules/user/discover_bar/discover_details/controllers/discover_details_controller.dart';
-import 'package:coupon_code/app/modules/vendor/vendor_account/controllers/vendor_account_controller.dart';
+import 'package:coupon_code/app/data/services/storage_service.dart';
+import 'package:coupon_code/app/modules/vendor/vendor_account/controllers/update_shop_controller.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_account/views/widgets/business_logo_upload.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_account/views/widgets/multiple_outlet_form.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_account/views/widgets/single_outlet_form.dart';
@@ -14,74 +14,32 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
-class CreateVendorAccountPage extends GetView<VendorAccountController> {
-  CreateVendorAccountPage({super.key});
-
-  final controller = Get.put(VendorAccountController());
-  final serviceDetailsController = Get.put(ServiceDetailsController());
+class UpdateShopView extends GetView<UpdateShopController> {
+  UpdateShopView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final args = Get.parameters;
-    final String? shopId = args['shopId'];
-    final bool showBack = args['showBack'] == 'true';
+    StorageService _storageService = StorageService();
+    final String? myId = _storageService.userId;
 
-    bool isUpdating = false;
-
-    if (shopId != null) {
-      isUpdating = true;
-      if (serviceDetailsController.shop.value == null) {
-        serviceDetailsController.getShopDetails(shopId);
-      }
-
-      // Autofill fields once shop details are available
-      ever(serviceDetailsController.shop, (_) {
-        if (serviceDetailsController.shop.value != null) {
-          controller.businessNameController.text =
-              serviceDetailsController.shop.value!.businessName ?? '';
-          controller.businessDescriptionController.text =
-              serviceDetailsController.shop.value!.description ?? '';
-          controller.emailController.text =
-              serviceDetailsController.shop.value!.businessEmail ?? '';
-          controller.countryCodeController.text =
-              serviceDetailsController.shop.value!.businessPhone?.countryCode ?? '';
-          controller.phoneNumberController.text =
-              serviceDetailsController.shop.value!.businessPhone?.phoneNumber ?? '';
-          controller.websiteLinkController.text =
-              serviceDetailsController.shop.value!.website ?? '';
-          // controller.addressController.text = serviceDetailsController.shop.value!.address ?? '';
-          // controller.locationController.text = serviceDetailsController.shop.value!.location ?? '';
-          // controller.zipCodeController.text = serviceDetailsController.shop.value!.zipCode ?? '';
-          // controller.selectedImage.value =
-          //     serviceDetailsController.shop.value!.businessLogo ?? ''; // Set business logo
-        }
-      });
+    if (myId == null) {
+      return Scaffold(
+        appBar: CommonAppBar(title: 'Error', showBack: true),
+        body: Center(child: Text('Shop not found!')),
+      );
+    } else {
+      controller.fetchShopDetails(myId);
     }
 
     return Scaffold(
-      appBar: CommonAppBar(
-        title: isUpdating ? 'Update Your Vendor Account' : 'Create Your Vendor Account',
-        showBack: showBack,
-      ),
+      appBar: CommonAppBar(title: 'Update Your Vendor Account', showBack: true),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.only(left: 15, right: 15),
+          padding: EdgeInsets.symmetric(horizontal: 15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Subtitle
-              if (shopId == null)
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 30, right: 30),
-                    child: Text(
-                      'Set up your business profile and start offering amazing deals to customers.',
-                      textAlign: .center,
-                    ),
-                  ),
-                ),
-
-              /// Business Details
+              // Business Details
               SectionHeading(title: 'Business Details'),
               const SizedBox(height: 20),
 
@@ -89,21 +47,21 @@ class CreateVendorAccountPage extends GetView<VendorAccountController> {
               const SizedBox(height: 5),
               CustomTextField(
                 hint: 'Enter your business name',
-                controller: controller.businessNameController,
+                controller: controller.name, // Bind to the name controller
                 icon: Iconsax.shop_copy,
               ),
               const SizedBox(height: 10),
 
               Text('Business Logo', style: AppText.body1.semiBold),
               const SizedBox(height: 5),
-              BusinessLogoUpload(),
+              BusinessLogoUpload(), // Custom widget for uploading logo
               const SizedBox(height: 10),
 
               Text('Description', style: AppText.body1.semiBold),
               const SizedBox(height: 5),
               CustomTextField(
                 hint: 'Business description',
-                controller: controller.businessDescriptionController,
+                controller: controller.description,
                 maxLength: 100,
                 maxLines: 4,
               ),
@@ -117,7 +75,7 @@ class CreateVendorAccountPage extends GetView<VendorAccountController> {
               const SizedBox(height: 5),
               CustomTextField(
                 hint: 'Enter your email address',
-                controller: controller.emailController,
+                controller: controller.email,
                 icon: Icons.email_outlined,
               ),
               const SizedBox(height: 10),
@@ -131,24 +89,22 @@ class CreateVendorAccountPage extends GetView<VendorAccountController> {
                       border: Border.all(color: AppColor.border, width: 2),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    initialSelection: controller.countryCodeController.text.isNotEmpty
-                        ? controller.countryCodeController.text
-                        : null,
+                    initialSelection: controller.countryCode.countryCode ?? '',
                     onChanged: (value) {
-                      controller.countryCodeController.text = value.dialCode ?? '';
+                      controller.countryCode.countryCode = value.dialCode ?? '';
                     },
                   ),
                   Expanded(
                     child: CustomTextField(
                       hint: 'Enter your phone number',
-                      controller: controller.phoneNumberController,
+                      controller: controller.phoneNumber,
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 10),
 
-              // Location Details
+              // Location Details Section
               SectionHeading(title: 'Location Details'),
               Text(
                 'If you have a single outlet, continue with the flow; if you have multiple outlets, click "Multiple Outlet" and add each outlet with its address and location.',
@@ -222,8 +178,10 @@ class CreateVendorAccountPage extends GetView<VendorAccountController> {
               Obx(
                 () => Row(
                   children: [
-                    if (controller.selectedTab.value == 0) Expanded(child: SingleOutletForm()),
-                    if (controller.selectedTab.value == 1) Expanded(child: MultipleOutletForm()),
+                    if (controller.selectedTab.value == 0)
+                      Expanded(child: SingleOutletForm()), // Single Outlet form
+                    if (controller.selectedTab.value == 1)
+                      Expanded(child: MultipleOutletForm()), // Multiple Outlet form
                   ],
                 ),
               ),
@@ -234,22 +192,16 @@ class CreateVendorAccountPage extends GetView<VendorAccountController> {
               const SizedBox(height: 5),
               CustomTextField(
                 hint: 'Enter your website link',
-                controller: controller.websiteLinkController,
+                controller: controller.website, // Bind to the website controller
                 icon: Icons.language,
               ),
               const SizedBox(height: 30),
 
-              if (shopId == null)
-                AppButton(
-                  text: 'Submit for Approval',
-                  onPressed: () => controller.submitForApproval(),
-                ),
-
-              if (shopId != null)
-                AppButton(
-                  text: isUpdating ? 'Update' : 'Publish',
-                  onPressed: () => controller.submitForApproval(),
-                ),
+              AppButton(
+                text: 'Update',
+                onPressed: () =>
+                    controller.updateShopDetails(), // Update shop details on button press
+              ),
             ],
           ),
         ),

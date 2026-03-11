@@ -6,8 +6,10 @@ import 'package:coupon_code/app/modules/vendor/payment_method/view/add_new_card_
 import 'package:coupon_code/app/modules/vendor/payment_method/view/payment_methods_view.dart';
 import 'package:coupon_code/app/modules/vendor/profile/bindings/profile_binding.dart';
 import 'package:coupon_code/app/modules/vendor/profile/views/profile_view.dart';
+import 'package:coupon_code/app/modules/vendor/vendor_account/bindings/update_shop_binding.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_account/bindings/vendor_account_binding.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_account/views/create_vendor_account_view.dart';
+import 'package:coupon_code/app/modules/vendor/vendor_account/views/update_shop_view.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_account/views/vendor_registration_success_view.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_dashboard/bindings/vendor_dashboard_binding.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_dashboard/views/vendor_dashboard_view.dart';
@@ -172,6 +174,11 @@ class AppPages {
       name: AppRoutes.VENDOR_REGISTRATION_SUCCESS,
       page: () => VendorRegistrationSuccessView(),
       binding: VendorAccountBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.UPDATE_SHOP,
+      page: () => UpdateShopView(),
+      binding: UpdateShopBinding(),
     ),
     GetPage(
       name: AppRoutes.VENDOR_VERIFICATION,

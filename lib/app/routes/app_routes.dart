@@ -39,6 +39,8 @@ abstract class AppRoutes {
   static const VENDOR_DASHBOARD = '/vendor/dashboard';
   static const VENDOR_PROFILE = '/vendor/profile';
 
+  static const UPDATE_SHOP = '/shop/update';
+
   static const VENDOR_DEALS = '/vendor/deals';
   static const ADD_DEAL = '/vendor/deals/add';
   static const DEAL_PUBLISH_NOTICE = '/vendor/deals/add/notice';
