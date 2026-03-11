@@ -73,30 +73,6 @@ class UserMySavesPage extends GetView<SavesController> {
                           Get.toNamed(AppRoutes.DISCOVERDETAILS, arguments: {'id': item.id});
                         },
                       ),
-                      // --- Badge ---
-                      // Positioned(
-                      //   top: 12,
-                      //   right: 20,
-                      //   child: Container(
-                      //     padding: const EdgeInsets.all(6),
-                      //     decoration: BoxDecoration(
-                      //       color: item.isAvailable ? Colors.green : Colors.red,
-                      //       shape: BoxShape.circle, // circular background
-                      //       boxShadow: [
-                      //         BoxShadow(
-                      //           color: Colors.black.withOpacity(0.2),
-                      //           blurRadius: 4,
-                      //           offset: const Offset(0, 2),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //     child: Icon(
-                      //       item.isAvailable ? Icons.check : Icons.close, // check for available, close for expired
-                      //       color: Colors.white,
-                      //       size: 12, // adjust size as needed
-                      //     ),
-                      //   ),
-                      // ),
                     ],
                   );
                 },

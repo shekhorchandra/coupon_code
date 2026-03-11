@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:app_links/app_links.dart';
 import 'package:coupon_code/app/data/network/dio_client.dart';
 import 'package:coupon_code/app/data/services/device_info_service.dart';
 import 'package:coupon_code/app/data/services/fcm_service.dart';
@@ -10,6 +12,8 @@ import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart' hide Response;
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class VendorLoginController extends GetxController {
   final obscure = true.obs;
@@ -23,6 +27,8 @@ class VendorLoginController extends GetxController {
   final DeviceInfoService _deviceInfoService = DeviceInfoService();
   final StorageService _storageService = StorageService();
 
+  /// for google login
+
   @override
   void onInit() {
     Future.microtask(() => _checkAuthentication());
@@ -34,6 +40,52 @@ class VendorLoginController extends GetxController {
 
     if (accessToken != null) {
       Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR);
+    }
+  }
+
+  /// for google login
+
+  Future<void> loginWithGoogleDeepLink() async {
+    loading.value = true;
+
+    final AppLinks appLinks = AppLinks();
+    StreamSubscription<Uri>? sub;
+
+    try {
+      // Step 1: Listen for deep link callback
+      sub = appLinks.uriLinkStream.listen((Uri uri) async {
+        if (uri.scheme == "myapp" && uri.host == "google-login") {
+          final accessToken = uri.queryParameters['token'];
+
+          if (accessToken != null) {
+            _storageService.setAccessToken(accessToken);
+
+            _storeUserId({
+              "data": {"accessToken": accessToken},
+            });
+
+            Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR);
+          } else {
+            Get.snackbar("Error", "Failed to get token from Google login");
+          }
+
+          await sub?.cancel();
+        }
+      });
+
+      // Step 2: Open browser with your API
+      final url = Uri.parse(
+        '${ApiConstants.baseUrl}/auth/google?redirect_uri=myapp://google-login',
+      );
+
+      if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+        Get.snackbar("Error", "Could not launch login URL");
+        return;
+      }
+    } catch (e, st) {
+      _handleException(e, st);
+    } finally {
+      loading.value = false;
     }
   }
 
