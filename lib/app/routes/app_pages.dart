@@ -50,6 +50,8 @@ import '../modules/user/categories/category_details/views/categoty_details_view.
 import '../modules/user/discover_bar/Discover/bindings/discover_binding.dart';
 import '../modules/user/discover_bar/Discover/views/discover_view.dart';
 import '../modules/user/discover_bar/discover_details/views/discover_details_view_page.dart';
+import '../modules/user/discover_bar/vendor_shop_details/bindings/vendor_details_binding.dart';
+import '../modules/user/discover_bar/vendor_shop_details/views/vendor_details_view.dart';
 import '../modules/user/menu/about_us/bindings/About_Binding.dart';
 import '../modules/user/menu/about_us/views/About_View.dart';
 import '../modules/user/menu/contact_us/contact_view/contact_us_view.dart';
@@ -58,6 +60,7 @@ import '../modules/user/menu/menu_bar/menu_binding/menu_binding.dart';
 import '../modules/user/menu/menu_bar/menu_view/menu_view.dart';
 import '../modules/user/menu/privacy_policy/privacy_policy_view/Privacy_Policy_View.dart';
 import '../modules/user/menu/terms_condition/terms_condition_view/Terms_Condition_View.dart';
+import '../modules/user/saved/bindings/user_saved_binding.dart';
 import '../modules/user/saved/views/save_view.dart';
 import 'app_routes.dart';
 
@@ -101,6 +104,18 @@ class AppPages {
         // Inject the controller here
         Get.put(CategoryDetailsController());
       }),
+    ),
+
+    GetPage(
+      name: AppRoutes.shopDetails,
+      page: () => const VendorDetailsView(),
+      binding: VendorDetailsBinding(),
+    ),
+
+    GetPage(
+      name: AppRoutes.SAVEDLATER, // '/my-saves'
+      page: () => const UserMySavesPage(),
+      binding: UserMenuBinding(), // <-- injects SavesController
     ),
 
     GetPage(name: AppRoutes.SAVED, page: () => UserMySavesPage()),

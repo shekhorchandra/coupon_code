@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
-
 import '../../../../../core/values/app_color.dart';
 import '../../../../../core/widgets/App_button.dart';
 import '../../../../../core/widgets/common_app_bar.dart';
 import '../../../../../core/widgets/custom_text_field.dart';
+import '../../../../../routes/app_routes.dart';
 import '../../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
-import '../../../discover_bar/discover_details/views/discover_details_view_page.dart';
 import '../category_details_filter_widget/category_filter_controller/category_filter_controller.dart';
 import '../category_details_filter_widget/category_fliter_view/category_filter_dropdown.dart';
 import '../controllers/category_details_controller.dart';
+import '../model/category_deal_model.dart';
 
 class CategotyDetails extends GetView<CategoryDetailsController> {
   const CategotyDetails({super.key});
@@ -23,221 +23,266 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
 
     return Scaffold(
       appBar: CommonAppBar(
-        title: "Food & Drinks",
+        title: controller.title,
         showBack: true,
-        onBack: () {
-          navController.closeOverlayPage();
-        },
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            // Search + Zip Code + Location
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await controller.fetchDeals();
+            await Future.delayed(const Duration(milliseconds: 600));
+          },
+          color: AppColor.primary,
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: [
+              Column(
                 children: [
-                  // Search Bar + Zip Code Button
-                  Row(
-                    children: [
-                      // Search Field
-                      Expanded(
-                        child: CustomTextField(hint: "Search for deals", icon: Icons.search),
-                      ),
+                  // Search + Zip Code + Location
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Search Bar + Zip Code Button
+                        Row(
+                          children: [
+                            // Search Field
+                            Expanded(
+                              child: CustomTextField(
+                                hint: "Search for Deals or Zip Code...",
+                                icon: Icons.search,
+                                onChanged: controller.onSearchDeals, // use controller method
 
-                      const SizedBox(width: 4),
-                      AppButton(
-                        text: "ZIP Code",
-                        width: 100,
-                        height: 40,
-                        backgroundColor: Colors.white,
-                        textColor: AppColor.primary,
-                        borderColor: AppColor.primary,
-                        icon: Icons.location_on_outlined,
-                        onPressed: () {
-                          /// open zip selector
-                        },
-                      ),
-                    ],
+
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                      ],
+                    ),
                   ),
+
+                  // Dropdown
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                    color: Colors.grey.shade100,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          filterDropdown(
+                            hint: "Sort By",
+                            selectedValue: filterController.sortBy,
+                            items: filterController.sortOptions,
+                          ),
+                          const SizedBox(width: 8),
+
+                          filterDropdown(
+                            hint: "Categories",
+                            selectedValue: filterController.category,
+                            items: filterController.categoryOptions,
+                          ),
+                          const SizedBox(width: 8),
+
+                          filterDropdown(
+                            hint: "Price",
+                            selectedValue: filterController.price,
+                            items: filterController.priceOptions,
+                          ),
+                          const SizedBox(width: 8),
+
+                          filterDropdown(
+                            hint: "Availability",
+                            selectedValue: filterController.availability,
+                            items: filterController.availabilityOptions,
+                          ),
+
+                          const SizedBox(width: 8),
+
+                          filterDropdown(
+                            hint: "Distance",
+                            selectedValue: filterController.distance,
+                            items: filterController.distanceOptions,
+                          ),
+
+                          const SizedBox(width: 8),
+
+                          filterDropdown(
+                            hint: "Location",
+                            selectedValue: filterController.location,
+                            items: filterController.locationOptions,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
                   const SizedBox(height: 8),
+
+                  // Deals Grid
+
+                  Obx(() {
+                    if (controller.isLoading.value) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    if (controller.deals.isEmpty) {
+                      return const Center(
+                        child: Text(
+                          "No deals found",
+                          style: TextStyle(fontSize: 16, color: Colors.black),
+                        ),
+                      );
+                    }
+
+                    return MasonryGridView.count(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 12,
+                      crossAxisSpacing: 12,
+                      itemCount: controller.deals.length,
+                      itemBuilder: (context, index) {
+                        final deal = controller.deals[index];
+                        final isShort = index % 2 == 0;
+                        return _dealCard(navController, deal, isShort);
+                      },
+                    );
+                  }),
                 ],
               ),
-            ),
-
-            // Dropdown
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-              color: Colors.grey.shade100,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    filterDropdown(
-                      hint: "Sort By",
-                      selectedValue: filterController.sortBy,
-                      items: filterController.sortOptions,
-                    ),
-                    const SizedBox(width: 8),
-
-                    filterDropdown(
-                      hint: "Categories",
-                      selectedValue: filterController.category,
-                      items: filterController.categoryOptions,
-                    ),
-                    const SizedBox(width: 8),
-
-                    filterDropdown(
-                      hint: "Price",
-                      selectedValue: filterController.price,
-                      items: filterController.priceOptions,
-                    ),
-                    const SizedBox(width: 8),
-
-                    filterDropdown(
-                      hint: "Availability",
-                      selectedValue: filterController.availability,
-                      items: filterController.availabilityOptions,
-                    ),
-
-                    const SizedBox(width: 8),
-
-                    filterDropdown(
-                      hint: "Distance",
-                      selectedValue: filterController.distance,
-                      items: filterController.distanceOptions,
-                    ),
-
-                    const SizedBox(width: 8),
-
-                    filterDropdown(
-                      hint: "Location",
-                      selectedValue: filterController.location,
-                      items: filterController.locationOptions,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 8),
-
-            // Deals Grid
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: MasonryGridView.count(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 12,
-                  crossAxisSpacing: 12,
-                  itemCount: controller.deals.length, // reactive list
-                  itemBuilder: (context, index) {
-                    final isShort = index % 2 == 0;
-                    return _dealCard(navController, index, isShort);
-                  },
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _dealCard(UserNavigationBarController navController, int index, bool isShort) {
+  Widget _dealCard(UserNavigationBarController navController, CategoryDealModel deal, bool isShort) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         color: Colors.white,
         boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4)],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Image
-          Stack(
-            children: [
-              Container(
-                height: isShort ? 155 : 255,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(16),
-                    topRight: Radius.circular(16),
-                  ),
-                  image: const DecorationImage(
-                    image: NetworkImage('https://picsum.photos/300'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              Container(
-                height: isShort ? 155 : 255,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(16),
-                    topRight: Radius.circular(16),
-                  ),
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Colors.transparent, Colors.black54],
-                  ),
-                ),
-              ),
-              Positioned(top: 8, left: 8, child: _badge("55% off")),
-              Positioned(bottom: 8, right: 8, child: _textOverlay("● 1.2 km away")),
-            ],
-          ),
-
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Image
+            Stack(
               children: [
-                const Text(
-                  "The Ultimate Radiance Revival: Luxurious Facial...",
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 4),
-                const Text(
-                  "Glamour Glow Salon",
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
-                ),
-                const SizedBox(height: 6),
-                Row(
-                  children: const [
-                    Text("\$20", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                    SizedBox(width: 6),
-                    Text(
-                      "\$30",
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey,
-                        decoration: TextDecoration.lineThrough,
-                      ),
+                Container(
+                  height: isShort ? 155 : 255,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(16),
+                      topRight: Radius.circular(16),
                     ),
-                    SizedBox(width: 24),
-                    Text(
-                      "10d   08h",
-                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange),
+                    image: DecorationImage(
+                      image: NetworkImage(deal.images.first),
+                      fit: BoxFit.cover,
                     ),
-                  ],
+                  ),
                 ),
-                const SizedBox(height: 8),
-                AppButton(
-                  text: "Redeem Now",
-                  height: 32,
-                  onPressed: () {
-                    navController.openOverlayPage(ServiceDetailsPage(id: "1"));
-                  },
+                Container(
+                  height: isShort ? 155 : 255,
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(16),
+                      topRight: Radius.circular(16),
+                    ),
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Colors.transparent, Colors.black54],
+                    ),
+                  ),
+                ),
+                Positioned(top: 8, left: 8, child: _badge("${deal.discount.toInt()}% off")),
+                Positioned(
+                  bottom: 8,
+                  right: 8,
+                  child: _textOverlay(
+                    "● ${(deal.distance / 1000).toStringAsFixed(3)} km away",
+                  ),
                 ),
               ],
             ),
-          ),
-        ],
+
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    deal.title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    deal.businessName,
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                  const SizedBox(height: 6),
+
+                  // Use Wrap instead of Row
+                  Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: 6, // horizontal spacing
+                    runSpacing: 4, // vertical spacing
+                    children: [
+                      Text(
+                        "\$${deal.finalPrice.toStringAsFixed(0)}",
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        "\$${deal.price.toStringAsFixed(0)}",
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                          decoration: TextDecoration.lineThrough,
+                        ),
+                      ),
+                      // _badge("${deal.discount.toInt()}% off"),
+                      // _textOverlay("● ${deal.distance.toStringAsFixed(1)} m away"),
+                      Text(
+                        deal.promotedUntil != null
+                            ? _formatRemainingTime(deal.promotedUntil!)
+                            : "",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.orange,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 8),
+                  AppButton(
+                    text: "Redeem Now",
+                    height: 32,
+                    onPressed: () {
+                      Get.toNamed(
+                        AppRoutes.DISCOVERDETAILS,
+                        arguments: {
+                          'id': deal.id,
+                          'dealItem': deal,
+                          'isNetworkImage': true, // optional, defaults to true
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -255,4 +300,17 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
     text,
     style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
   );
+
+  //Helper function to format remaining time
+  String _formatRemainingTime(DateTime endTime) {
+    final now = DateTime.now();
+    if (endTime.isBefore(now)) return "Expired";
+
+    final difference = endTime.difference(now);
+
+    final days = difference.inDays;
+    final hours = difference.inHours % 24;
+
+    return "${days}d ${hours.toString().padLeft(2, '0')}h";
+  }
 }

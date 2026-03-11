@@ -4,7 +4,7 @@ Widget dealOverlayText(String text) {
   return Text(
     text,
     style: const TextStyle(
-      color: Colors.white,
+      color: Colors.black,
       fontSize: 10,
       fontWeight: FontWeight.bold,
       shadows: [

@@ -60,10 +60,10 @@ class _AddDealViewState extends State<AddDealView> {
       controller.highlightController.value = deal.highlights;
       controller.descController.text = deal.description;
       controller.couponController.text = '';
-      controller.priceController.text = deal.regularPrice.toString();
+      controller.priceController.text = deal.reguler_price.toString();
       controller.discountController.text = deal.discountPercent.toStringAsFixed(2);
       controller.finalPriceController.text = DealModel.afterDiscountPrice(
-        deal.regularPrice,
+        deal.reguler_price,
         deal.discountPercent,
       ).toStringAsFixed(2);
     }

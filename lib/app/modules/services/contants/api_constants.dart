@@ -1,4 +1,6 @@
 class ApiConstants {
+
+
   static const String baseUrl = "https://gastrotomic-squirrelly-yuonne.ngrok-free.dev/api/v1";
 
   // Define endpoints
@@ -33,4 +35,9 @@ class ApiConstants {
   // Deal
   static const String myDeals = '/service/my_deals';
   static String dealDetails(String id) => '/service/$id';
+  static String serviceDetails(String id, double lng, double lat) => '/service/$id/$lng/$lat';
+
+  // Deal
+  static String getDeals(String longitude, String latitude) =>
+      '/service/deals/$longitude/$latitude';
 }

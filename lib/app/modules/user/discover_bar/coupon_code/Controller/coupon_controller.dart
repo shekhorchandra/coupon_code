@@ -1,5 +1,6 @@
 import 'package:coupon_code/app/data/models/deal_model.dart';
 import 'package:get/get.dart';
+import '../../../../../data/models/deal_model.dart';
 
 class CouponController extends GetxController {
   // ---------------- Deal info ----------------
@@ -32,7 +33,7 @@ class CouponController extends GetxController {
     productId = deal.id;
     dealTitle = deal.title;
     dealImage = deal.images.isNotEmpty ? deal.images.first : null;
-    regularPrice = deal.regularPrice;
+    regularPrice = deal.reguler_price;
     discountPercent = deal.discountPercent;
 
     couponCode.value = deal.coupon ?? "No coupon available";

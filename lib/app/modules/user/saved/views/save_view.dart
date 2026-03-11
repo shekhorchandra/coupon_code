@@ -7,22 +7,19 @@ import 'package:get/get.dart';
 import '../../../../core/values/app_color.dart';
 import '../../../../core/widgets/common_app_bar.dart';
 import '../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
+import '../models/save_item_model.dart';
 
 class UserMySavesPage extends GetView<SavesController> {
   const UserMySavesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final navController = Get.find<UserNavigationBarController>();
     return Scaffold(
       // appBar: const CommonAppBar(title: "My Saves", showBack: false),
       appBar: CommonAppBar(
         title: "My Saves",
-        showBack: false,
-        onBack: () {
-          // Close the overlay page instead of default back
-          navController.closeOverlayPage();
-        },
+        showBack: true,
+
       ),
       body: Column(
         children: [
@@ -37,6 +34,10 @@ class UserMySavesPage extends GetView<SavesController> {
           // --- List of Saved Items ---
           Expanded(
             child: Obx(() {
+
+              if(controller.isLoading.value){
+                return const Center(child: CircularProgressIndicator(color: AppColor.primary,));
+              }
               List<SaveItem> listToShow;
               switch (controller.selectedTab.value) {
                 case 1:
@@ -57,18 +58,46 @@ class UserMySavesPage extends GetView<SavesController> {
                 itemCount: listToShow.length,
                 itemBuilder: (context, index) {
                   final item = listToShow[index];
-                  return SaveItemCard(
-                    imagePath: item.imagePath,
-                    title: item.title,
-                    subtitle: item.subtitle,
-                    price: item.price,
-                    originalPrice: item.originalPrice,
-                    duration: item.duration,
-                    isAvailable: item.isAvailable,
-                    Status: item.Status,
-                    onTap: () {
-                      Get.toNamed(AppRoutes.DISCOVERDETAILS, arguments: {'id': 1});
-                    },
+                  return Stack(
+                    children: [
+                      SaveItemCard(
+                        id: item.id,
+                        imagePath: item.imagePath,
+                        title: item.title,
+                        businessName: item.businessName,
+                        price: item.price,
+                        originalPrice: item.originalPrice,
+                        isAvailable: item.isAvailable,
+                        Status: item.status,
+                        onTap: () {
+                          Get.toNamed(AppRoutes.DISCOVERDETAILS, arguments: {'id': item.id});
+                        },
+                      ),
+                      // --- Badge ---
+                      // Positioned(
+                      //   top: 12,
+                      //   right: 20,
+                      //   child: Container(
+                      //     padding: const EdgeInsets.all(6),
+                      //     decoration: BoxDecoration(
+                      //       color: item.isAvailable ? Colors.green : Colors.red,
+                      //       shape: BoxShape.circle, // circular background
+                      //       boxShadow: [
+                      //         BoxShadow(
+                      //           color: Colors.black.withOpacity(0.2),
+                      //           blurRadius: 4,
+                      //           offset: const Offset(0, 2),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //     child: Icon(
+                      //       item.isAvailable ? Icons.check : Icons.close, // check for available, close for expired
+                      //       color: Colors.white,
+                      //       size: 12, // adjust size as needed
+                      //     ),
+                      //   ),
+                      // ),
+                    ],
                   );
                 },
               );

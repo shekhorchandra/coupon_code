@@ -55,14 +55,40 @@ class DioClient {
             print("Error Response Data: ${error.response?.data}");
           }
 
-          if (error.response?.data['message'] == "jwt expired") {
-            final newAccessToken = await refreshToken();
+          onError: (error, handler) async {
+            print("Error Status: ${error.response?.statusCode}");
+            print("Error Message: ${error.message}");
 
-            if (newAccessToken != null) {
-              _dio.options.headers["Authorization"] = '$newAccessToken';
-              return handler.resolve(await _dio.fetch(error.requestOptions));
+            final data = error.response?.data;
+
+            if (data != null) {
+              print("Error Response Data: $data");
             }
-          }
+
+            // Only try to read message if response is JSON
+            if (data is Map && data['message'] == "jwt expired") {
+              final newAccessToken = await refreshToken();
+
+              if (newAccessToken != null) {
+                error.requestOptions.headers["Authorization"] = 'Bearer $newAccessToken';
+                final opts = Options(
+                  method: error.requestOptions.method,
+                  headers: error.requestOptions.headers,
+                );
+
+                final cloneReq = await _dio.request(
+                  error.requestOptions.path,
+                  options: opts,
+                  data: error.requestOptions.data,
+                  queryParameters: error.requestOptions.queryParameters,
+                );
+
+                return handler.resolve(cloneReq);
+              }
+            }
+
+            return handler.next(error);
+          };
           return handler.next(error);
         },
       ),
