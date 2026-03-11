@@ -38,7 +38,7 @@ class VendorMenuController extends GetxController {
     try {
       final response = await _dioClient.client.get(
         ApiConstants.shopDetails,
-        data: {'myId': userId},
+        queryParameters: {'myId': userId},
       );
 
       if (response.statusCode == 200) {

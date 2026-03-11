@@ -1,11 +1,12 @@
 import 'dart:developer';
-import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+
 import 'package:coupon_code/app/data/models/deal_model.dart';
 import 'package:coupon_code/app/data/models/shop_model.dart';
 import 'package:coupon_code/app/data/network/dio_client.dart';
 import 'package:coupon_code/app/modules/services/contants/api_constants.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ServiceDetailsController extends GetxController {
   final PageController pageController = PageController();
@@ -17,13 +18,13 @@ class ServiceDetailsController extends GetxController {
 
   void onPageChanged(int index) => currentImage.value = index;
 
-  void next() => pageController.nextPage(
-      duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+  void next() =>
+      pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
 
   void previous() => pageController.previousPage(
-      duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-
-
+    duration: const Duration(milliseconds: 300),
+    curve: Curves.easeInOut,
+  );
 
   // Get Deal Details
   Future<void> getDealDetails(String id, {required double lat, required double lng}) async {
@@ -51,7 +52,7 @@ class ServiceDetailsController extends GetxController {
   // Get Shop Details
   Future<void> getShopDetails(String shopId) async {
     try {
-      final url = "${ApiConstants.baseUrl}/shop/$shopId"; // only the ID here
+      final url = "${ApiConstants.baseUrl}/shop/shop_details?shopId=$shopId";
       final response = await _dioClient.client.get(url);
 
       if (response.statusCode == 200 && response.data['data'] != null) {

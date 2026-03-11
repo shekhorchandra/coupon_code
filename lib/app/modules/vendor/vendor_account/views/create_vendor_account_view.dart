@@ -5,7 +5,6 @@ import 'package:coupon_code/app/core/widgets/App_button.dart';
 import 'package:coupon_code/app/core/widgets/common_app_bar.dart';
 import 'package:coupon_code/app/core/widgets/custom_text_field.dart';
 import 'package:coupon_code/app/core/widgets/section_heading.dart';
-import 'package:coupon_code/app/data/models/shop_model.dart';
 import 'package:coupon_code/app/modules/user/discover_bar/discover_details/controllers/discover_details_controller.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_account/controllers/vendor_account_controller.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_account/views/widgets/business_logo_upload.dart';
@@ -23,40 +22,54 @@ class CreateVendorAccountPage extends GetView<VendorAccountController> {
 
   @override
   Widget build(BuildContext context) {
-    String? shopId = (Get.arguments as Map?)?['shopId'] as String?;
-    ShopModel? shop;
+    final args = Get.parameters;
+    final String? shopId = args['shopId'];
+    final bool showBack = args['showBack'] == 'true';
+
+    bool isUpdating = false;
 
     if (shopId != null) {
-      controller.isUpdating.value = true;
-      serviceDetailsController.getShopDetails(shopId);
-      shop = serviceDetailsController.shop.value;
+      isUpdating = true;
+      if (serviceDetailsController.shop.value == null) {
+        serviceDetailsController.getShopDetails(shopId);
+      }
+
+      // Autofill fields once shop details are available
+      ever(serviceDetailsController.shop, (_) {
+        if (serviceDetailsController.shop.value != null) {
+          controller.businessNameController.text =
+              serviceDetailsController.shop.value!.businessName ?? '';
+          controller.businessDescriptionController.text =
+              serviceDetailsController.shop.value!.description ?? '';
+          controller.emailController.text =
+              serviceDetailsController.shop.value!.businessEmail ?? '';
+          controller.countryCodeController.text =
+              serviceDetailsController.shop.value!.businessPhone?.countryCode ?? '';
+          controller.phoneNumberController.text =
+              serviceDetailsController.shop.value!.businessPhone?.phoneNumber ?? '';
+          controller.websiteLinkController.text =
+              serviceDetailsController.shop.value!.website ?? '';
+          // controller.addressController.text = serviceDetailsController.shop.value!.address ?? '';
+          // controller.locationController.text = serviceDetailsController.shop.value!.location ?? '';
+          // controller.zipCodeController.text = serviceDetailsController.shop.value!.zipCode ?? '';
+          // controller.selectedImage.value =
+          //     serviceDetailsController.shop.value!.businessLogo ?? ''; // Set business logo
+        }
+      });
     }
 
     return Scaffold(
       appBar: CommonAppBar(
-        title: shopId != null ? 'Update Your Vendor Account' : 'Create Your Vendor Account',
-        showBack: false,
+        title: isUpdating ? 'Update Your Vendor Account' : 'Create Your Vendor Account',
+        showBack: showBack,
       ),
-
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.only(left: 15, right: 15),
           child: Column(
-            crossAxisAlignment: .start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Subtitle
-              if (shopId == null)
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 30, right: 30),
-                    child: Text(
-                      'Set up your business profile and start offering amazing deals to customers.',
-                      textAlign: .center,
-                    ),
-                  ),
-                ),
-
-              const SizedBox(height: 30),
+              // Other UI elements...
 
               /// Business Details
               SectionHeading(title: 'Business Details'),
@@ -86,7 +99,7 @@ class CreateVendorAccountPage extends GetView<VendorAccountController> {
               ),
               const SizedBox(height: 10),
 
-              /// Business Details
+              // Contact Information Section
               SectionHeading(title: 'Contact Information'),
               const SizedBox(height: 20),
 
@@ -108,6 +121,9 @@ class CreateVendorAccountPage extends GetView<VendorAccountController> {
                       border: Border.all(color: AppColor.border, width: 2),
                       borderRadius: BorderRadius.circular(10),
                     ),
+                    initialSelection: controller.countryCodeController.text.isNotEmpty
+                        ? controller.countryCodeController.text
+                        : null,
                     onChanged: (value) {
                       controller.countryCodeController.text = value.dialCode ?? '';
                     },
@@ -116,14 +132,13 @@ class CreateVendorAccountPage extends GetView<VendorAccountController> {
                     child: CustomTextField(
                       hint: 'Enter your phone number',
                       controller: controller.phoneNumberController,
-                      // icon: Iconsax.call_copy,
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 10),
 
-              /// Location Details
+              // Location Details
               SectionHeading(title: 'Location Details'),
               Text(
                 'If you have a single outlet, continue with the flow; if you have multiple outlets, click "Multiple Outlet" and add each outlet with its address and location.',
@@ -159,7 +174,6 @@ class CreateVendorAccountPage extends GetView<VendorAccountController> {
                         ),
                       ),
                     ),
-
                     const SizedBox(width: 8),
 
                     // Multiple Outlet Tab
@@ -223,8 +237,8 @@ class CreateVendorAccountPage extends GetView<VendorAccountController> {
 
               if (shopId != null)
                 AppButton(
-                  text: 'Update',
-                  onPressed: () => controller.submitForApproval(), // TODO: fix the method
+                  text: isUpdating ? 'Update' : 'Publish',
+                  onPressed: () => controller.submitForApproval(),
                 ),
             ],
           ),
