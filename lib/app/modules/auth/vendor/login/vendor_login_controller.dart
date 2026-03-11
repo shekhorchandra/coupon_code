@@ -50,17 +50,17 @@ class VendorLoginController extends GetxController {
         _storeUserId(data);
 
         // Register FCM and Device
-        // bool fcmRegistered = await _registerFCM();
-        // if (!fcmRegistered) {
-        //   Get.snackbar('Error', 'An error occurred while initializing notifications!');
-        //   return;
-        // }
+        bool fcmRegistered = await _registerFCM();
+        if (!fcmRegistered) {
+          Get.snackbar('Error', 'An error occurred while initializing notifications!');
+          return;
+        }
 
-        // bool deviceRegistered = await _registerDevice(data);
-        // if (!deviceRegistered) {
-        //   Get.snackbar('Error', 'An error occurred while registering the device.');
-        //   return;
-        // }
+        bool deviceRegistered = await _registerDevice(data);
+        if (!deviceRegistered) {
+          Get.snackbar('Error', 'An error occurred while registering the device.');
+          return;
+        }
 
         // Proceed to the next screen
         isVerifiedOrIsShopCreated();
@@ -149,7 +149,7 @@ class VendorLoginController extends GetxController {
       final response = await _dioClient.client.get(ApiConstants.getMe);
 
       if (response.statusCode == 200) {
-        _storageService.setUserId(data['data']['_id']);
+        _storageService.setUserId(response.data['data']['_id']);
       } else {
         Get.snackbar('Error', 'Couldn\'t fetch user information!');
       }
