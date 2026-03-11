@@ -6,7 +6,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
 import 'app/core/values/app_strings.dart';
 import 'app/routes/app_pages.dart';
@@ -23,8 +22,6 @@ void main() async {
 
   // Handle FCM messages while in background
   FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
-
-  await GetStorage.init(); // initialize storage for local storage
 
   runApp(const CouponDiscountApp());
 }
