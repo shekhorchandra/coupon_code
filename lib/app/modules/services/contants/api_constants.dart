@@ -40,4 +40,7 @@ class ApiConstants {
   // Deal
   static String getDeals(String longitude, String latitude) =>
       '/service/deals/$longitude/$latitude';
+
+  /// user saved deals
+  static const String savedDeals = "/service/saved";
 }

@@ -19,9 +19,7 @@ class SaveItem {
     this.status = 'Normal',
   });
 
-  // ------------------------------
   // Create SaveItem from API JSON
-  // ------------------------------
   factory SaveItem.fromJson(Map<String, dynamic> json) {
     final promotedUntil = json['promotedUntil'] != null
         ? DateTime.tryParse(json['promotedUntil'])
@@ -53,9 +51,7 @@ class SaveItem {
     );
   }
 
-  // ------------------------------
   // Convert to JSON
-  // ------------------------------
   Map<String, dynamic> toJson() {
     return {
       'id': id,

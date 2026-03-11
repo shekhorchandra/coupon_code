@@ -123,20 +123,20 @@ class VendorSignupView extends GetView<VendorSignupController> {
 
             const SizedBox(height: 20),
 
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32.0),
-              child: Row(
-                children: const [
-                  Expanded(
-                    child: SocialButton(text: "Google", iconPath: AppAssets.google),
-                  ),
-                  SizedBox(width: 12),
-                  Expanded(
-                    child: SocialButton(text: "Apple", iconPath: AppAssets.apple),
-                  ),
-                ],
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 32.0),
+            //   child: Row(
+            //     children: const [
+            //       Expanded(
+            //         child: SocialButton(text: "Google", iconPath: AppAssets.google),
+            //       ),
+            //       SizedBox(width: 12),
+            //       Expanded(
+            //         child: SocialButton(text: "Apple", iconPath: AppAssets.apple),
+            //       ),
+            //     ],
+            //   ),
+            // ),
 
             const SizedBox(height: 26),
 

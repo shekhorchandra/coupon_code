@@ -146,13 +146,23 @@ class VendorLoginView extends GetView<VendorLoginController> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 32.0),
               child: Row(
-                children: const [
+                children: [
                   Expanded(
-                    child: SocialButton(text: "Google", iconPath: AppAssets.google),
+                    child: SocialButton(
+                      text: "Google",
+                      iconPath: AppAssets.google,
+                      onPressed: () => Get.find<VendorLoginController>().loginWithGoogleDeepLink(),
+                    ),
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   Expanded(
-                    child: SocialButton(text: "Apple", iconPath: AppAssets.apple),
+                    child: SocialButton(
+                      text: "Apple",
+                      iconPath: AppAssets.apple,
+                      onPressed: () {
+                        // TODO: Apple login logic
+                      },
+                    ),
                   ),
                 ],
               ),
