@@ -7,7 +7,7 @@ class SaveItemCard extends StatelessWidget {
   final String id;
   final String imagePath;
   final String title;
-  final String businessName; // changed from subtitle
+  final String businessName;
   final double price;
   final double originalPrice;
   final bool isAvailable;
@@ -19,7 +19,7 @@ class SaveItemCard extends StatelessWidget {
     required this.id,
     required this.imagePath,
     required this.title,
-    required this.businessName, // changed
+    required this.businessName,
     required this.price,
     required this.originalPrice,
     required this.isAvailable,
@@ -66,12 +66,6 @@ class SaveItemCard extends StatelessWidget {
                       style: const TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 14),
                     ),
-
-                    // Business Name
-                    // Text(
-                    //   businessName,
-                    //   style: const TextStyle(fontSize: 12, color: Colors.grey),
-                    // ),
 
                     // Price + Original Price
                     Row(

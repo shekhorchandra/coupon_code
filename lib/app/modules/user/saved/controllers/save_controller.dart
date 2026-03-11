@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../services/contants/api_constants.dart';
 import '../models/save_item_model.dart';
 
 class SavesController extends GetxController {
@@ -18,24 +19,21 @@ class SavesController extends GetxController {
     fetchSavedDeals(); // load saved deals on init
   }
 
-  // ------------------------------
   // Fetch saved deals from API
-  // ------------------------------
   Future<void> fetchSavedDeals() async {
     isLoading.value = true;
 
     try {
-      //  Get saved IDs safely
       final savedIds = _getSavedIds();
+
       if (savedIds.isEmpty) {
         savesList.clear();
-        isLoading.value = false;
         return;
       }
 
-      // Fetch fresh data from API
-      final baseURL = 'https://gastrotomic-squirrelly-yuonne.ngrok-free.dev';
-      final url = Uri.parse('$baseURL/api/v1/service/saved?ids=${savedIds.join(",")}');
+      // Use ApiConstants instead of hardcoded URL
+      final url = Uri.parse("${ApiConstants.baseUrl}/service/saved?ids=${savedIds.join(",")}");
+
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
@@ -44,10 +42,9 @@ class SavesController extends GetxController {
         if (data['success'] == true) {
           final List fetchedDeals = data['data'] ?? [];
 
-          //  Map API data to SaveItem model
           savesList.value = fetchedDeals.map((e) => SaveItem.fromJson(e)).toList();
 
-          //  Update stored IDs (remove deleted deals automatically)
+          // Remove deleted deals automatically
           final fetchedIds = savesList.map((e) => e.id).toList();
           _storage.write('savedDeals', fetchedIds);
         } else {
@@ -63,9 +60,7 @@ class SavesController extends GetxController {
     }
   }
 
-  // ------------------------------
   // Save a deal by ID
-  // ------------------------------
   void saveForLater(String dealId) {
     final savedIds = _getSavedIds();
 
@@ -81,9 +76,7 @@ class SavesController extends GetxController {
     fetchSavedDeals();
   }
 
-  // ------------------------------
   // Delete a saved deal by ID
-  // ------------------------------
   void deleteSavedDeal(String dealId) {
     final savedIds = _getSavedIds();
     savedIds.remove(dealId);
@@ -93,9 +86,7 @@ class SavesController extends GetxController {
     savesList.removeWhere((deal) => deal.id == dealId);
   }
 
-  // ------------------------------
   // Helper: Get saved IDs safely from storage
-  // ------------------------------
   List<String> _getSavedIds() {
     final raw = _storage.read('savedDeals');
 
@@ -108,11 +99,14 @@ class SavesController extends GetxController {
     if (raw is String) {
       try {
         final list = jsonDecode(raw) as List;
-        return list.map((e) {
-          if (e is String) return e;
-          if (e is Map && e['id'] != null) return e['id'].toString();
-          return '';
-        }).where((id) => id.isNotEmpty).toList();
+        return list
+            .map((e) {
+              if (e is String) return e;
+              if (e is Map && e['id'] != null) return e['id'].toString();
+              return '';
+            })
+            .where((id) => id.isNotEmpty)
+            .toList();
       } catch (_) {
         return [];
       }
@@ -121,9 +115,7 @@ class SavesController extends GetxController {
     return [];
   }
 
-  // ------------------------------
   // Computed getters
-  // ------------------------------
   List<SaveItem> get all => savesList;
   List<SaveItem> get available => savesList.where((item) => item.isAvailable).toList();
   List<SaveItem> get expired => savesList.where((item) => !item.isAvailable).toList();

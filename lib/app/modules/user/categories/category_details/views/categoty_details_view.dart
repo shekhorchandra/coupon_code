@@ -249,8 +249,6 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                           decoration: TextDecoration.lineThrough,
                         ),
                       ),
-                      // _badge("${deal.discount.toInt()}% off"),
-                      // _textOverlay("● ${deal.distance.toStringAsFixed(1)} m away"),
                       Text(
                         deal.promotedUntil != null
                             ? _formatRemainingTime(deal.promotedUntil!)
