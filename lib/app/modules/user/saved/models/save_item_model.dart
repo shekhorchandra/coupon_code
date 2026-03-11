@@ -3,37 +3,59 @@ class SaveItem {
   final String title;
   final String businessName;
   final String imagePath;
-  final double price;
-  final double originalPrice;
+  final double price; // price after discount
+  final double originalPrice; // regular price
   final bool isAvailable;
   final String status;
 
   SaveItem({
     required this.id,
-    required this.title,
-    required this.businessName,
-    required this.imagePath,
-    required this.price,
-    required this.originalPrice,
-    required this.isAvailable,
-    required this.status,
+    this.title = '',
+    this.businessName = '',
+    this.imagePath = '',
+    this.price = 0.0,
+    this.originalPrice = 0.0,
+    this.isAvailable = false,
+    this.status = 'Normal',
   });
 
-  // fromJson
+  // ------------------------------
+  // Create SaveItem from API JSON
+  // ------------------------------
   factory SaveItem.fromJson(Map<String, dynamic> json) {
+    final promotedUntil = json['promotedUntil'] != null
+        ? DateTime.tryParse(json['promotedUntil'])
+        : null;
+
+    // Parse regular price
+    final double regularPrice = (json['reguler_price'] ?? 0).toDouble();
+
+    // Parse discount as percentage
+    final double discountPercent = (json['discount'] ?? 0).toDouble();
+
+    // Calculate price after discount
+    final double discountedPrice =
+        regularPrice - (regularPrice * discountPercent / 100);
+
     return SaveItem(
-      id: json['id'] as String,
-      title: json['title'] as String,
-      businessName: json['businessName'] as String,
-      imagePath: json['imagePath'] as String,
-      price: (json['price'] as num).toDouble(),
-      originalPrice: (json['originalPrice'] as num).toDouble(),
-      isAvailable: json['isAvailable'] as bool,
-      status: json['status'] as String,
+      id: json['_id'] ?? '',
+      title: json['title'] ?? '',
+      businessName: json['shop'] ?? '',
+      imagePath: (json['images'] as List<dynamic>?)?.isNotEmpty == true
+          ? json['images'][0]
+          : '',
+      price: discountedPrice,
+      originalPrice: regularPrice,
+      isAvailable: promotedUntil != null
+          ? promotedUntil.isAfter(DateTime.now())
+          : false,
+      status: json['isPromoted'] == true ? 'Promoted' : 'Normal',
     );
   }
 
-  // toJson
+  // ------------------------------
+  // Convert to JSON
+  // ------------------------------
   Map<String, dynamic> toJson() {
     return {
       'id': id,

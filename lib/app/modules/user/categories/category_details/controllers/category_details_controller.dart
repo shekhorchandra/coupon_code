@@ -90,6 +90,11 @@ class CategoryDetailsController extends GetxController {
     fetchDeals();
   }
 
+  /// for refresh
+  Future<void> refreshDeals() async {
+    await fetchDeals();
+  }
+
   /// Fetch deals for this category
   Future<void> fetchDeals({String sort = "reguler_price"}) async {
     try {

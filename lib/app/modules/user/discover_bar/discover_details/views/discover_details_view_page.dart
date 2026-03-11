@@ -547,23 +547,46 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
                         ),
                       ),
 
+                    // Expanded(
+                    //   child: AppButton(
+                    //     text: 'Save For Later',
+                    //     onPressed: () {
+                    //       final item = SaveItem(
+                    //         id: deal.id,
+                    //         // title: deal.title,
+                    //         // businessName: deal.businessName ?? 'Unknown',
+                    //         // imagePath: deal.image,
+                    //         // price: deal.price,
+                    //         // originalPrice: deal.originalPrice,
+                    //         // isAvailable: true,
+                    //         // status: 'active',
+                    //       );
+                    //
+                    //       // Save locally using the controller
+                    //       Get.find<SavesController>().saveForLater(item);
+                    //       Get.toNamed(AppRoutes.SAVEDLATER);
+                    //     },
+                    //     backgroundColor: Colors.white70,
+                    //     textColor: AppColor.primary,
+                    //     borderColor: AppColor.primary,
+                    //     leading: SvgPicture.asset(
+                    //       AppAssets.saved,
+                    //       width: 18,
+                    //       height: 18,
+                    //       colorFilter: const ColorFilter.mode(AppColor.primary, BlendMode.srcIn),
+                    //     ),
+                    //   ),
+                    // ),
+
                     Expanded(
                       child: AppButton(
                         text: 'Save For Later',
                         onPressed: () {
-                          final item = SaveItem(
-                            id: deal.id,
-                            title: deal.title,
-                            businessName: deal.businessName ?? 'Unknown',
-                            imagePath: deal.image,
-                            price: deal.price,
-                            originalPrice: deal.originalPrice,
-                            isAvailable: true,
-                            status: 'active',
-                          );
+                          final dealId = deal.id;
+                          final controller = Get.find<SavesController>();
 
-                          // Save locally using the controller
-                          Get.find<SavesController>().saveForLater(item);
+                          controller.saveForLater(dealId);
+                          controller.fetchSavedDeals();
                           Get.toNamed(AppRoutes.SAVEDLATER);
                         },
                         backgroundColor: Colors.white70,

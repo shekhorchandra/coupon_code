@@ -43,10 +43,12 @@ class DiscoverController extends GetxController {
   void onLocationPressed() {}
   void onNotificationPressed() {}
 
+  /// for refresh
   Future<void> refreshDeals() async {
     await fetchDeals();
   }
 
+  /// fetach all deals
   Future<void> fetchDeals({int page = 1}) async {
     try {
       isLoading.value = true;

@@ -14,16 +14,12 @@ class UserMySavesPage extends GetView<SavesController> {
 
   @override
   Widget build(BuildContext context) {
-    final navController = Get.find<UserNavigationBarController>();
     return Scaffold(
       // appBar: const CommonAppBar(title: "My Saves", showBack: false),
       appBar: CommonAppBar(
         title: "My Saves",
-        showBack: false,
-        onBack: () {
-          // Close the overlay page instead of default back
-          navController.closeOverlayPage();
-        },
+        showBack: true,
+
       ),
       body: Column(
         children: [
@@ -62,18 +58,46 @@ class UserMySavesPage extends GetView<SavesController> {
                 itemCount: listToShow.length,
                 itemBuilder: (context, index) {
                   final item = listToShow[index];
-                  return SaveItemCard(
-                    id: item.id,
-                    imagePath: item.imagePath,
-                    title: item.title,
-                    businessName: item.businessName, // changed
-                    price: item.price,
-                    originalPrice: item.originalPrice,
-                    isAvailable: item.isAvailable,
-                    Status: item.status,
-                    onTap: () {
-                      Get.toNamed(AppRoutes.DISCOVERDETAILS, arguments: {'id': item.id});
-                    },
+                  return Stack(
+                    children: [
+                      SaveItemCard(
+                        id: item.id,
+                        imagePath: item.imagePath,
+                        title: item.title,
+                        businessName: item.businessName,
+                        price: item.price,
+                        originalPrice: item.originalPrice,
+                        isAvailable: item.isAvailable,
+                        Status: item.status,
+                        onTap: () {
+                          Get.toNamed(AppRoutes.DISCOVERDETAILS, arguments: {'id': item.id});
+                        },
+                      ),
+                      // --- Badge ---
+                      // Positioned(
+                      //   top: 12,
+                      //   right: 20,
+                      //   child: Container(
+                      //     padding: const EdgeInsets.all(6),
+                      //     decoration: BoxDecoration(
+                      //       color: item.isAvailable ? Colors.green : Colors.red,
+                      //       shape: BoxShape.circle, // circular background
+                      //       boxShadow: [
+                      //         BoxShadow(
+                      //           color: Colors.black.withOpacity(0.2),
+                      //           blurRadius: 4,
+                      //           offset: const Offset(0, 2),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //     child: Icon(
+                      //       item.isAvailable ? Icons.check : Icons.close, // check for available, close for expired
+                      //       color: Colors.white,
+                      //       size: 12, // adjust size as needed
+                      //     ),
+                      //   ),
+                      // ),
+                    ],
                   );
                 },
               );

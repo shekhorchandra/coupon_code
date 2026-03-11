@@ -23,6 +23,8 @@ class ServiceDetailsController extends GetxController {
   void previous() => pageController.previousPage(
       duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
 
+
+
   // Get Deal Details
   Future<void> getDealDetails(String id, {required double lat, required double lng}) async {
     try {

@@ -68,17 +68,16 @@ class SaveItemCard extends StatelessWidget {
                     ),
 
                     // Business Name
-                    Text(
-                      businessName,
-                      style: const TextStyle(fontSize: 12, color: Colors.grey),
-                    ),
+                    // Text(
+                    //   businessName,
+                    //   style: const TextStyle(fontSize: 12, color: Colors.grey),
+                    // ),
 
                     // Price + Original Price
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        // Left side: Price + Original Price + Availability
                         Row(
                           children: [
                             Text(
@@ -95,36 +94,31 @@ class SaveItemCard extends StatelessWidget {
                                   decoration: TextDecoration.lineThrough),
                             ),
                             const SizedBox(width: 16),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: isAvailable ? AppColor.primary : Colors.grey.shade300,
-                                borderRadius: BorderRadius.circular(12),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    blurRadius: 4,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: Text(
-                                isAvailable ? "Available" : "Expired",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey.shade700,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ),
+
                           ],
+                        ),
+
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: isAvailable ? Colors.green : Colors.red,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            isAvailable ? 'Available' : 'Expired',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
 
                         // Right side: Delete button
                         Container(
                           decoration: BoxDecoration(
                             color: Colors.red.shade100, // background color
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(6),
                           ),
                           child: IconButton(
                             onPressed: () {
@@ -155,7 +149,7 @@ class SaveItemCard extends StatelessWidget {
                                         ),
                                       ),
                                       onPressed: () {
-                                        Get.find<SavesController>().removeSavedDeal(id);
+                                        Get.find<SavesController>().deleteSavedDeal(id);
                                         Navigator.pop(ctx);
                                       },
                                       child: const Text("Delete"),
