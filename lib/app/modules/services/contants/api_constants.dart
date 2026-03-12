@@ -1,5 +1,6 @@
 class ApiConstants {
-  static const String baseUrl = "https://gastrotomic-squirrelly-yuonne.ngrok-free.dev/api/v1";
+  static const String baseUrl =
+      "https://multiple-defines-organised-easier.trycloudflare.com/api/v1";
 
   // Define endpoints
 
@@ -30,6 +31,7 @@ class ApiConstants {
   static const String createShop = '/shop/create_shop';
   static const String shopDetails = '/shop/shop_details';
   static String updateShop(String id) => '/shop/update_shop/$id';
+  static const String shopAnalytics = '/shop/analytics';
 
   // Deal
   static const String myDeals = '/service/my_deals';

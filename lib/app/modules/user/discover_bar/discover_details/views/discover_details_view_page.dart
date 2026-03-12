@@ -103,7 +103,7 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
 
       return SafeArea(
         child: Scaffold(
-          appBar: widget.dealItem != null
+          appBar: widget.id == null
               ? DealCreationPreviewAppBar()
               : CommonAppBar(title: 'Deal Details'),
 

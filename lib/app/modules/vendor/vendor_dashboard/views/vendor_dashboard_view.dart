@@ -21,6 +21,7 @@ class VendorDashboardPage extends GetView<VendorDashboardController> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(VendorDashboardController());
     final menuController = Get.put(VendorMenuController());
 
     return Scaffold(
@@ -80,18 +81,24 @@ class VendorDashboardPage extends GetView<VendorDashboardController> {
                 Row(
                   children: [
                     Expanded(
-                      child: OverviewCard(
-                        icon: AppAssets.activeDeals,
-                        title: 'Active Deals',
-                        number: '5',
+                      child: Obx(
+                        () => OverviewCard(
+                          icon: AppAssets.activeDeals,
+                          title: 'Active Deals',
+                          number: controller.shopAnalytics.value.activeDeals.toString(),
+                          isLoading: controller.isLoading.value,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 10),
                     Expanded(
-                      child: OverviewCard(
-                        icon: AppAssets.totalViews,
-                        title: 'Total Views',
-                        number: '2,456',
+                      child: Obx(
+                        () => OverviewCard(
+                          icon: AppAssets.totalViews,
+                          title: 'Total Views',
+                          number: controller.shopAnalytics.value.totalViews.toString(),
+                          isLoading: controller.isLoading.value,
+                        ),
                       ),
                     ),
                   ],
@@ -99,7 +106,13 @@ class VendorDashboardPage extends GetView<VendorDashboardController> {
                 const SizedBox(height: 10),
 
                 // Total Impression
-                TotalImpressionCard(),
+                Obx(
+                  () => TotalImpressionCard(
+                    totalImpressions: controller.shopAnalytics.value.totalImpressions.toString(),
+                    ctr: controller.ctr.value.toString(),
+                    isLoading: controller.isLoading.value,
+                  ),
+                ),
                 const SizedBox(height: 30),
 
                 // Overview Chart

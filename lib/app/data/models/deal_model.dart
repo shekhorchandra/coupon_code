@@ -165,7 +165,7 @@ class DealModel {
 
     return DealModel(
       id: map['_id']?.toString() ?? '',
-      shopId: map['shop']?.toString() ?? '',
+      shopId: map['shop']?['_id'].toString() ?? '',
       userId: map['user']?.toString() ?? '',
       categoryId: map['category']?.toString() ?? '',
       activePromotion: map['activePromotion']?.toString(),
