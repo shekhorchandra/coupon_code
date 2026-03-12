@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coupon_code/app/core/widgets/common_app_bar.dart';
 import 'package:coupon_code/app/data/models/deal_model.dart';
@@ -10,13 +11,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import '../../../../../core/values/app_assets.dart';
 import '../../../../../core/values/app_color.dart';
 import '../../../../../core/values/app_text_styles.dart';
 import '../../../../../core/widgets/App_button.dart';
 import '../../../categories/category_details/model/category_deal_model.dart';
 import '../../../saved/controllers/save_controller.dart';
-import '../../../saved/models/save_item_model.dart';
 import '../../coupon_code/Controller/coupon_controller.dart';
 import '../../coupon_code/views/coupon_popup_view.dart';
 import '../../vendor_shop_details/bindings/vendor_details_binding.dart';
@@ -87,7 +88,7 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
 
   void _fetchShopDetails() async {
     if (controller.deal.value?.shopId != null) {
-      await controller.getShopDetails(controller.deal.value!.shopId);
+      await controller.getShopDetails(controller.deal.value!.shopId!);
     }
   }
 
@@ -292,7 +293,7 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
                               Row(
                                 children: [
                                   Text(
-                                    "\$${DealModel.afterDiscountPrice(deal.reguler_price, deal.discountPercent).toStringAsFixed(2)}",
+                                    "\$${DealModel.afterDiscountPrice(deal.regular_price ?? deal.originalPrice, deal.discountPercent).toStringAsFixed(2)}",
                                     style: const TextStyle(
                                       fontSize: 36,
                                       fontWeight: FontWeight.bold,
@@ -300,7 +301,7 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
                                   ),
                                   const SizedBox(width: 6),
                                   Text(
-                                    "\$${deal.reguler_price.toStringAsFixed(2)}",
+                                    "\$${deal.regular_price?.toStringAsFixed(2)}",
                                     style: const TextStyle(
                                       fontSize: 20,
                                       color: Colors.grey,
@@ -448,14 +449,21 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
                         final business = controller.deal.value?.businessName ?? 'Website';
 
                         if (website.isEmpty) {
-                          return const Text("No website available", style: TextStyle(color: Colors.grey));
+                          return const Text(
+                            "No website available",
+                            style: TextStyle(color: Colors.grey),
+                          );
                         }
 
                         return InkWell(
                           onTap: () async {
                             try {
-                              await launchUrl(Uri.parse(website.startsWith('http') ? website : 'https://$website'),
-                                  mode: LaunchMode.externalApplication);
+                              await launchUrl(
+                                Uri.parse(
+                                  website.startsWith('http') ? website : 'https://$website',
+                                ),
+                                mode: LaunchMode.externalApplication,
+                              );
                             } catch (e) {
                               Get.snackbar("Error", "Could not launch website: $e");
                             }
@@ -466,7 +474,10 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
                                 "assets/icons/web.svg",
                                 width: 18,
                                 height: 18,
-                                colorFilter: const ColorFilter.mode(AppColor.primary, BlendMode.srcIn),
+                                colorFilter: const ColorFilter.mode(
+                                  AppColor.primary,
+                                  BlendMode.srcIn,
+                                ),
                               ),
                               const SizedBox(width: 8),
                               Expanded(
@@ -577,7 +588,6 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
                     //     ),
                     //   ),
                     // ),
-
                     Expanded(
                       child: AppButton(
                         text: 'Save For Later',
@@ -585,7 +595,7 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
                           final dealId = deal.id;
                           final controller = Get.find<SavesController>();
 
-                          controller.saveForLater(dealId);
+                          controller.saveForLater(dealId!);
                           controller.fetchSavedDeals();
                           Get.toNamed(AppRoutes.SAVEDLATER);
                         },

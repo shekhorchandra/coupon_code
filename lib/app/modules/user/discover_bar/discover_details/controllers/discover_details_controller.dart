@@ -37,8 +37,8 @@ class ServiceDetailsController extends GetxController {
         deal.value = DealModel.fromMap(response.data['data']);
 
         // After fetching deal, fetch shop info
-        if (deal.value!.shopId.isNotEmpty) {
-          await getShopDetails(deal.value!.shopId);
+        if (deal.value!.shopId!.isNotEmpty) {
+          await getShopDetails(deal.value!.shopId!);
         }
       } else {
         Get.snackbar('Error', 'Deal not found!');

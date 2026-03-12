@@ -7,7 +7,6 @@ import 'package:coupon_code/app/data/models/deal_model.dart';
 import 'package:coupon_code/app/data/models/deal_plan_model.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/controllers/vendor_deals_controller.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/data/deal_plans.dart';
-import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -42,10 +41,10 @@ class _DealPlanViewState extends State<DealPlanView> {
       controller.highlightController.value = deal.highlights;
       controller.descController.text = deal.description;
       controller.couponController.text = deal.coupon ?? '';
-      controller.priceController.text = deal.reguler_price.toString();
+      controller.priceController.text = deal.regular_price.toString();
       controller.discountController.text = deal.discountPercent.toStringAsFixed(2);
       controller.finalPriceController.text = DealModel.afterDiscountPrice(
-        deal.reguler_price,
+        deal.regular_price ?? deal.originalPrice,
         deal.discountPercent,
       ).toStringAsFixed(2);
     }
@@ -91,10 +90,12 @@ class _DealPlanViewState extends State<DealPlanView> {
               controller.validateAndSubmit();
 
               if (!controller.hasError.value) {
-                Get.toNamed(
-                  AppRoutes.DISCOVERDETAILS,
-                  arguments: {'dealItem': controller.deal.value, 'isNetworkImage': false},
-                );
+                // Get.toNamed(
+                //   AppRoutes.DISCOVERDETAILS,
+                //   arguments: {'dealItem': controller.deal.value, 'isNetworkImage': false},
+                // );
+
+                Get.snackbar('Info', 'Yoo! Publishing the deal!');
               }
             },
           );

@@ -125,11 +125,11 @@ class DealTile extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "\$${DealModel.afterDiscountPrice(deal.reguler_price, deal.discountPercent).toStringAsFixed(2)}",
+                            "\$${DealModel.afterDiscountPrice(deal.regular_price ?? deal.originalPrice, deal.discountPercent).toStringAsFixed(2)}",
                             style: AppText.label.bold.copyWith(fontSize: 15, color: Colors.black),
                           ),
                           Text(
-                            "\$${deal.reguler_price.toStringAsFixed(2)}",
+                            "\$${deal.regular_price?.toStringAsFixed(2)}",
                             style: const TextStyle(
                               fontSize: 11,
                               color: Colors.grey,

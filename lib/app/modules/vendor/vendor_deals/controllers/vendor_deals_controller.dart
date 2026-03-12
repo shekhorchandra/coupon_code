@@ -170,32 +170,24 @@ class VendorDealsController extends GetxController {
     }
   }
 
-  // DealModel buildDealModel() {
-  //   return DealModel(
-  //     id: DateTime.now().millisecondsSinceEpoch.toString(), // temporary ID for mock
-  //     shopId: 'some_shop_id', // You may want to use a real shop ID here
-  //     userId: 'some_user_id', // You may want to use a real user ID here
-  //     categoryId: deal.categoryId,
-  //     activePromotion: true, // Assuming default value as true
-  //     title: titleController.text.trim(),
-  //     regularPrice: price,
-  //     discountPercent: discount,
-  //     highlights: highlights,
-  //     description: descController.text.trim(),
-  //     images: images
-  //         .map((image) => image.path)
-  //         .toList(), // Convert image file paths to list of strings
-  //     isPromoted: true, // Assuming default value as true
-  //     promotedUntil: DateTime.now().add(Duration(days: 30)), // Set a default expiration date
-  //     coupon: couponController.text.trim(),
-  //     totalViews: 0,
-  //     totalImpression: 0,
-  //     createdAt: DateTime.now(),
-  //     updatedAt: DateTime.now(),
-  //     dealPlan: selectedDealPlan.value!, // Ensure this is not null
-  //     expireDate: selectedValidityRange.value!.end, // Ensure this is not null
-  //   );
-  // }
+  DealModel buildDealModel() {
+    return DealModel(
+      categoryId: selectedCategory.value,
+      title: titleController.text.trim(),
+      originalPrice: double.parse(priceController.text),
+      discountPercent: double.parse(discountController.text),
+      highlights: highlightController.value,
+      description: descController.text.trim(),
+      images: images
+          .map((image) => image.path)
+          .toList(), // Convert image file paths to list of strings
+      isPromoted: true, // Assuming default value as true
+      promotedUntil: DateTime.now().add(Duration(days: 30)), // Set a default expiration date
+      coupon: couponController.text.trim(),
+      totalViews: 0,
+      totalImpression: 0,
+    );
+  }
 
   void validateAndSubmit() {
     // 1. Check Images
@@ -247,17 +239,17 @@ class VendorDealsController extends GetxController {
     }
 
     // 5. T&C Validation
-    if (!acceptedTnC.value) {
-      hasError.value = true;
-      _showError("You must accept the Terms and Conditions.");
-      return;
-    }
+    // if (!acceptedTnC.value) {
+    //   hasError.value = true;
+    //   _showError("You must accept the Terms and Conditions.");
+    //   return;
+    // }
 
     // SUCCESS
     hasError.value = false;
 
     // TODO: Call repository/API here
-    // deal.value = buildDealModel();
+    deal.value = buildDealModel();
     debugPrint("Created Deal: ${deal.value}");
   }
 

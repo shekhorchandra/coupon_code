@@ -2,22 +2,21 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:coupon_code/app/data/models/shop_model.dart';
 import 'package:flutter/foundation.dart';
 
 class DealModel {
-  final String id;
-  final String shopId;
-  final String userId;
+  final String? id;
+  final String? shopId;
+  final String? userId;
   final String categoryId;
   final String? activePromotion;
   final String title;
-  final String subtitle;
-  final String image;
-  final double price;
+  final String? subtitle;
+  final String? image;
+  final double? price;
   final double originalPrice;
-  final String duration;
-  final double reguler_price;
+  final String? duration;
+  final double? regular_price;
   final double discountPercent;
   final List<String> highlights;
   final String description;
@@ -33,13 +32,13 @@ class DealModel {
   final String? businessName;
 
   DealModel({
-    required this.id,
-    required this.shopId,
-    required this.userId,
+    this.id,
+    this.shopId,
+    this.userId,
     required this.categoryId,
     this.activePromotion,
     required this.title,
-    required this.reguler_price,
+    this.regular_price,
     required this.discountPercent,
     required this.highlights,
     required this.description,
@@ -53,11 +52,11 @@ class DealModel {
     this.website,
     this.address,
     this.businessName,
-    required this.subtitle,
-    required this.image,
-    required this.price,
+    this.subtitle,
+    this.image,
+    this.price,
     required this.originalPrice,
-    required this.duration,
+    this.duration,
   });
 
   DealModel copyWith({
@@ -94,7 +93,7 @@ class DealModel {
       categoryId: categoryId ?? this.categoryId,
       activePromotion: activePromotion ?? this.activePromotion,
       title: title ?? this.title,
-      reguler_price: regularPrice ?? this.reguler_price,
+      regular_price: regularPrice ?? this.regular_price,
       discountPercent: discountPercent ?? this.discountPercent,
       highlights: highlights ?? this.highlights,
       description: description ?? this.description,
@@ -128,7 +127,7 @@ class DealModel {
       'price': price,
       'originalPrice': originalPrice,
       'duration': duration,
-      'reguler_price': reguler_price,
+      'reguler_price': regular_price,
       'discountPercent': discountPercent,
       'highlights': highlights,
       'description': description,
@@ -171,7 +170,7 @@ class DealModel {
       categoryId: map['category']?.toString() ?? '',
       activePromotion: map['activePromotion']?.toString(),
       title: map['title']?.toString() ?? '',
-      reguler_price: (map['reguler_price'] ?? 0).toDouble(),
+      regular_price: (map['reguler_price'] ?? 0).toDouble(),
       discountPercent: (map['discount'] ?? 0).toDouble(),
       highlights: map['highlight'] != null ? List<String>.from(map['highlight']) : [],
       description: map['description']?.toString() ?? '',
@@ -205,7 +204,7 @@ class DealModel {
 
   @override
   String toString() {
-    return 'DealModel(id: $id, shopId: $shopId, userId: $userId, categoryId: $categoryId, activePromotion: $activePromotion, title: $title, regularPrice: $reguler_price, discountPercent: $discountPercent, highlights: $highlights, description: $description, images: $images, isPromoted: $isPromoted, promotedUntil: $promotedUntil, coupon: $coupon, totalViews: $totalViews, totalImpression: $totalImpression), subtitle: $subtitle, image: $image, price: $price, originalPrice: $originalPrice, duration: $duration)';
+    return 'DealModel(id: $id, shopId: $shopId, userId: $userId, categoryId: $categoryId, activePromotion: $activePromotion, title: $title, regularPrice: $regular_price, discountPercent: $discountPercent, highlights: $highlights, description: $description, images: $images, isPromoted: $isPromoted, promotedUntil: $promotedUntil, coupon: $coupon, totalViews: $totalViews, totalImpression: $totalImpression), subtitle: $subtitle, image: $image, price: $price, originalPrice: $originalPrice, duration: $duration)';
   }
 
   @override
@@ -218,7 +217,7 @@ class DealModel {
         other.categoryId == categoryId &&
         other.activePromotion == activePromotion &&
         other.title == title &&
-        other.reguler_price == reguler_price &&
+        other.regular_price == regular_price &&
         other.discountPercent == discountPercent &&
         listEquals(other.highlights, highlights) &&
         other.description == description &&
@@ -243,7 +242,7 @@ class DealModel {
         categoryId.hashCode ^
         activePromotion.hashCode ^
         title.hashCode ^
-        reguler_price.hashCode ^
+        regular_price.hashCode ^
         discountPercent.hashCode ^
         highlights.hashCode ^
         description.hashCode ^
