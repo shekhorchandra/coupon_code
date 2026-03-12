@@ -115,9 +115,9 @@ class AppPages {
     ),
 
     GetPage(
-      name: AppRoutes.SAVEDLATER, // '/my-saves'
+      name: AppRoutes.SAVEDLATER,
       page: () => const UserMySavesPage(),
-      binding: UserMenuBinding(), // <-- injects SavesController
+      binding: SavesBinding(),
     ),
 
     GetPage(name: AppRoutes.SAVED, page: () => UserMySavesPage()),
