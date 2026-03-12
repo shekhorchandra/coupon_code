@@ -1,11 +1,24 @@
+import 'dart:developer';
+
+import 'package:coupon_code/app/data/models/shop_model.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_account/controllers/vendor_account_controller.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_account/views/widgets/add_outlet_form.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class MultipleOutletForm extends GetView<VendorAccountController> {
+  MultipleOutletForm({super.key, this.outlets});
+
+  final List<Outlets>? outlets;
+
   @override
   Widget build(BuildContext context) {
+    // For shop update
+    inspect(outlets);
+    if (outlets != null) {
+      controller.outlets.value = outlets!;
+    }
+
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Color(0xFFA3A3A3)),
@@ -39,18 +52,18 @@ class MultipleOutletForm extends GetView<VendorAccountController> {
                             text: TextSpan(
                               children: [
                                 TextSpan(
-                                  text: "${item['name']}: ",
+                                  text: "Outlet ${index + 1}: ",
                                   style: const TextStyle(
                                     color: Color(0xFF4CB5C3),
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 TextSpan(
-                                  text: item['address'],
+                                  text: item.address,
                                   style: const TextStyle(color: Colors.grey),
                                 ),
                                 TextSpan(
-                                  text: ", ${item['zip_code']}",
+                                  text: ", ${item.zipCode}",
                                   style: const TextStyle(color: Colors.grey),
                                 ),
                               ],
@@ -65,7 +78,7 @@ class MultipleOutletForm extends GetView<VendorAccountController> {
                             // Confirmation Dialog
                             Get.defaultDialog(
                               title: "Remove Outlet",
-                              middleText: "Are you sure you want to delete ${item['name']}?",
+                              middleText: "Are you sure you want to delete '${item.address}'?",
                               textConfirm: "Delete",
                               textCancel: "Cancel",
                               confirmTextColor: Colors.white,
@@ -92,7 +105,16 @@ class MultipleOutletForm extends GetView<VendorAccountController> {
               width: double.infinity,
               height: 40,
               child: ElevatedButton.icon(
-                onPressed: () => _showAddOutletSheet(context),
+                onPressed: () {
+                  // Clear values
+                  controller.pickedLat.value = 0.0;
+                  controller.pickedLng.value = 0.0;
+                  controller.businessAddressController.clear();
+                  controller.businessDescriptionController.clear();
+                  controller.zipCodeController.clear();
+
+                  _showAddOutletSheet(context);
+                },
                 icon: const Icon(Icons.add, color: Colors.white),
                 label: const Text(
                   "Add Outlet",

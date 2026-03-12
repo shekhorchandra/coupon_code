@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:coupon_code/app/data/models/shop_model.dart';
 import 'package:coupon_code/app/data/network/dio_client.dart';
 import 'package:coupon_code/app/modules/auth/vendor/login/vendor_login_controller.dart';
 import 'package:coupon_code/app/modules/services/contants/api_constants.dart';
@@ -92,7 +93,7 @@ class VendorAccountController extends GetxController {
       position: LatLng(43.68235894136127, -79.62811399251223),
     ),
   }.obs;
-  var outlets = <Map<String, String>>[].obs;
+  var outlets = <Outlets>[].obs;
 
   void updateLocation(LatLng position) {
     // Save to variables
@@ -105,13 +106,14 @@ class VendorAccountController extends GetxController {
 
   void saveOutlet() {
     if (businessAddressController.text.isNotEmpty) {
-      outlets.add({
-        'name': 'Outlet ${outlets.length + 1}',
-        'address': businessAddressController.text,
-        'lat': pickedLat.value.toString(),
-        'lng': pickedLng.value.toString(),
-        'zip_code': zipCodeController.text,
-      });
+      outlets.add(
+        Outlets(
+          shop: 'Outlet ${outlets.length + 1}',
+          address: businessAddressController.text,
+          location: Location(coordinates: [pickedLng.value, pickedLat.value]),
+          zipCode: zipCodeController.text,
+        ),
+      );
 
       // Clear fields after saving
       businessAddressController.clear();
@@ -126,7 +128,7 @@ class VendorAccountController extends GetxController {
 
     // Renumber remaining outlets
     for (int i = 0; i < outlets.length; i++) {
-      outlets[i]['name'] = 'Outlet ${i + 1}';
+      outlets[i].shop = 'Outlet ${i + 1}';
     }
     outlets.refresh();
   }
@@ -141,7 +143,8 @@ class VendorAccountController extends GetxController {
     }
 
     try {
-      Center(child: CircularProgressIndicator.adaptive());
+      // Show loading indicator
+      isUpdating.value = true;
 
       // Shop part
       Map<String, dynamic> shopData = {
@@ -170,9 +173,9 @@ class VendorAccountController extends GetxController {
       } else {
         outletData = outlets.map((item) {
           return {
-            "address": item['address'],
-            "zip_code": item['zip_code'],
-            "coordinates": [double.parse(item['lng']!), double.parse(item['lat']!)],
+            "address": item.address,
+            "zip_code": item.zipCode,
+            "coordinates": [item.location?.coordinates?[0], item.location?.coordinates?[1]],
           };
         }).toList();
       }
@@ -192,36 +195,20 @@ class VendorAccountController extends GetxController {
       // Send request
       final response = await _dioClient.client.post(ApiConstants.createShop, data: formData);
 
-      Get.back(); // Close loading
-
       if (response.statusCode == 200 || response.statusCode == 201) {
         Get.offAllNamed(AppRoutes.VENDOR_REGISTRATION_SUCCESS);
+      } else {
+        throw Exception("Failed to submit the form");
       }
     } on dio.DioException catch (e) {
-      Get.back();
-      String errorMsg = "Server Error";
-
-      if (e.response?.data != null) {
-        if (e.response?.data is Map) {
-          errorMsg =
-              e.response?.data['message']?.toString() ??
-              e.response?.data['errorSources'][0]['message']?.toString() ??
-              e.message ??
-              "Unknown Error";
-        } else {
-          errorMsg = "Server returned an invalid response format.";
-          log("Raw Server Error: ${e.response?.data}");
-        }
-      } else {
-        errorMsg = e.message ?? "No response from server";
-      }
-
-      log("Final Parsed Error: $errorMsg");
+      String errorMsg = e.response?.data['message'] ?? e.message ?? "Unknown error";
       Get.snackbar("Error", errorMsg);
     } catch (e) {
-      Get.back();
-      log("General Error: $e");
       Get.snackbar("Error", "Something went wrong");
+      log("General Error: $e");
+    } finally {
+      // Hide loading indicator
+      isUpdating.value = false;
     }
   }
 }

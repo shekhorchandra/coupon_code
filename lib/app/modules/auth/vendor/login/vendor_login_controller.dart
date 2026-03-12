@@ -12,7 +12,6 @@ import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart' hide Response;
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class VendorLoginController extends GetxController {
@@ -102,17 +101,17 @@ class VendorLoginController extends GetxController {
         _storeUserId(data);
 
         // Register FCM and Device
-        bool fcmRegistered = await _registerFCM();
-        if (!fcmRegistered) {
-          Get.snackbar('Error', 'An error occurred while initializing notifications!');
-          return;
-        }
+        // bool fcmRegistered = await _registerFCM();
+        // if (!fcmRegistered) {
+        //   Get.snackbar('Error', 'An error occurred while initializing notifications!');
+        //   return;
+        // }
 
-        bool deviceRegistered = await _registerDevice(data);
-        if (!deviceRegistered) {
-          Get.snackbar('Error', 'An error occurred while registering the device.');
-          return;
-        }
+        // bool deviceRegistered = await _registerDevice(data);
+        // if (!deviceRegistered) {
+        //   Get.snackbar('Error', 'An error occurred while registering the device.');
+        //   return;
+        // }
 
         // Proceed to the next screen
         isVerifiedOrIsShopCreated();

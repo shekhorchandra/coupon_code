@@ -17,7 +17,7 @@ class UpdateShopController extends GetxController {
   final logo = TextEditingController();
   final description = TextEditingController();
   final email = TextEditingController();
-  final countryCode = BusinessPhone();
+  Rx<BusinessPhone> countryCode = BusinessPhone().obs;
   final phoneNumber = TextEditingController();
   final List<Outlets> outlets = [];
   final website = TextEditingController();
@@ -40,8 +40,8 @@ class UpdateShopController extends GetxController {
     logo.clear();
     description.clear();
     email.clear();
-    countryCode.countryCode = null;
-    countryCode.phoneNumber = null;
+    countryCode.value.countryCode = null;
+    countryCode.value.phoneNumber = null;
     website.clear();
   }
 
@@ -94,9 +94,10 @@ class UpdateShopController extends GetxController {
     email.text = shopData.businessEmail ?? '';
     website.text = shopData.website ?? '';
     if (shopData.businessPhone != null) {
-      countryCode.countryCode = shopData.businessPhone?.countryCode;
-      countryCode.phoneNumber = shopData.businessPhone?.phoneNumber;
+      countryCode.value.countryCode = shopData.businessPhone?.countryCode;
+      countryCode.value.phoneNumber = shopData.businessPhone?.phoneNumber;
     }
+    phoneNumber.text = countryCode.value.phoneNumber ?? '';
     outlets.clear();
     if (shopData.outlets != null) {
       outlets.addAll(shopData.outlets!);
@@ -115,7 +116,7 @@ class UpdateShopController extends GetxController {
           'logo': logo.text,
           'description': description.text,
           'email': email.text,
-          'countryCode': countryCode.countryCode,
+          'countryCode': countryCode.value.countryCode,
           'phoneNumber': phoneNumber.text,
           'website': website.text,
           'outlets': outlets.map((outlet) => outlet.toJson()).toList(),

@@ -82,25 +82,28 @@ class UpdateShopView extends GetView<UpdateShopController> {
 
               Text('Phone Number', style: AppText.body1.semiBold),
               const SizedBox(height: 5),
-              Row(
-                children: [
-                  CountryCodePicker(
-                    boxDecoration: BoxDecoration(
-                      border: Border.all(color: AppColor.border, width: 2),
-                      borderRadius: BorderRadius.circular(10),
+              Obx(
+                () => Row(
+                  children: [
+                    if (!controller.isLoading.value)
+                      CountryCodePicker(
+                        boxDecoration: BoxDecoration(
+                          border: Border.all(color: AppColor.border, width: 2),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        initialSelection: controller.countryCode.value.countryCode,
+                        onChanged: (value) {
+                          controller.countryCode.value.countryCode = value.dialCode;
+                        },
+                      ),
+                    Expanded(
+                      child: CustomTextField(
+                        hint: 'Enter your phone number',
+                        controller: controller.phoneNumber,
+                      ),
                     ),
-                    initialSelection: controller.countryCode.countryCode ?? '',
-                    onChanged: (value) {
-                      controller.countryCode.countryCode = value.dialCode ?? '';
-                    },
-                  ),
-                  Expanded(
-                    child: CustomTextField(
-                      hint: 'Enter your phone number',
-                      controller: controller.phoneNumber,
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               const SizedBox(height: 10),
 
@@ -179,9 +182,13 @@ class UpdateShopView extends GetView<UpdateShopController> {
                 () => Row(
                   children: [
                     if (controller.selectedTab.value == 0)
-                      Expanded(child: SingleOutletForm()), // Single Outlet form
+                      Expanded(
+                        child: SingleOutletForm(outlets: controller.shop.value.outlets),
+                      ), // Single Outlet form
                     if (controller.selectedTab.value == 1)
-                      Expanded(child: MultipleOutletForm()), // Multiple Outlet form
+                      Expanded(
+                        child: MultipleOutletForm(outlets: controller.shop.value.outlets),
+                      ), // Multiple Outlet form
                   ],
                 ),
               ),
