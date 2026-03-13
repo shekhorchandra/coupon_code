@@ -110,7 +110,7 @@ class AppPages {
 
     GetPage(
       name: AppRoutes.shopDetails,
-      page: () => const VendorDetailsView(),
+      page: () => VendorDetailsView(),
       binding: VendorDetailsBinding(),
     ),
 
