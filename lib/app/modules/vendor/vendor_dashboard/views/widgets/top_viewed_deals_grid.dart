@@ -54,7 +54,7 @@ class TopViewedDealsGrid extends GetView<VendorDashboardController> {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             padding: const EdgeInsets.symmetric(vertical: 12),
-            itemCount: controller.deals.length < 4 ? controller.deals.length : 4,
+            itemCount: controller.deals.length < 10 ? controller.deals.length : 10,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 10,
