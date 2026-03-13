@@ -67,14 +67,12 @@ class VendorDetailsView extends GetView<VendorDetailsController> {
 
               /// Vendor Name
               Text(vendor.businessName, style: AppTextStyles.MenuTitle),
-              const SizedBox(height: 8),
 
               /// Description
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Text(vendor.description, style: AppTextStyles.Text),
               ),
-              const SizedBox(height: 10),
 
               /// Tabs
               Row(
@@ -84,15 +82,20 @@ class VendorDetailsView extends GetView<VendorDetailsController> {
                   _tabButton("Address & Location", 1),
                 ],
               ),
-              const SizedBox(height: 10),
 
               /// Tab Content
               Expanded(
-                child: Obx(() {
-                  return controller.selectedTab.value == 0
-                      ? _activeDeals()
-                      : _addressLocation();
-                }),
+                child: RefreshIndicator(
+                  color: AppColor.primary,
+                  onRefresh: () async {
+                    await controller.fetchVendorDetails(); // your reload API
+                  },
+                  child: Obx(() {
+                    return controller.selectedTab.value == 0
+                        ? _activeDeals()
+                        : _addressLocation();
+                  }),
+                ),
               )
             ],
           );
@@ -124,6 +127,7 @@ class VendorDetailsView extends GetView<VendorDetailsController> {
     if (vendor.deals.isEmpty) return const Center(child: Text("No Deals Available"));
 
     return ListView.builder(
+      physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.all(8),
       itemCount: vendor.deals.length,
       itemBuilder: (_, index) {
@@ -210,6 +214,7 @@ class VendorDetailsView extends GetView<VendorDetailsController> {
     if (vendor.outlets.isEmpty) return const Center(child: Text("No Outlets"));
 
     return SingleChildScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
       child: Column(
         children: [
           /// OUTLETS

@@ -39,6 +39,12 @@ class VendorDetailsController extends GetxController {
     return box.read('accessToken') ?? '';
   }
 
+  Future<void> fetchVendorDetails() async {
+    if (shopId.isNotEmpty) {
+      await fetchVendorDeals(shopId);
+    }
+  }
+
   /// Fetch vendor details by shopId using token in headers
   Future<void> fetchVendorDeals(String shopId) async {
     try {
