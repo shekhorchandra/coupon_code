@@ -17,7 +17,7 @@ class UserMySavesPage extends GetView<SavesController> {
     return Scaffold(
       appBar: CommonAppBar(
         title: "My Saves",
-        showBack: false,
+        showBack: true,
       ),
       body: Column(
         children: [
