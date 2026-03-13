@@ -1,10 +1,14 @@
-// lib/app/modules/deals/views/widgets/deal_card.dart
+
+import 'dart:developer';
+
 import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../../../../core/values/app_assets.dart';
 import '../../../../../core/widgets/App_button.dart';
+import '../../../../../data/models/deal_model.dart';
+import '../../../../../data/services/storage_service.dart';
 import 'deal_badge.dart';
 import '../models/deal_card_model.dart';
 import 'deal_overlay_text.dart';
@@ -14,7 +18,7 @@ class DealCard extends StatelessWidget {
   final DealCardModel deal;
   final int index;
 
-  const DealCard({super.key, required this.deal, required this.index});
+  DealCard({super.key, required this.deal, required this.index});
 
   // Calculate time left for promotion
   String getTimeLeft(DateTime? promotedUntil) {
@@ -31,6 +35,8 @@ class DealCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("Avizit");
+    inspect(deal);
     final isShort = index % 2 == 0;
     final imageUrl = deal.images.isNotEmpty
         ? deal.images.first
@@ -103,18 +109,27 @@ class DealCard extends StatelessWidget {
                       const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
                     ),
                     const SizedBox(width: 4),
+                    // Inside DealCard widget, replace GestureDetector with:
+
                     GestureDetector(
                       onTap: () {
-                        Get.toNamed(AppRoutes.shopDetails, arguments: {'shopId': deal.shopId});
+                        // Pass only shopId
+                        Get.toNamed(
+                          AppRoutes.shopDetails,
+                          arguments: {
+                            "shopId": deal.shopId,
+                          },
+                        );
                       },
                       child: Text(
                         deal.shopName,
                         style: const TextStyle(
                           fontSize: 12,
-                          color: Colors.blue, // make it look clickable
+                          color: Colors.blue, // looks clickable
+                          decoration: TextDecoration.underline,
                         ),
                       ),
-                    ),
+                    )
                   ],
                 ),
                 const SizedBox(height: 6),
