@@ -1,13 +1,11 @@
-import 'dart:math';
-
-import 'package:coupon_code/app/core/widgets/common_app_bar.dart';
+// vendor_details_view.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../../core/widgets/common_app_bar.dart';
+import '../../../../../core/widgets/App_button.dart';
 import '../../../../../core/values/app_color.dart';
 import '../../../../../core/values/app_text_styles.dart';
-import '../../../../../core/widgets/App_button.dart';
 import '../../../../../routes/app_routes.dart';
-import '../bindings/vendor_details_binding.dart';
 import '../controller/vendor_details_controller.dart';
 
 class VendorDetailsView extends GetView<VendorDetailsController> {
@@ -18,45 +16,90 @@ class VendorDetailsView extends GetView<VendorDetailsController> {
     return SafeArea(
       child: Scaffold(
         appBar: CommonAppBar(title: 'Vendor Details'),
-        body: Column(
-          children: [
-            // Vendor Info
-            const CircleAvatar(
-              radius: 45,
-              backgroundImage: NetworkImage("https://e7.pngegg.com/pngimages/975/385/png-clipart-partnership-business-logo-marketing-business-service-people.png"),
-            ),
-            const SizedBox(height: 6),
-            Text("Glamour Glow Salon", style: AppTextStyles.MenuTitle.copyWith()),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-              child: Text(
-                "Glamour Glow Salon is a modern beauty studio offering expert hair styling, skincare, makeup, and grooming services. Our skilled professionals use premium products to help you look and feel your best. Whether it’s a quick refresh or a special occasion makeover, we bring out your natural glow with care and creativity.",
-                style: AppTextStyles.Text.copyWith(),
-                textAlign: TextAlign.start,
+        body: Obx(() {
+          if (controller.isLoading.value) {
+            return const Center(child: CircularProgressIndicator( color: AppColor.primary,));
+          }
+
+          final vendor = controller.vendor.value;
+          if (vendor == null) {
+            return const Center(child: Text("Vendor not found"));
+          }
+          return Column(
+            children: [
+              /// Business Logo
+              ClipOval(
+                child: Image.network(
+                  vendor.businessLogo,
+                  width: 70,
+                  height: 70,
+                  fit: BoxFit.cover,
+
+                  /// Loading Indicator
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+
+                    return Container(
+                      width: 70,
+                      height: 70,
+                      alignment: Alignment.center,
+                      color: AppColor.greyText,
+                      child: const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2, color: AppColor.primary,),
+                      ),
+                    );
+                  },
+
+                  /// Error Widget
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      width: 70,
+                      height: 70,
+                      color: AppColor.greyText,
+                      alignment: Alignment.center,
+                      child: const Icon(Icons.store),
+                    );
+                  },
+                ),
               ),
-            ),
-      
-            // Tabs
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _tabButton("Active Deals", 0),
-                _tabButton("Address & Location", 1),
-              ],
-            ),
-      
-            // const SizedBox(height: 6),
-      
-            // Tab Content
-            Expanded(
-              child: Obx(
-                () => controller.selectedTab.value == 0
-                    ? _activeDeals()
-                    : _addressLocation(),
+
+              /// Vendor Name
+              Text(vendor.businessName, style: AppTextStyles.MenuTitle),
+
+              /// Description
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Text(vendor.description, style: AppTextStyles.Text),
               ),
-            ),
-          ],
-        ),
+
+              /// Tabs
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _tabButton("Active Deals", 0),
+                  _tabButton("Address & Location", 1),
+                ],
+              ),
+
+              /// Tab Content
+              Expanded(
+                child: RefreshIndicator(
+                  color: AppColor.primary,
+                  onRefresh: () async {
+                    await controller.fetchVendorDetails(); // your reload API
+                  },
+                  child: Obx(() {
+                    return controller.selectedTab.value == 0
+                        ? _activeDeals()
+                        : _addressLocation();
+                  }),
+                ),
+              )
+            ],
+          );
+        }),
       ),
     );
   }
@@ -64,164 +107,101 @@ class VendorDetailsView extends GetView<VendorDetailsController> {
   Widget _tabButton(String title, int index) {
     return Obx(() {
       final isSelected = controller.selectedTab.value == index;
-
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 6),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: isSelected
-                ? AppColor.vividSky.s300
-                : Color(0xFFD4D4D4),
+            backgroundColor:
+            isSelected ? AppColor.vividSky.s300 : const Color(0xFFD4D4D4),
           ),
           onPressed: () => controller.changeTab(index),
-          child: Text(
-            title,
-            style: TextStyle(color: isSelected ? Colors.white : Colors.black),
-          ),
+          child: Text(title,
+              style: TextStyle(color: isSelected ? Colors.white : Colors.black)),
         ),
       );
     });
   }
 
-  // Active Deals Tab
   Widget _activeDeals() {
-    return ListView.builder(
-      padding: const EdgeInsets.all(6),
-      itemCount: controller.deals.length,
-      itemBuilder: (_, index) {
-        final deal = controller.deals[index];
+    final vendor = controller.vendor.value!;
+    if (vendor.deals.isEmpty) return const Center(child: Text("No Deals Available"));
 
+    return ListView.builder(
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: const EdgeInsets.all(8),
+      itemCount: vendor.deals.length,
+      itemBuilder: (_, index) {
+        final deal = vendor.deals[index];
         return Card(
           margin: const EdgeInsets.only(bottom: 16),
           clipBehavior: Clip.antiAlias,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              /// ================= IMAGE =================
-              SizedBox(
-                height: 200,
-                width: double.infinity,
-                child: Image.network(deal["image"]!, fit: BoxFit.cover),
-              ),
-
-              /// ================= TITLE =================
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: Text(
-                  deal["title"]!,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+              /// DEAL IMAGES
+              if (deal.images.isNotEmpty)
+                SizedBox(
+                  height: 200,
+                  child: PageView.builder(
+                    itemCount: deal.images.length,
+                    itemBuilder: (_, imgIndex) =>
+                        Image.network(deal.images[imgIndex], fit: BoxFit.cover),
                   ),
                 ),
-              ),
 
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                child: Row(
-                  children: [
-                    /// Vendor Chip
-                    InkWell(
-                      onTap: () {
-                        Get.to(
-                          () => const VendorDetailsView(),
-                          binding: VendorDetailsBinding(),
-                        );
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade200,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: const Text(
-                          "Glamour Glow Salon",
-                          style: TextStyle(fontSize: 12, color: Colors.grey),
-                        ),
-                      ),
-                    ),
-
-                    const Spacer(),
-
-                    // Countdown
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.orange.withOpacity(0.15),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Text(
-                        "10d 08h 54m 23s",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.orange,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                padding: const EdgeInsets.all(4),
+                child: Text(deal.title,
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold)),
               ),
 
-              /// ================= PRICE =================
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Row(
-                  children: const [
-                    Text(
-                      "\$49",
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    Text(
-                      "\$79",
-                      style: TextStyle(
-                        decoration: TextDecoration.lineThrough,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    Spacer(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     Row(
-                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.star, color: Colors.orange, size: 16),
-                        Icon(Icons.star, color: Colors.orange, size: 16),
-                        Icon(Icons.star, color: Colors.orange, size: 16),
-                        Icon(Icons.star_half, color: Colors.orange, size: 16),
-                        Icon(Icons.star_border, color: Colors.orange, size: 16),
-                        const SizedBox(width: 4),
-                        Text(
-                          "3.5", // you can replace with dynamic deal.rating
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
+                        Text("\$${deal.price}",
+                            style: const TextStyle(
+                                fontSize: 28, fontWeight: FontWeight.bold)),
+                        const SizedBox(width: 8),
+                        Text("\$${deal.originalPrice}",
+                            style: const TextStyle(
+                                decoration: TextDecoration.lineThrough,
+                                color: Colors.grey)),
+                        const Spacer(),
+                        if (deal.isPromoted)
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.orange.withOpacity(0.15),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(deal.remainingTime,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.orange)),
+                          )
                       ],
                     ),
+                    const SizedBox(height: 8),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: AppButton(
+                        width: double.infinity,
+                          text: "Redeem Now",
+                          height: 32,
+                          onPressed: () {
+                            Get.toNamed(AppRoutes.DISCOVERDETAILS,
+                                arguments: {'id': deal.id});
+                          }),
+                    )
                   ],
                 ),
-              ),
-
-              SizedBox(height: 10,),
-
-              AppButton(
-                text: "Redeem Now",
-                height: 32,
-                onPressed: () => Get.toNamed(
-                  AppRoutes.DISCOVERDETAILS,
-                  arguments: {'id': Random().nextInt(50) + 1},
-                ),
-              ),
+              )
             ],
           ),
         );
@@ -229,91 +209,82 @@ class VendorDetailsView extends GetView<VendorDetailsController> {
     );
   }
 
-  // Address & Location Tab
   Widget _addressLocation() {
+    final vendor = controller.vendor.value!;
+    if (vendor.outlets.isEmpty) return const Center(child: Text("No Outlets"));
+
     return SingleChildScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
       child: Column(
         children: [
-          // ================= OUTLETS =================
+          /// OUTLETS
           Padding(
             padding: const EdgeInsets.all(12),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start, // aligns text/buttons to start
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Outlets Address",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: AppColor.primary,
-                  ),
-                ),
+                const Text("Outlets Address",
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: AppColor.primary)),
                 const SizedBox(height: 8),
-                Obx(
-                      () => Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: controller.outlets.map((o) {
-                      bool isSelected =
-                          controller.selectedOutlet.value?["name"] == o["name"];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4),
-                        child: AppButton(
-                          onPressed: () => controller.selectOutlet(o),
-                          text: o["name"] as String,
-                          backgroundColor: controller.selectedOutlet.value?["name"] == o["name"]
-                              ? AppColor.primary
-                              : Colors.grey.shade200,
-                          textColor: controller.selectedOutlet.value?["name"] == o["name"]
-                              ? Colors.white
-                              : Colors.black,
-                          height: 40, // optional
-                          width: double.infinity, // optional
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
+                Column(
+                  children: vendor.outlets.asMap().entries.map((entry) {
+                    int index = entry.key;
+                    final outlet = entry.value;
+                    bool isSelected =
+                        controller.selectedOutlet.value?.id == outlet.id;
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      child: AppButton(
+                        onPressed: () => controller.selectOutlet(outlet),
+                        text: "Outlet ${index + 1}\n${outlet.name}",
+                        backgroundColor:
+                        isSelected ? AppColor.primary : Colors.grey.shade200,
+                        textColor: isSelected ? Colors.white : Colors.black,
+                        height: 60,
+                        width: double.infinity,
+                      ),
+                    );
+                  }).toList(),
+                )
               ],
             ),
           ),
-      
-          const SizedBox(height: 12),
-      
-          // ================= MAP =================
+
+          /// MAP LOCATION
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Map Location",
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: AppColor.primary),
-                ),
+                const Text("Map Location",
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: AppColor.primary)),
                 const SizedBox(height: 8),
                 Obx(() {
                   final outlet = controller.selectedOutlet.value;
                   return Container(
-                    height: 180,
+                    height: 300,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: Colors.grey.shade300,
-                    ),
+                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.grey.shade300),
                     child: Center(
-                      child: Text(
-                        outlet != null
-                            ? "${outlet['name']} \nLat: ${outlet['lat']}, Lng: ${outlet['lng']}"
-                            : "Select an outlet to view location",
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
+                        child: Text(
+                          outlet != null
+                              ? "${outlet.name}\nLat: ${outlet.lat}, Lng: ${outlet.lng}"
+                              : "Select an outlet",
+                          textAlign: TextAlign.center,
+                        )),
                   );
-                }),
+                })
               ],
             ),
-          ),
+          )
         ],
       ),
     );

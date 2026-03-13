@@ -1,6 +1,7 @@
 class ApiConstants {
-  static const String baseUrl =
-      "https://multiple-defines-organised-easier.trycloudflare.com/api/v1";
+
+
+  static const String baseUrl = "https://multiple-defines-organised-easier.trycloudflare.com/api/v1";
 
   // Define endpoints
 
@@ -46,4 +47,7 @@ class ApiConstants {
 
   /// user saved deals
   static const String savedDeals = "/service/saved";
+
+  /// category details
+  static String categoryDeals(String categoryId) => "/service/c/$categoryId";
 }

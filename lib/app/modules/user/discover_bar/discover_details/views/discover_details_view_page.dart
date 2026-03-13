@@ -98,7 +98,9 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
       final deal = controller.deal.value;
 
       if (deal == null) {
-        return const Scaffold(body: Center(child: CircularProgressIndicator()));
+        return const Scaffold(
+          body: Center(child: CircularProgressIndicator(color: AppColor.primary)),
+        );
       }
 
       return SafeArea(
@@ -134,8 +136,9 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
                                       imageUrl: imageUrl,
                                       fit: BoxFit.cover,
                                       width: double.infinity,
-                                      placeholder: (_, _) =>
-                                          const Center(child: CircularProgressIndicator()),
+                                      placeholder: (_, _) => const Center(
+                                        child: CircularProgressIndicator(color: AppColor.primary),
+                                      ),
                                       errorWidget: (_, _, _) => const Icon(Icons.broken_image),
                                     ),
                                   )
@@ -213,17 +216,17 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: InkWell(
-                      borderRadius: BorderRadius.circular(8), // optional for ripple effect
+                      borderRadius: BorderRadius.circular(8),
                       onTap: () {
-                        Get.to(
-                          () => const VendorDetailsView(),
-                          binding: VendorDetailsBinding(),
+                        Get.toNamed(
+                          AppRoutes.shopDetails,
+                          arguments: {"shopId": deal.shopId},
                         ); // TODO: pass the shop id or details
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade200, // optional background
+                          color: Colors.grey.shade200,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Row(
@@ -237,7 +240,7 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              deal.businessName ?? 'No shop name',
+                              "Shop Name: ${deal.businessName ?? 'No shop name'}",
                               style: TextStyle(fontSize: 12, color: AppColor.bw.s600),
                             ),
                           ],
@@ -257,7 +260,7 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
                             children: [
                               // Address
                               Text(
-                                deal.address ?? "No address",
+                                "Address: ${deal.address ?? 'No address'}",
                                 style: AppTextStyles.MenuButtonText.copyWith(
                                   color: AppColor.titleColor,
                                   fontWeight: FontWeight.w600,
@@ -267,13 +270,9 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
                               const SizedBox(height: 2),
 
                               // Distance
-                              Text(
-                                "${deal.distance?.toStringAsFixed(2) ?? '0'} km away",
-                                style: AppTextStyles.MenuButtonText.copyWith(
-                                  color: Colors.grey,
-                                  fontSize: 12,
-                                ),
-                              ),
+                              // Text(
+                              //   "${((deal.distance))}",
+                              // )
                             ],
                           ),
                         ),

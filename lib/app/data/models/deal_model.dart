@@ -159,46 +159,47 @@ class DealModel {
     double? distance;
 
     if (outlets != null && outlets.isNotEmpty) {
-      final firstOutlet = outlets.first;
-      if (firstOutlet is Map) {
-        address = firstOutlet['address']?.toString();
-        distance = firstOutlet['distance'] != null
-            ? (firstOutlet['distance'] as num).toDouble()
-            : null;
-      }
+      final nearestOutlet = outlets.reduce((a, b) {
+        final distA = (a['distance'] ?? double.infinity) as num;
+        final distB = (b['distance'] ?? double.infinity) as num;
+        return distA < distB ? a : b;
+      });
+
+      address = nearestOutlet['address']?.toString();
+      distance = nearestOutlet['distance'] != null
+          ? (nearestOutlet['distance'] as num).toDouble()
+          : null;
     }
 
-    // 3. Safe Date Parsing
-    DateTime? parsedDate;
-    if (map['promotedUntil'] != null && map['promotedUntil'] is String) {
-      parsedDate = DateTime.tryParse(map['promotedUntil']);
-    }
+    final List<String> imagesList =
+        (map['images'] as List?)?.map((e) => e.toString()).toList() ?? [];
 
     return DealModel(
       id: map['_id']?.toString() ?? '',
-      shopId: map['shop'] is Map
-          ? (map['shop']['_id']?.toString() ?? '')
-          : map['shop']?.toString() ?? '',
+      // shopId: map['shop']?.toString() ?? '',
+      shopId: map['shop']['_id'] ?? '',
       userId: map['user']?.toString() ?? '',
       categoryId: map['category']?.toString() ?? '',
       activePromotion: map['activePromotion']?.toString(),
       title: map['title']?.toString() ?? '',
       regular_price: (map['reguler_price'] ?? 0).toDouble(),
       discountPercent: (map['discount'] ?? 0).toDouble(),
-      highlights: highlightList,
+      highlights: map['highlight'] != null
+          ? (map['highlight'] as List).map((e) => e.toString()).toList()
+          : [],
       description: map['description']?.toString() ?? '',
       images: imagesList,
       isPromoted: map['isPromoted'] as bool?,
-      promotedUntil: parsedDate,
+      promotedUntil: map['promotedUntil'] != null
+          ? DateTime.tryParse(map['promotedUntil'])
+          : null,
       coupon: map['coupon']?.toString() ?? '',
       totalViews: map['total_views'] ?? 0,
       totalImpression: map['total_impression'] ?? 0,
       website: map['shop'] is Map ? map['shop']['website']?.toString() : null,
       address: address,
       distance: distance,
-      businessName: (map['shop'] is Map && map['shop']['business_name'] != null)
-          ? map['shop']['business_name'].toString()
-          : '',
+      businessName: map['shop']?['business_name']?.toString() ?? '',
       subtitle: map['description']?.toString() ?? '',
       image: imagesList.isNotEmpty ? imagesList.first : '',
       price: DealModel.afterDiscountPrice(

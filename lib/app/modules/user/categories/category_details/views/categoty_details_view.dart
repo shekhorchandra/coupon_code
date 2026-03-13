@@ -125,7 +125,7 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
 
                   Obx(() {
                     if (controller.isLoading.value) {
-                      return const Center(child: CircularProgressIndicator());
+                      return const Center(child: CircularProgressIndicator(color: AppColor.primary,));
                     }
 
                     if (controller.deals.isEmpty) {
@@ -162,34 +162,49 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
 
   Widget _dealCard(UserNavigationBarController navController, CategoryDealModel deal, bool isShort) {
     return Container(
+      margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         color: Colors.white,
-        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4)],
+        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 3))],
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Image
-            Stack(
-              children: [
-                Container(
-                  height: isShort ? 155 : 255,
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(16),
-                      topRight: Radius.circular(16),
-                    ),
-                    image: DecorationImage(
-                      image: NetworkImage(deal.images.first),
-                      fit: BoxFit.cover,
-                    ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          /// Image with overlay
+          Stack(
+            children: [
+              ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(16),
+                  topRight: Radius.circular(16),
+                ),
+                child: Image.network(
+                  deal.images.first,
+                  height: isShort ? 160 : 260,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Container(
+                      height: isShort ? 160 : 260,
+                      alignment: Alignment.center,
+                      color: Colors.grey.shade200,
+                      child: const CircularProgressIndicator(strokeWidth: 2, color: AppColor.primary),
+                    );
+                  },
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    height: isShort ? 160 : 260,
+                    alignment: Alignment.center,
+                    color: Colors.grey.shade300,
+                    child: const Icon(Icons.image_not_supported, size: 40, color: Colors.grey),
                   ),
                 ),
-                Container(
-                  height: isShort ? 155 : 255,
+              ),
+
+              /// Gradient Overlay
+              Positioned.fill(
+                child: Container(
                   decoration: const BoxDecoration(
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(16),
@@ -198,89 +213,126 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      colors: [Colors.transparent, Colors.black54],
+                      colors: [Colors.transparent, Colors.black45],
                     ),
                   ),
                 ),
-                Positioned(top: 8, left: 8, child: _badge("${deal.discount.toInt()}% off")),
-                Positioned(
-                  bottom: 8,
-                  right: 8,
-                  child: _textOverlay(
-                    "● ${(deal.distance / 1000).toStringAsFixed(3)} km away",
+              ),
+
+              /// Discount badge
+              Positioned(
+                top: 8,
+                left: 8,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.redAccent,
+                    borderRadius: BorderRadius.circular(20),
                   ),
+                  child: Text(
+                    "${deal.discount.toInt()}% OFF",
+                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+                  ),
+                ),
+              ),
+
+              /// Distance overlay
+              Positioned(
+                bottom: 8,
+                left: 8,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.black54,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    "${(deal.distance / 1000).toStringAsFixed(2)} km away",
+                    style: const TextStyle(color: Colors.white, fontSize: 12),
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          /// Content Padding
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                /// Deal Title
+                Text(
+                  deal.title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 4),
+
+                /// Shop Name
+                GestureDetector(
+                  onTap: () {
+                    Get.toNamed(AppRoutes.shopDetails, arguments: {"shopId": deal.shopId});
+                  },
+                  child: Text(
+                    deal.businessName,
+                    style: const TextStyle(fontSize: 13, color: Colors.blueAccent),
+                  ),
+                ),
+                const SizedBox(height: 8),
+
+                /// Prices and promotion
+                Row(
+                  children: [
+                    Text(
+                      "\$${deal.finalPrice.toStringAsFixed(0)}",
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      "\$${deal.price.toStringAsFixed(0)}",
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                        decoration: TextDecoration.lineThrough,
+                      ),
+                    ),
+                    const Spacer(),
+                    if (deal.promotedUntil != null)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: Colors.orange.shade100,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          _formatRemainingTime(deal.promotedUntil!),
+                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.orange),
+                        ),
+                      ),
+                  ],
+                ),
+
+                const SizedBox(height: 8),
+
+                /// Redeem Button
+                AppButton(
+                  text: "Redeem Now",
+                  height: 36,
+                  width: double.infinity,
+                  onPressed: () {
+                    Get.toNamed(AppRoutes.DISCOVERDETAILS, arguments: {
+                      'id': deal.id,
+                      'dealItem': deal,
+                      'isNetworkImage': true,
+                    });
+                  },
                 ),
               ],
             ),
-
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    deal.title,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    deal.businessName,
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
-                  ),
-                  const SizedBox(height: 6),
-
-                  // Use Wrap instead of Row
-                  Wrap(
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    spacing: 6, // horizontal spacing
-                    runSpacing: 4, // vertical spacing
-                    children: [
-                      Text(
-                        "\$${deal.finalPrice.toStringAsFixed(0)}",
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        "\$${deal.price.toStringAsFixed(0)}",
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
-                          decoration: TextDecoration.lineThrough,
-                        ),
-                      ),
-                      Text(
-                        deal.promotedUntil != null
-                            ? _formatRemainingTime(deal.promotedUntil!)
-                            : "",
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.orange,
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 8),
-                  AppButton(
-                    text: "Redeem Now",
-                    height: 32,
-                    onPressed: () {
-                      Get.toNamed(
-                        AppRoutes.DISCOVERDETAILS,
-                        arguments: {
-                          'id': deal.id,
-                          'dealItem': deal,
-                          'isNetworkImage': true, // optional, defaults to true
-                        },
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
