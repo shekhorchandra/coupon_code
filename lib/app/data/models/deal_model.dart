@@ -1,6 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 
@@ -145,45 +144,59 @@ class DealModel {
   }
 
   factory DealModel.fromMap(Map<String, dynamic> map) {
-    log("Mapping DealModel from map: $map");
+    // 1. Safe parsing for Lists (converts objects to strings if they aren't already)
+    List<String> parseStringList(dynamic list) {
+      if (list == null || list is! List) return [];
+      return list.map((e) => e is Map ? e.toString() : e.toString()).toList();
+    }
 
+    final imagesList = parseStringList(map['images']);
+    final highlightList = parseStringList(map['highlight']);
+
+    // 2. Safe parsing for Outlets
     final outlets = map['available_outlet'] as List?;
-
     String? address;
     double? distance;
 
     if (outlets != null && outlets.isNotEmpty) {
       final firstOutlet = outlets.first;
-
-      address = firstOutlet['address']?.toString();
-
-      distance = firstOutlet['distance'] != null
-          ? (firstOutlet['distance'] as num).toDouble()
-          : null;
+      if (firstOutlet is Map) {
+        address = firstOutlet['address']?.toString();
+        distance = firstOutlet['distance'] != null
+            ? (firstOutlet['distance'] as num).toDouble()
+            : null;
+      }
     }
-    final imagesList = map['images'] != null ? List<String>.from(map['images']) : [];
+
+    // 3. Safe Date Parsing
+    DateTime? parsedDate;
+    if (map['promotedUntil'] != null && map['promotedUntil'] is String) {
+      parsedDate = DateTime.tryParse(map['promotedUntil']);
+    }
 
     return DealModel(
       id: map['_id']?.toString() ?? '',
-      shopId: map['shop']?['_id'].toString() ?? '',
+      shopId: map['shop'] is Map
+          ? (map['shop']['_id']?.toString() ?? '')
+          : map['shop']?.toString() ?? '',
       userId: map['user']?.toString() ?? '',
       categoryId: map['category']?.toString() ?? '',
       activePromotion: map['activePromotion']?.toString(),
       title: map['title']?.toString() ?? '',
       regular_price: (map['reguler_price'] ?? 0).toDouble(),
       discountPercent: (map['discount'] ?? 0).toDouble(),
-      highlights: map['highlight'] != null ? List<String>.from(map['highlight']) : [],
+      highlights: highlightList,
       description: map['description']?.toString() ?? '',
-      images: map['images'] != null ? List<String>.from(map['images']) : [],
+      images: imagesList,
       isPromoted: map['isPromoted'] as bool?,
-      promotedUntil: map['promotedUntil'] != null ? DateTime.tryParse(map['promotedUntil']) : null,
+      promotedUntil: parsedDate,
       coupon: map['coupon']?.toString() ?? '',
       totalViews: map['total_views'] ?? 0,
       totalImpression: map['total_impression'] ?? 0,
-      website: map['shop']?['website']?.toString(),
+      website: map['shop'] is Map ? map['shop']['website']?.toString() : null,
       address: address,
       distance: distance,
-      businessName: (map['shop'] != null && map['shop']['business_name'] != null)
+      businessName: (map['shop'] is Map && map['shop']['business_name'] != null)
           ? map['shop']['business_name'].toString()
           : '',
       subtitle: map['description']?.toString() ?? '',
@@ -279,8 +292,6 @@ class DealModel {
   }
 
   static double afterDiscountPrice(double regularPrice, double discountPercent) {
-    print("Regular Price: $regularPrice");
-    print("Discount: $discountPercent");
     return regularPrice - (regularPrice * discountPercent / 100);
   }
 }

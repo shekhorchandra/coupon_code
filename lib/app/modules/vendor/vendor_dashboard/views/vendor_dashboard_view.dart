@@ -109,7 +109,7 @@ class VendorDashboardPage extends GetView<VendorDashboardController> {
                 Obx(
                   () => TotalImpressionCard(
                     totalImpressions: controller.shopAnalytics.value.totalImpressions.toString(),
-                    ctr: controller.ctr.value.toString(),
+                    ctr: controller.ctr.value.toStringAsFixed(2),
                     isLoading: controller.isLoading.value,
                   ),
                 ),
