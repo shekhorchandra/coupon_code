@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../../../../core/values/app_assets.dart';
+import '../../../../../core/values/app_color.dart';
 import '../../../../../core/widgets/App_button.dart';
 import '../../../../../data/models/deal_model.dart';
 import '../../../../../data/services/storage_service.dart';
@@ -35,8 +36,6 @@ class DealCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("Avizit");
-    inspect(deal);
     final isShort = index % 2 == 0;
     final imageUrl = deal.images.isNotEmpty
         ? deal.images.first
@@ -46,100 +45,135 @@ class DealCard extends StatelessWidget {
     DealCardModel.afterDiscountPrice(deal.regularPrice, deal.discountPercent);
 
     return Container(
+      margin: const EdgeInsets.symmetric(vertical: 6),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         color: Colors.white,
-        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4)],
+        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 3))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          /// Image with overlay
           Stack(
             children: [
-              // Deal Image
-              Container(
-                height: isShort ? 155 : 255,
-                decoration: BoxDecoration(
-                  borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(16)),
-                  image: DecorationImage(
-                    image: NetworkImage(imageUrl),
-                    fit: BoxFit.cover,
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                child: Image.network(
+                  imageUrl,
+                  height: isShort ? 160 : 260,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Container(
+                      height: isShort ? 160 : 260,
+                      alignment: Alignment.center,
+                      color: Colors.grey.shade200,
+                      child: const CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: AppColor.primary,
+                      ),
+                    );
+                  },
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    height: isShort ? 160 : 260,
+                    alignment: Alignment.center,
+                    color: Colors.grey.shade300,
+                    child: const Icon(Icons.image_not_supported, size: 40, color: Colors.grey),
                   ),
                 ),
               ),
-              // Distance Badge
+
+              /// Gradient overlay
+              Positioned.fill(
+                child: Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Colors.transparent, Colors.black45],
+                    ),
+                  ),
+                ),
+              ),
+
+              /// Distance badge (top-left)
               Positioned(
                 top: 8,
                 left: 8,
-                child: dealBadge(
-                    "${(deal.distance / 1000).toStringAsFixed(3)} km"), // meters to km
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.black54,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    "${(deal.distance / 1000).toStringAsFixed(2)} km away",
+                    style: const TextStyle(color: Colors.white, fontSize: 12),
+                  ),
+                ),
               ),
-              // Discount Badge
+
+              /// Discount badge (bottom-right)
               Positioned(
                 bottom: 8,
                 right: 8,
-                child: dealOverlayText("${deal.discountPercent.toInt()}% off"),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.redAccent,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    "${deal.discountPercent.toInt()}% OFF",
+                    style: const TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+                  ),
+                ),
               ),
             ],
           ),
-          // Deal Info
+
+          /// Deal Info
           Padding(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Title
+                /// Title
                 Text(
                   deal.title,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 const SizedBox(height: 4),
-                // Shop Name with icon
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SvgPicture.asset(
-                      AppAssets.category,
-                      width: 14,
-                      height: 14,
-                      colorFilter:
-                      const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
-                    ),
-                    const SizedBox(width: 4),
-                    // Inside DealCard widget, replace GestureDetector with:
 
-                    GestureDetector(
-                      onTap: () {
-                        // Pass only shopId
-                        Get.toNamed(
-                          AppRoutes.shopDetails,
-                          arguments: {
-                            "shopId": deal.shopId,
-                          },
-                        );
-                      },
-                      child: Text(
-                        deal.shopName,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.blue, // looks clickable
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    )
-                  ],
+                /// Shop Name
+                GestureDetector(
+                  onTap: () {
+                    Get.toNamed(
+                      AppRoutes.shopDetails,
+                      arguments: {"shopId": deal.shopId},
+                    );
+                  },
+                  child: Text(
+                    deal.shopName,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: Colors.blue,
+                    ),
+                  ),
                 ),
-                const SizedBox(height: 6),
-                // Price & Time Left
+                const SizedBox(height: 8),
+
+                /// Price + Original Price + Time Left
                 Row(
                   children: [
                     Text(
                       "\$${priceAfterDiscount.toStringAsFixed(1)}",
-                      style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(width: 6),
                     Text(
@@ -150,21 +184,32 @@ class DealCard extends StatelessWidget {
                         decoration: TextDecoration.lineThrough,
                       ),
                     ),
-                    const SizedBox(width: 12),
-                    Text(
-                      getTimeLeft(deal.promotedUntil),
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.orange),
-                    ),
+                    const Spacer(),
+                    if (deal.promotedUntil != null)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: Colors.orange.shade100,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          getTimeLeft(deal.promotedUntil),
+                          style: const TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold, color: Colors.orange),
+                        ),
+                      ),
                   ],
                 ),
                 const SizedBox(height: 8),
-                // Redeem Button
+
+                /// Redeem Button
                 AppButton(
                   text: "Redeem Now",
-                  height: 32,
-                  onPressed: () => Get.toNamed('/discover-details',
-                      arguments: {'id': deal.id}),
+                  height: 36,
+                  width: double.infinity,
+                  onPressed: () {
+                    Get.toNamed('/discover-details', arguments: {'id': deal.id});
+                  },
                 ),
               ],
             ),
