@@ -109,17 +109,19 @@ class UpdateShopController extends GetxController {
     isLoading.value = true;
 
     try {
-      final response = await _dioClient.client.put(
+      final response = await _dioClient.client.patch(
         ApiConstants.updateShop(shop.value.sId!),
         data: {
-          'name': name.text,
-          'logo': logo.text,
+          'business_name': name.text,
+          // 'business_logo': logo.text,
           'description': description.text,
-          'email': email.text,
-          'countryCode': countryCode.value.countryCode,
-          'phoneNumber': phoneNumber.text,
+          'business_email': email.text,
+          'business_phone': {
+            "country_code": countryCode.value.countryCode,
+            "phone_number": phoneNumber.text,
+          },
           'website': website.text,
-          'outlets': outlets.map((outlet) => outlet.toJson()).toList(),
+          // 'outlets': outlets.map((outlet) => outlet.toJson()).toList(),
         },
       );
 
