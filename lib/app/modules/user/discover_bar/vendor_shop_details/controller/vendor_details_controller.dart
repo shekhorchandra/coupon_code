@@ -1,37 +1,98 @@
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+
+import '../../../../services/contants/api_constants.dart';
+import '../model/Vendor_deals_Shop_Model.dart';
 
 class VendorDetailsController extends GetxController {
+  var isLoading = true.obs;
+  var vendor = Rx<VendorDetailsModel?>(null);
   var selectedTab = 0.obs;
+  var selectedOutlet = Rx<OutletModel?>(null);
 
-  // Dummy active deals
-  var deals = [
-    {
-      "image": "https://img.freepik.com/premium-photo/woman-shampoo-wash-salon-with-hairdresser-basin-cleaning-hygiene-foam-wellness-people-service-soak-with-soap-hair-care-with-helping-hand-cosmetic-change-growth_590464-506368.jpg?semt=ais_user_personalization&w=740&q=80",
-      "title": "Hair Spa Offer",
-      "subtitle": "Get 30% off on premium hair spa",
-    },
-    {
-      "image": "https://www.snip.co.in/wp-content/uploads/2025/10/is-hair-spa-good-1.webp",
-      "title": "Hair Spa Service",
-      "subtitle": "Exclusive Hair Spa Service package discount",
-    },
-  ].obs;
+  late String shopId;
 
-  // Dummy outlets
-  var outlets = [
-    {"name": "Outlet 1 - Dhanmondi, B block, Dhaka, Bangladesh", "lat": 23.746, "lng": 90.376},
-    {"name": "Outlet 2 - Gulshan, G block, Dhaka, Bangladesh", "lat": 23.780, "lng": 90.419},
-    {"name": "Outlet 3 - Uttara, D block, Dhaka, Bangladesh", "lat": 23.880, "lng": 90.396},
-  ].obs;
+  @override
+  void onInit() {
+    super.onInit();
 
-  // Currently selected outlet
-  var selectedOutlet = Rx<Map<String, dynamic>?>(null);
+    final args = Get.arguments;
 
-  void selectOutlet(Map<String, dynamic> outlet) {
-    selectedOutlet.value = outlet;
+    print("Arguments-----------: $args");
+
+    if (args != null && args['shopId'] != null) {
+      shopId = args['shopId'];
+
+      print("SHOP ID RECEIVED: $shopId");
+
+      fetchVendorDeals(shopId);
+    } else {
+      print("shopId not found in arguments");
+    }
   }
 
-  void changeTab(int index) {
-    selectedTab.value = index;
+  /// Get logged-in user token (replace key with your storage key)
+  final box = GetStorage();
+
+  String getUserToken() {
+    return box.read('accessToken') ?? '';
   }
+
+  /// Fetch vendor details by shopId using token in headers
+  Future<void> fetchVendorDeals(String shopId) async {
+    try {
+      isLoading.value = true;
+
+      final url = "${ApiConstants.baseUrl}/shop/shop_details";
+
+      final token = getUserToken();
+
+      final response = await Dio().get(
+        url,
+        queryParameters: {'shopId': shopId},
+        options: Options(
+          headers: {'Authorization': 'Bearer $token'},
+          validateStatus: (status) => status! < 500,
+        ),
+      );
+
+      print("Response: ${response.data}");
+
+      if (response.statusCode == 200 &&
+          response.data['success'] == true &&
+          response.data['data'] != null) {
+
+        // Parse vendor
+        vendor.value = VendorDetailsModel.fromJson(response.data['data']);
+
+        // Select first outlet
+        if (vendor.value!.outlets.isNotEmpty) {
+          selectedOutlet.value = vendor.value!.outlets.first;
+        }
+
+        // Filter deals for this shopId (though API already gives it)
+        final deals = (response.data['data']['deals'] as List? ?? [])
+            .map((e) => DealModel.fromJson(e ?? {}))
+            .where((d) => d.shopId == shopId)
+            .toList();
+
+        vendor.value!.deals.clear();
+        vendor.value!.deals.addAll(deals);
+
+      } else {
+        vendor.value = null;
+        selectedOutlet.value = null;
+      }
+    } catch (e) {
+      print("Error fetching deals: $e");
+      vendor.value = null;
+      selectedOutlet.value = null;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  void changeTab(int index) => selectedTab.value = index;
+  void selectOutlet(OutletModel outlet) => selectedOutlet.value = outlet;
 }
