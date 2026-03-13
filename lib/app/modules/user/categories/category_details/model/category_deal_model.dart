@@ -1,9 +1,11 @@
 class CategoryDealModel {
   final String id;
   final String title;
+  final String shopId;
   final double price;
   final double discount;
   final List<String> images;
+  final String shop;
   final String businessName;
   final String businessLogo;
   final double distance;
@@ -19,20 +21,29 @@ class CategoryDealModel {
     required this.businessLogo,
     required this.distance,
     this.promotedUntil,
+    required this.shop,
+    required this.shopId,
   });
 
   factory CategoryDealModel.fromJson(Map<String, dynamic> json) {
+    final dealJson = json["deal"] ?? {};
+    final shopJson = json["shop"] ?? {};
+
+    print("Shop ID------------------: ${shopJson['_id']}"); // for debugging
+
     return CategoryDealModel(
-      id: json["deal"]["_id"] ?? "",
-      title: json["deal"]["title"] ?? "",
-      price: (json["deal"]["reguler_price"] ?? 0).toDouble(),
-      discount: (json["deal"]["discount"] ?? 0).toDouble(),
-      images: List<String>.from(json["deal"]["images"] ?? []),
-      businessName: json["shop"]["business_name"] ?? "",
-      businessLogo: json["shop"]["business_logo"] ?? "",
+      id: dealJson["_id"] ?? "",
+      title: dealJson["title"] ?? "",
+      price: (dealJson["reguler_price"] ?? 0).toDouble(),
+      discount: (dealJson["discount"] ?? 0).toDouble(),
+      images: List<String>.from(dealJson["images"] ?? []),
+      shop: shopJson["_id"] ?? "",      // shop ID
+      shopId: shopJson["_id"] ?? "",    // shopId
+      businessName: shopJson["business_name"] ?? "",
+      businessLogo: shopJson["business_logo"] ?? "",
       distance: (json["distance"] ?? 0).toDouble(),
-      promotedUntil: json["deal"]["promotedUntil"] != null
-          ? DateTime.parse(json["deal"]["promotedUntil"])
+      promotedUntil: dealJson["promotedUntil"] != null
+          ? DateTime.parse(dealJson["promotedUntil"])
           : null,
     );
   }

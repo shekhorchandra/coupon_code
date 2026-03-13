@@ -125,7 +125,7 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
 
                   Obx(() {
                     if (controller.isLoading.value) {
-                      return const Center(child: CircularProgressIndicator());
+                      return const Center(child: CircularProgressIndicator(color: AppColor.primary,));
                     }
 
                     if (controller.deals.isEmpty) {
@@ -225,10 +225,17 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 4),
-                  Text(
-                    deal.businessName,
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  TextButton(
+                    onPressed: () {
+                      Get.toNamed(
+                        AppRoutes.shopDetails,
+                        arguments: {"shopId": deal.shopId},
+                      );
+                    },
+                    child: Text(deal.businessName),
                   ),
+
+                  // shopId: json['id'],
                   const SizedBox(height: 6),
 
                   // Use Wrap instead of Row
