@@ -19,6 +19,16 @@ class SavesController extends GetxController {
     fetchSavedDeals(); // load saved deals on init
   }
 
+  Future<void> fetchSavedItems() async {
+    isLoading.value = true;
+
+    try {
+      await fetchSavedDeals();
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   // Fetch saved deals from API
   Future<void> fetchSavedDeals() async {
     isLoading.value = true;

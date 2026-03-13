@@ -15,11 +15,9 @@ class UserMySavesPage extends GetView<SavesController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: const CommonAppBar(title: "My Saves", showBack: false),
       appBar: CommonAppBar(
         title: "My Saves",
-        showBack: true,
-
+        showBack: false,
       ),
       body: Column(
         children: [
@@ -54,28 +52,39 @@ class UserMySavesPage extends GetView<SavesController> {
                 return const Center(child: Text("No items found"));
               }
 
-              return ListView.builder(
-                itemCount: listToShow.length,
-                itemBuilder: (context, index) {
-                  final item = listToShow[index];
-                  return Stack(
-                    children: [
-                      SaveItemCard(
-                        id: item.id,
-                        imagePath: item.imagePath,
-                        title: item.title,
-                        businessName: item.businessName,
-                        price: item.price,
-                        originalPrice: item.originalPrice,
-                        isAvailable: item.isAvailable,
-                        Status: item.status,
-                        onTap: () {
-                          Get.toNamed(AppRoutes.DISCOVERDETAILS, arguments: {'id': item.id});
-                        },
-                      ),
-                    ],
-                  );
+              return RefreshIndicator(
+                color: AppColor.primary,
+                onRefresh: () async {
+                  await controller.fetchSavedItems(); // your API reload method
                 },
+                child: ListView.builder(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemCount: listToShow.length,
+                  itemBuilder: (context, index) {
+                    final item = listToShow[index];
+
+                    return Stack(
+                      children: [
+                        SaveItemCard(
+                          id: item.id,
+                          imagePath: item.imagePath,
+                          title: item.title,
+                          businessName: item.businessName,
+                          price: item.price,
+                          originalPrice: item.originalPrice,
+                          isAvailable: item.isAvailable,
+                          Status: item.status,
+                          onTap: () {
+                            Get.toNamed(
+                              AppRoutes.DISCOVERDETAILS,
+                              arguments: {'id': item.id},
+                            );
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                ),
               );
             }),
           ),
@@ -86,6 +95,7 @@ class UserMySavesPage extends GetView<SavesController> {
 
   // Tab button
   Widget _tabButton(String label, int index) {
+
     return Obx(() {
       bool isSelected = controller.selectedTab.value == index;
       return GestureDetector(
