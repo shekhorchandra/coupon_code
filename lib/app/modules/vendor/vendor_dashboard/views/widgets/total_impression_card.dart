@@ -42,7 +42,7 @@ class TotalImpressionCard extends StatelessWidget {
               children: [
                 Icon(Icons.trending_up_rounded, color: Color(0xFFFFC100)),
                 const SizedBox(width: 5),
-                Text(ctr == "-1.0" ? "N/A" : ctr, style: AppText.h5.semiBold),
+                Text(ctr == "-1.0" ? "N/A" : '$ctr%', style: AppText.h5.semiBold),
                 const SizedBox(width: 5),
                 Text('CTR', style: AppText.h5.semiBold.copyWith(color: Color(0xFFFFC100))),
               ],
