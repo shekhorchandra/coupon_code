@@ -37,13 +37,12 @@ class OverviewChart extends StatelessWidget {
             height: 250,
             width: double.infinity,
             child: Obx(() {
-              final lines = controller.getVisibleLines();
-
-              if (lines.isEmpty) {
-                return const Center(
-                  child: Text("No data available", style: TextStyle(color: Colors.grey)),
-                );
+              if (controller.isLoading.value) {
+                return const Center(child: CircularProgressIndicator());
               }
+
+              final lines = controller.getVisibleLines();
+              if (lines.isEmpty) return const Center(child: Text("No data"));
 
               return LineChart(_buildChartData(controller));
             }),
@@ -105,11 +104,10 @@ class OverviewChart extends StatelessWidget {
           value: controller.selectedMetric.value,
           icon: const Icon(Iconsax.arrow_down_1_copy, size: 20),
           underline: const SizedBox(),
-          items: [
-            'Views',
-            'Clicks',
-            'Conversions',
-          ].map((val) => DropdownMenuItem(value: val, child: Text(val))).toList(),
+          items:
+              ['Views', 'Impressions'] // Use the keys from the API
+                  .map((val) => DropdownMenuItem(value: val, child: Text(val)))
+                  .toList(),
           onChanged: controller.changeMetric,
         ),
       ),

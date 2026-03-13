@@ -32,6 +32,7 @@ class ApiConstants {
   static const String shopDetails = '/shop/shop_details';
   static String updateShop(String id) => '/shop/update_shop/$id';
   static const String shopAnalytics = '/shop/analytics';
+  static const String yearlyAnalytics = '/shop/yearly_analytics';
 
   // Deal
   static const String myDeals = '/service/my_deals';
