@@ -116,7 +116,7 @@ class VendorDashboardPage extends GetView<VendorDashboardController> {
                 const SizedBox(height: 30),
 
                 // Overview Chart
-                SectionHeading(title: "Personal Overview", subtitle: "last 1 year"),
+                SectionHeading(title: "Personal Overview", subtitle: "1 year"),
                 const SizedBox(height: 10),
 
                 OverviewChart(),
