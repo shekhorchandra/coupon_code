@@ -118,7 +118,7 @@ class DealModel {
 
     double price = regularPrice - (regularPrice * discount / 100);
 
-    print("Shop ID------------///--------///---: $json['shop'] ?? json['_id']}");
+    // print("Shop ID------------///--------///---: $json['shop'] ?? json['_id']}");
 
     return DealModel(
       id: json['_id'] ?? '',

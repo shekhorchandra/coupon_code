@@ -150,7 +150,7 @@ class DealModel {
       return list.map((e) => e is Map ? e.toString() : e.toString()).toList();
     }
 
-    final imagesList = parseStringList(map['images']);
+    var imagesList = parseStringList(map['images']);
     final highlightList = parseStringList(map['highlight']);
 
     // 2. Safe parsing for Outlets
@@ -171,7 +171,7 @@ class DealModel {
           : null;
     }
 
-    final List<String> imagesList =
+    imagesList =
         (map['images'] as List?)?.map((e) => e.toString()).toList() ?? [];
 
     return DealModel(
