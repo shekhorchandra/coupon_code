@@ -18,8 +18,8 @@ class VendorLoginController extends GetxController {
   final obscure = true.obs;
 
   /// Default values for email and password
-  final emailController = TextEditingController(text: "shekhor@gmail.com").obs;
-  final passwordController = TextEditingController(text: "nayem@@Ahmed017").obs;
+  final emailController = TextEditingController(text: "nayemalways.sm@gmail.com").obs;
+  final passwordController = TextEditingController(text: "nayem@@Ahmed007").obs;
   RxBool loading = false.obs;
 
   final DioClient _dioClient = DioClient();
