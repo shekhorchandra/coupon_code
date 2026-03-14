@@ -1,7 +1,7 @@
 class ApiConstants {
 
 
-  static const String baseUrl = "https://multiple-defines-organised-easier.trycloudflare.com/api/v1";
+  static const String baseUrl = "https://gastrotomic-squirrelly-yuonne.ngrok-free.dev/api/v1";
 
   // Define endpoints
 
