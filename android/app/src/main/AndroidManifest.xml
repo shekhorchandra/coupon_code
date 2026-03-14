@@ -48,11 +48,7 @@
             </intent-filter>
         </service> -->
 
-        <!-- Google Maps API Key -->
-        <!-- <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBU6apS6bCfXAcAeNmP6uvCjVwsurlzG-I"/> -->
-            
+        <!-- Google Maps API Key -->           
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCzz34Li0m8Qq_hz3Q5HltABEQa12yPd30"/>
