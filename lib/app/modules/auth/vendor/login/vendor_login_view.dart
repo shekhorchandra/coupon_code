@@ -169,7 +169,7 @@ class VendorLoginView extends GetView<VendorLoginController> {
                           webAuthenticationOptions: WebAuthenticationOptions(
                             clientId: 'agency.beuptech.yepp.auth',
                             redirectUri: Uri.parse(
-                              'https://example.com/callbacks/sign_in_with_apple',
+                              'https://www.avizitrx.com/callbacks/sign_in_with_apple',
                             ),
                           ),
                         );
