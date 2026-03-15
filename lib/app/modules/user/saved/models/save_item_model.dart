@@ -44,10 +44,10 @@ class SaveItem {
     return SaveItem(
       id: json['_id'] ?? '',
       title: json['title'] ?? '',
-      businessName: json['shop'] ?? '',
+      businessName: json['shop']?['business_name'] ?? '',
       imagePath: (json['images'] as List<dynamic>?)?.isNotEmpty == true
           ? json['images'][0]
-          : '',
+          : json['shop']?['business_logo'] ?? '',
       price: discountedPrice,
       originalPrice: regularPrice,
       isAvailable: promotedUntil != null
