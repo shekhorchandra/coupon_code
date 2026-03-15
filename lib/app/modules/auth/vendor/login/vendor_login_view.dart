@@ -166,6 +166,12 @@ class VendorLoginView extends GetView<VendorLoginController> {
                             AppleIDAuthorizationScopes.email,
                             AppleIDAuthorizationScopes.fullName,
                           ],
+                          webAuthenticationOptions: WebAuthenticationOptions(
+                            clientId: 'agency.beuptech.yepp.auth',
+                            redirectUri: Uri.parse(
+                              'https://example.com/callbacks/sign_in_with_apple',
+                            ),
+                          ),
                         );
 
                         print(credential);
