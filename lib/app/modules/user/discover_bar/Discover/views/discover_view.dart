@@ -16,12 +16,12 @@ import '../discover_widget/deal_card.dart';
 
 class DiscoverView extends GetView<DiscoverController> {
   const DiscoverView({super.key});
+  static Timer? _debounce;
 
   @override
   Widget build(BuildContext context) {
     final CategoriesController controller = Get.put(CategoriesController());
     final DiscoverController discoverController = Get.find();
-    Timer? _debounce;
 
     return Scaffold(
       body: SafeArea(
@@ -53,13 +53,7 @@ class DiscoverView extends GetView<DiscoverController> {
                   child: CustomTextField(
                     hint: "Search for Deals or Zip Code...",
                     icon: Icons.search,
-                    onChanged: (value) {
-                      controller.onSearch(value);
-                      if (_debounce?.isActive ?? false) _debounce!.cancel();
-                      _debounce = Timer(const Duration(milliseconds: 500), () {
-                        discoverController.fetchDealsWithSearch(searchTerm: value);
-                      });
-                    },
+                    onChanged: discoverController.onSearch,
                   ),
                 ),
 

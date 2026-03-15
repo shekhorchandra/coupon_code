@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import '../../../../services/Helper_status_code/HttpStatusHandler.dart';
 import '../../../../services/contants/api_constants.dart';
+import '../../../../services/geolocator_helper/current_location_picker.dart';
 import '../models/deal_card_model.dart';
 
 class DiscoverController extends GetxController {
@@ -53,15 +54,24 @@ class DiscoverController extends GetxController {
     try {
       isLoading.value = true;
 
-      final double lat = 90.4293804;
-      final double lng = 23.7587992;
+      final position = await getCurrentLocation();
+      if (position == null) {
+        deals.clear();
+        print("Could not get current location");
+        return;
+      }
+
+      final lng = position.longitude;
+      final lat = position.latitude;
+
+      print("Location: lat=$lat, lng=$lng");
 
       final response = await Dio().get(
-        '${ApiConstants.baseUrl}/service/deals/$lat/$lng',
+        '${ApiConstants.baseUrl}/service/deals/$lng/$lat',
         queryParameters: {"page": page, "limit": 10},
       );
 
-      final Map<String, dynamic> res = response.data is String
+      final res = response.data is String
           ? jsonDecode(response.data)
           : response.data;
 
@@ -71,19 +81,11 @@ class DiscoverController extends GetxController {
         print("Deals loaded: ${deals.length}");
       } else {
         deals.clear();
-        final msg = HttpStatusHandler.getMessage(
-          response.statusCode ?? 0,
-          fallback: res['message']?.toString(),
-        );
-        print("Failed: $msg");
       }
     } catch (e) {
       if (e is DioException) {
-        final msg = HttpStatusHandler.getMessage(
-          e.response?.statusCode ?? 0,
-          fallback: e.response?.data?['message']?.toString(),
-        );
-        print("Dio error: $msg");
+        print("Status: ${e.response?.statusCode}");
+        print("Response: ${e.response?.data}");
       } else {
         print("Error: $e");
       }
@@ -99,15 +101,19 @@ class DiscoverController extends GetxController {
     try {
       isLoading.value = true;
 
-      // final double lat = 23.7587992;
-      // final double lng = 90.4293804;
-      final double lat = 90.4293804;
-      final double lng = 23.7587992;
+      final position = await getCurrentLocation();
+      if (position == null) {
+        print("Could not get current location");
+        return;
+      }
+
+      final double lng = position.longitude;
+      final double lat = position.latitude;
 
       final query = {"page": page, "limit": 10, "searchTerm": searchTerm};
 
       final response = await Dio().get(
-        '${ApiConstants.baseUrl}/service/deals/all_deals/$lat/$lng',
+        '${ApiConstants.baseUrl}/service/deals/all_deals/$lng/$lat',
         queryParameters: query,
       );
 
@@ -141,4 +147,5 @@ class DiscoverController extends GetxController {
       isLoading.value = false;
     }
   }
+
 }
