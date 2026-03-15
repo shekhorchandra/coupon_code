@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 class SaveItem {
   final String id;
   final String title;
@@ -7,6 +9,8 @@ class SaveItem {
   final double originalPrice; // regular price
   final bool isAvailable;
   final String status;
+  final DateTime? promotedUntil;
+
 
   SaveItem({
     required this.id,
@@ -17,6 +21,8 @@ class SaveItem {
     this.originalPrice = 0.0,
     this.isAvailable = false,
     this.status = 'Normal',
+    this.promotedUntil,
+
   });
 
   // Create SaveItem from API JSON
@@ -48,6 +54,7 @@ class SaveItem {
           ? promotedUntil.isAfter(DateTime.now())
           : false,
       status: json['isPromoted'] == true ? 'Promoted' : 'Normal',
+      promotedUntil: promotedUntil,
     );
   }
 
@@ -62,6 +69,7 @@ class SaveItem {
       'originalPrice': originalPrice,
       'isAvailable': isAvailable,
       'status': status,
+      'promotedUntil': promotedUntil?.toIso8601String(),
     };
   }
 }

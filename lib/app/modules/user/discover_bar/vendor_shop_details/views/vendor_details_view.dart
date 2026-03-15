@@ -1,4 +1,4 @@
-// vendor_details_view.dart
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../core/widgets/common_app_bar.dart';
@@ -7,6 +7,7 @@ import '../../../../../core/values/app_color.dart';
 import '../../../../../core/values/app_text_styles.dart';
 import '../../../../../routes/app_routes.dart';
 import '../controller/vendor_details_controller.dart';
+import 'outlet_map_widget/VendorOutletMap.dart';
 
 class VendorDetailsView extends GetView<VendorDetailsController> {
   const VendorDetailsView({super.key});
@@ -28,40 +29,50 @@ class VendorDetailsView extends GetView<VendorDetailsController> {
           return Column(
             children: [
               /// Business Logo
-              ClipOval(
-                child: Image.network(
-                  vendor.businessLogo,
-                  width: 70,
-                  height: 70,
-                  fit: BoxFit.cover,
+              Container(
+                width: 74,
+                height: 74,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: AppColor.primary, // border color
+                    width: 2,
+                  ),
+                ),
+                child: ClipOval(
+                  child: Image.network(
+                    vendor.businessLogo,
+                    width: 70,
+                    height: 70,
+                    fit: BoxFit.cover,
 
-                  /// Loading Indicator
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
+                    /// Loading Indicator
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
 
-                    return Container(
-                      width: 70,
-                      height: 70,
-                      alignment: Alignment.center,
-                      color: AppColor.greyText,
-                      child: const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2, color: AppColor.primary,),
-                      ),
-                    );
-                  },
+                      return Container(
+                        alignment: Alignment.center,
+                        color: AppColor.white,
+                        child: const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: AppColor.primary,
+                          ),
+                        ),
+                      );
+                    },
 
-                  /// Error Widget
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      width: 70,
-                      height: 70,
-                      color: AppColor.greyText,
-                      alignment: Alignment.center,
-                      child: const Icon(Icons.store),
-                    );
-                  },
+                    /// Error Widget
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        color: AppColor.greyText,
+                        alignment: Alignment.center,
+                        child: const Icon(Icons.store),
+                      );
+                    },
+                  ),
                 ),
               ),
 
@@ -266,20 +277,17 @@ class VendorDetailsView extends GetView<VendorDetailsController> {
                         fontWeight: FontWeight.bold,
                         color: AppColor.primary)),
                 const SizedBox(height: 8),
+                /// for all outlets
+                // Obx(() {
+                //   return VendorOutletMap(
+                //     outlets: vendor.outlets,
+                //     selectedOutlet: controller.selectedOutlet.value,
+                //   );
+                // })
+                /// for selected outlets
                 Obx(() {
-                  final outlet = controller.selectedOutlet.value;
-                  return Container(
-                    height: 300,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: Colors.grey.shade300),
-                    child: Center(
-                        child: Text(
-                          outlet != null
-                              ? "${outlet.name}\nLat: ${outlet.lat}, Lng: ${outlet.lng}"
-                              : "Select an outlet",
-                          textAlign: TextAlign.center,
-                        )),
+                  return VendorOutletMap(
+                    selectedOutlet: controller.selectedOutlet.value,
                   );
                 })
               ],

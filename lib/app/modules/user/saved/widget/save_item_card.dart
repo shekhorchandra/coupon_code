@@ -11,7 +11,8 @@ class SaveItemCard extends StatelessWidget {
   final double price;
   final double originalPrice;
   final bool isAvailable;
-  final String Status;
+  final String status;
+  final DateTime? promotedUntil;
   final VoidCallback onTap;
 
   const SaveItemCard({
@@ -23,12 +24,28 @@ class SaveItemCard extends StatelessWidget {
     required this.price,
     required this.originalPrice,
     required this.isAvailable,
-    required this.Status,
+    required this.status,
     required this.onTap,
+    this.promotedUntil,
   });
+
+  // Get remaining promotion time
+  String getRemainingTime() {
+    if (promotedUntil == null) return "Expired";
+
+    final remaining = promotedUntil!.difference(DateTime.now());
+
+    if (remaining.isNegative) return "Expired";
+    if (remaining.inDays > 0) return "${remaining.inDays} days left";
+    if (remaining.inHours > 0) return "${remaining.inHours} hours left";
+    if (remaining.inMinutes > 0) return "${remaining.inMinutes} minutes left";
+    return "Expiring soon";
+  }
 
   @override
   Widget build(BuildContext context) {
+    final remainingTimeText = getRemainingTime();
+
     return InkWell(
       borderRadius: BorderRadius.circular(12),
       onTap: onTap,
@@ -41,7 +58,9 @@ class SaveItemCard extends StatelessWidget {
             // Image section
             ClipRRect(
               borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(12), bottomLeft: Radius.circular(12)),
+                topLeft: Radius.circular(12),
+                bottomLeft: Radius.circular(12),
+              ),
               child: Image.network(
                 imagePath,
                 width: 100,
@@ -55,7 +74,6 @@ class SaveItemCard extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(8),
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Title
@@ -66,32 +84,48 @@ class SaveItemCard extends StatelessWidget {
                       style: const TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 14),
                     ),
+                    const SizedBox(height: 4),
 
-                    // Price + Original Price
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                    // Business name
+                    // Text(
+                    //   businessName,
+                    //   maxLines: 1,
+                    //   overflow: TextOverflow.ellipsis,
+                    //   style: const TextStyle(
+                    //     fontSize: 12,
+                    //     color: Colors.grey,
+                    //   ),
+                    // ),
+                    // const SizedBox(height: 6),
+
+                    // Price row
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
-                            Text(
-                              "\$$price",
-                              style: const TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
+                            Text("\$$price", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                             const SizedBox(width: 6),
-                            Text(
-                              "\$$originalPrice",
-                              style: const TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey,
-                                  decoration: TextDecoration.lineThrough),
-                            ),
-                            const SizedBox(width: 16),
-
+                            Text("\$$originalPrice", style: const TextStyle(fontSize: 12, color: Colors.grey, decoration: TextDecoration.lineThrough)),
                           ],
                         ),
+                        // const SizedBox(height: 4),
+                        // Text(
+                        //   getRemainingTime(),
+                        //   style: TextStyle(
+                        //     color: getRemainingTime() == "Expired" ? Colors.red : Colors.orange,
+                        //     fontSize: 12,
+                        //     fontWeight: FontWeight.bold,
+                        //   ),
+                        // ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
 
+                    // Promotion / availability & delete button
+                    Row(
+                      children: [
+                        // Unified status
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
@@ -99,29 +133,32 @@ class SaveItemCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
-                            isAvailable ? 'Available' : 'Expired',
+                            getRemainingTime(),
                             style: const TextStyle(
                               color: Colors.white,
-                              fontSize: 10,
+                              fontSize: 11,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
 
-                        // Right side: Delete button
+                        const Spacer(),
+
+                        // Delete button
                         Container(
                           decoration: BoxDecoration(
-                            color: Colors.red.shade100, // background color
+                            color: Colors.red.shade100,
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.red),
                             onPressed: () {
                               showDialog(
-
                                 context: context,
                                 builder: (ctx) => AlertDialog(
                                   title: const Text("Delete Saved Deal"),
-                                  content: const Text("Are you sure you want to remove this saved deal?"),
+                                  content: const Text(
+                                      "Are you sure you want to remove this saved deal?"),
                                   actions: [
                                     TextButton(
                                       style: TextButton.styleFrom(
@@ -152,11 +189,10 @@ class SaveItemCard extends StatelessWidget {
                                 ),
                               );
                             },
-                            icon: const Icon(Icons.delete, color: Colors.red),
                           ),
                         ),
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),
