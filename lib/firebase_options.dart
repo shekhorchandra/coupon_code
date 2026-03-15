@@ -41,46 +41,47 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyA93TE5xfX5jQvgsTlOmtZmL5ygCzuaQJ4',
-    appId: '1:307087082708:web:8df9cc50fb2829ea852741',
-    messagingSenderId: '307087082708',
-    projectId: 'yepp-91fe5',
-    authDomain: 'yepp-91fe5.firebaseapp.com',
-    storageBucket: 'yepp-91fe5.firebasestorage.app',
+    apiKey: 'AIzaSyA6_inEReD0lKuzY2pSld4-sfPHK136tOs',
+    appId: '1:191216477482:web:20c68fdc7fc557d4c2ea53',
+    messagingSenderId: '191216477482',
+    projectId: 'yepp-app',
+    authDomain: 'yepp-app.firebaseapp.com',
+    storageBucket: 'yepp-app.firebasestorage.app',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDKDewNJXHlhOIH5A90rxdrtYKrAD0MiCU',
-    appId: '1:307087082708:android:ce1dff41ddb4b917852741',
-    messagingSenderId: '307087082708',
-    projectId: 'yepp-91fe5',
-    storageBucket: 'yepp-91fe5.firebasestorage.app',
+    apiKey: 'AIzaSyB-ZPA1YKlwArS_C8JJ4wZgjSaga3OUglM',
+    appId: '1:191216477482:android:05ce7fab01d74fefc2ea53',
+    messagingSenderId: '191216477482',
+    projectId: 'yepp-app',
+    storageBucket: 'yepp-app.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDbiAkElewqnk2dpxgMs9s6s8M4SJjAM68',
-    appId: '1:307087082708:ios:25f21e10e5d2e49a852741',
-    messagingSenderId: '307087082708',
-    projectId: 'yepp-91fe5',
-    storageBucket: 'yepp-91fe5.firebasestorage.app',
+    apiKey: 'AIzaSyDp5yWlReFjg5yAYXNG_CoTm2mO8oq427I',
+    appId: '1:191216477482:ios:47809d2eaee504d3c2ea53',
+    messagingSenderId: '191216477482',
+    projectId: 'yepp-app',
+    storageBucket: 'yepp-app.firebasestorage.app',
     iosBundleId: 'agency.beuptech.yepp',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDbiAkElewqnk2dpxgMs9s6s8M4SJjAM68',
-    appId: '1:307087082708:ios:25f21e10e5d2e49a852741',
-    messagingSenderId: '307087082708',
-    projectId: 'yepp-91fe5',
-    storageBucket: 'yepp-91fe5.firebasestorage.app',
+    apiKey: 'AIzaSyDp5yWlReFjg5yAYXNG_CoTm2mO8oq427I',
+    appId: '1:191216477482:ios:47809d2eaee504d3c2ea53',
+    messagingSenderId: '191216477482',
+    projectId: 'yepp-app',
+    storageBucket: 'yepp-app.firebasestorage.app',
     iosBundleId: 'agency.beuptech.yepp',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyA93TE5xfX5jQvgsTlOmtZmL5ygCzuaQJ4',
-    appId: '1:307087082708:web:2e93f938e8bb258e852741',
-    messagingSenderId: '307087082708',
-    projectId: 'yepp-91fe5',
-    authDomain: 'yepp-91fe5.firebaseapp.com',
-    storageBucket: 'yepp-91fe5.firebasestorage.app',
+    apiKey: 'AIzaSyA6_inEReD0lKuzY2pSld4-sfPHK136tOs',
+    appId: '1:191216477482:web:ab0e9cde9a1dc9b8c2ea53',
+    messagingSenderId: '191216477482',
+    projectId: 'yepp-app',
+    authDomain: 'yepp-app.firebaseapp.com',
+    storageBucket: 'yepp-app.firebasestorage.app',
   );
+
 }
