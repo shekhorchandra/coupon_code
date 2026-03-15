@@ -1,13 +1,32 @@
 {
   "project_info": {
-    "project_number": "307087082708",
-    "project_id": "yepp-91fe5",
-    "storage_bucket": "yepp-91fe5.firebasestorage.app"
+    "project_number": "191216477482",
+    "project_id": "yepp-app",
+    "storage_bucket": "yepp-app.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:307087082708:android:305d7248e8de7688852741",
+        "mobilesdk_app_id": "1:191216477482:android:05ce7fab01d74fefc2ea53",
+        "android_client_info": {
+          "package_name": "agency.beuptech.yepp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-ZPA1YKlwArS_C8JJ4wZgjSaga3OUglM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:191216477482:android:d7d6bd0292329e6ec2ea53",
         "android_client_info": {
           "package_name": "com.app.coupon_code"
         }
@@ -15,7 +34,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDKDewNJXHlhOIH5A90rxdrtYKrAD0MiCU"
+          "current_key": "AIzaSyB-ZPA1YKlwArS_C8JJ4wZgjSaga3OUglM"
         }
       ],
       "services": {

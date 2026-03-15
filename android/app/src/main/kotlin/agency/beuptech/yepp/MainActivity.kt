@@ -1,4 +1,4 @@
-package com.app.coupon_code
+package agency.beuptech.yepp
 
 import io.flutter.embedding.android.FlutterActivity
 

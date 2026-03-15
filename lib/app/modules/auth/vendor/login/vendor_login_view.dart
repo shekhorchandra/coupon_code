@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../../../core/values/app_assets.dart';
 import '../../../../core/values/app_color.dart';
@@ -159,8 +160,21 @@ class VendorLoginView extends GetView<VendorLoginController> {
                     child: SocialButton(
                       text: "Apple",
                       iconPath: AppAssets.apple,
-                      onPressed: () {
-                        // TODO: Apple login logic
+                      onPressed: () async {
+                        final credential = await SignInWithApple.getAppleIDCredential(
+                          scopes: [
+                            AppleIDAuthorizationScopes.email,
+                            AppleIDAuthorizationScopes.fullName,
+                          ],
+                          webAuthenticationOptions: WebAuthenticationOptions(
+                            clientId: 'agency.beuptech.yepp.auth',
+                            redirectUri: Uri.parse(
+                              'https://example.com/callbacks/sign_in_with_apple',
+                            ),
+                          ),
+                        );
+
+                        print(credential);
                       },
                     ),
                   ),

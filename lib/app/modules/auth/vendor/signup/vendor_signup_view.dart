@@ -1,6 +1,8 @@
+import 'package:coupon_code/app/modules/auth/vendor/login/vendor_login_controller.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../../../core/values/app_assets.dart';
 import '../../../../core/values/app_text_styles.dart';
@@ -123,20 +125,37 @@ class VendorSignupView extends GetView<VendorSignupController> {
 
             const SizedBox(height: 20),
 
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 32.0),
-            //   child: Row(
-            //     children: const [
-            //       Expanded(
-            //         child: SocialButton(text: "Google", iconPath: AppAssets.google),
-            //       ),
-            //       SizedBox(width: 12),
-            //       Expanded(
-            //         child: SocialButton(text: "Apple", iconPath: AppAssets.apple),
-            //       ),
-            //     ],
-            //   ),
-            // ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: SocialButton(
+                      text: "Google",
+                      iconPath: AppAssets.google,
+                      onPressed: () => Get.find<VendorLoginController>().loginWithGoogleDeepLink(),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: SocialButton(
+                      text: "Apple",
+                      iconPath: AppAssets.apple,
+                      onPressed: () async {
+                        final credential = await SignInWithApple.getAppleIDCredential(
+                          scopes: [
+                            AppleIDAuthorizationScopes.email,
+                            AppleIDAuthorizationScopes.fullName,
+                          ],
+                        );
+
+                        print(credential);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
 
             const SizedBox(height: 26),
 
