@@ -77,7 +77,7 @@ class SavesController extends GetxController {
     if (!savedIds.contains(dealId)) {
       savedIds.add(dealId);
       _storage.write('savedDeals', savedIds);
-      Get.snackbar('Success', 'Deal saved for later');
+      Get.snackbar('Success', 'Deal saved');
     } else {
       Get.snackbar('Info', 'Deal already saved');
     }

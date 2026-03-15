@@ -12,6 +12,7 @@ import '../models/save_item_model.dart';
 class UserMySavesPage extends GetView<SavesController> {
   const UserMySavesPage({super.key});
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,7 +74,8 @@ class UserMySavesPage extends GetView<SavesController> {
                           price: item.price,
                           originalPrice: item.originalPrice,
                           isAvailable: item.isAvailable,
-                          Status: item.status,
+                          promotedUntil: item.promotedUntil, // promotion expiry
+                          status: item.status,               // ✅ fix: lowercase
                           onTap: () {
                             Get.toNamed(
                               AppRoutes.DISCOVERDETAILS,
