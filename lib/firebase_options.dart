@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDKDewNJXHlhOIH5A90rxdrtYKrAD0MiCU',
-    appId: '1:307087082708:android:305d7248e8de7688852741',
+    appId: '1:307087082708:android:ce1dff41ddb4b917852741',
     messagingSenderId: '307087082708',
     projectId: 'yepp-91fe5',
     storageBucket: 'yepp-91fe5.firebasestorage.app',
@@ -59,20 +59,20 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDbiAkElewqnk2dpxgMs9s6s8M4SJjAM68',
-    appId: '1:307087082708:ios:1e401e10ba2d3ec1852741',
+    appId: '1:307087082708:ios:25f21e10e5d2e49a852741',
     messagingSenderId: '307087082708',
     projectId: 'yepp-91fe5',
     storageBucket: 'yepp-91fe5.firebasestorage.app',
-    iosBundleId: 'com.app.couponCode',
+    iosBundleId: 'agency.beuptech.yepp',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyDbiAkElewqnk2dpxgMs9s6s8M4SJjAM68',
-    appId: '1:307087082708:ios:1e401e10ba2d3ec1852741',
+    appId: '1:307087082708:ios:25f21e10e5d2e49a852741',
     messagingSenderId: '307087082708',
     projectId: 'yepp-91fe5',
     storageBucket: 'yepp-91fe5.firebasestorage.app',
-    iosBundleId: 'com.app.couponCode',
+    iosBundleId: 'agency.beuptech.yepp',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(

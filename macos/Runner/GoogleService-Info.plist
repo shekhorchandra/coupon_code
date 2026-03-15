@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.app.couponCode</string>
+	<string>agency.beuptech.yepp</string>
 	<key>PROJECT_ID</key>
 	<string>yepp-91fe5</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:307087082708:ios:1e401e10ba2d3ec1852741</string>
+	<string>1:307087082708:ios:25f21e10e5d2e49a852741</string>
 </dict>
 </plist>

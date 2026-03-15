@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:307087082708:android:305d7248e8de7688852741",
+        "mobilesdk_app_id": "1:307087082708:android:ce1dff41ddb4b917852741",
         "android_client_info": {
-          "package_name": "com.app.coupon_code"
+          "package_name": "agency.beuptech.yepp"
         }
       },
       "oauth_client": [],
