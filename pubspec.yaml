@@ -69,8 +69,6 @@ dependencies:
   geolocator: ^14.0.2
 
 
-
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
