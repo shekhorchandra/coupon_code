@@ -24,27 +24,12 @@ class DealCardModel {
   });
 
   factory DealCardModel.fromJson(Map<String, dynamic> json) {
-    final deal = json['deals'] ?? json;
+    final deal = json['deal'] ?? json;
     final shop = json['shop'] ?? {};
-    // Print all relevant information
-    print("===== DealCardModel.fromJson =====");
-    print("Full JSON: $json");
-    print("Deal JSON: $deal");
-    print("Shop JSON: $shop");
-    print("Deal ID: ${deal['_id']}");
-    print("Shop ID------------------: ${deal['shop'] ?? json['_id']}");
-    print("Shop Name: ${shop['business_name']}");
-    print("Title: ${deal['title']}");
-    print("Regular Price: ${deal['reguler_price']}");
-    print("Discount Percent: ${deal['discount']}");
-    print("Is Promoted: ${deal['isPromoted']}");
-    print("Promoted Until: ${deal['promotedUntil']}");
-    print("Distance: ${json['distance']}");
-    print("Images: ${deal['images']}");
 
     return DealCardModel(
-      id: deal['_id'],
-      shopId: deal['shop']['_id'] ?? '',
+      id: deal['_id'] ?? json['_id'] ?? '',
+      shopId: shop['_id'] ?? '',
       shopName: shop['business_name'] ?? '',
       title: deal['title'] ?? '',
       regularPrice: (deal['reguler_price'] ?? 0).toDouble(),

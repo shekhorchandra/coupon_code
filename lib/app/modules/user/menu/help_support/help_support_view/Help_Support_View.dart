@@ -66,8 +66,8 @@ class HelpSupportView extends StatelessWidget {
                   ),
                   _contactItem(
                     icon: Icons.phone,
-                    title: "Phone",
-                    value: "Contact us directly for immediate assistance",
+                    title: "Phone Support",
+                    value: "+1 234 567 890\nMon-Fri: 9:00 AM – 6:00 PM (GMT)",
                     url: "tel:+1234567890",
                   ),
                 ],

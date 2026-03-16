@@ -1,11 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-
 import '../../../../services/Helper_status_code/HttpStatusHandler.dart';
 import '../../../../services/contants/api_constants.dart';
+import '../../../../services/geolocator_helper/current_location_picker.dart';
 import '../api_service/category_details_api_service.dart';
 import '../model/category_deal_model.dart';
 
@@ -46,10 +45,7 @@ class CategoryDetailsController extends GetxController {
     try {
       isLoading.value = true;
 
-      final result = await _api.getCategoryDeals(
-        categoryId,
-        sort: sort,
-      );
+      final result = await _api.getCategoryDeals(categoryId, sort: sort);
 
       deals.assignAll(result);
     } catch (e) {
@@ -68,20 +64,26 @@ class CategoryDetailsController extends GetxController {
     });
   }
 
-  /// API call for search
+  /// SEARCH DEALS API
   Future<void> fetchDealsWithSearch({int page = 1, String? searchTerm}) async {
-    if (searchTerm == null || searchTerm.isEmpty) return;
+    if (searchTerm == null || searchTerm.isEmpty) return; // don't call if empty
 
     try {
       isLoading.value = true;
 
-      final double lat = 90.4293804;
-      final double lng = 23.7587992;
+      final position = await getCurrentLocation();
+      if (position == null) {
+        print("Could not get current location");
+        return;
+      }
+
+      final double lng = position.longitude;
+      final double lat = position.latitude;
 
       final query = {"page": page, "limit": 10, "searchTerm": searchTerm};
 
       final response = await Dio().get(
-        '${ApiConstants.baseUrl}/service/deals/all_deals/$lat/$lng',
+        '${ApiConstants.baseUrl}/service/deals/all_deals/$lng/$lat',
         queryParameters: query,
       );
 
@@ -90,14 +92,10 @@ class CategoryDetailsController extends GetxController {
           : response.data;
 
       if (response.statusCode == 200 && res['success'] == true) {
-        final List items = res['data']['deals'];
+        final List items = res['data']?['deals'] ?? [];
+        deals.value = items.map((e) => CategoryDealModel.fromJson(e)).toList();
 
-        // Map API result to CategoryDealModel
-        deals.value = items
-            .map((e) => CategoryDealModel.fromJson(e))
-            .toList();
-
-        print("Search deals loaded: ${deals.length}");
+        print("Deals loaded: ${deals.length}");
       } else {
         deals.clear();
         final msg = HttpStatusHandler.getMessage(

@@ -63,8 +63,8 @@ class SaveItemCard extends StatelessWidget {
               ),
               child: Image.network(
                 imagePath,
-                width: 100,
-                height: 100,
+                width: 120,
+                height: 140,
                 fit: BoxFit.cover,
               ),
             ),
@@ -79,24 +79,22 @@ class SaveItemCard extends StatelessWidget {
                     // Title
                     Text(
                       title,
-                      maxLines: 2,
+                      maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 14),
                     ),
-                    const SizedBox(height: 4),
 
                     // Business name
-                    // Text(
-                    //   businessName,
-                    //   maxLines: 1,
-                    //   overflow: TextOverflow.ellipsis,
-                    //   style: const TextStyle(
-                    //     fontSize: 12,
-                    //     color: Colors.grey,
-                    //   ),
-                    // ),
-                    // const SizedBox(height: 6),
+                    Text(
+                      businessName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
+                    ),
 
                     // Price row
                     Column(
@@ -109,18 +107,9 @@ class SaveItemCard extends StatelessWidget {
                             Text("\$$originalPrice", style: const TextStyle(fontSize: 12, color: Colors.grey, decoration: TextDecoration.lineThrough)),
                           ],
                         ),
-                        // const SizedBox(height: 4),
-                        // Text(
-                        //   getRemainingTime(),
-                        //   style: TextStyle(
-                        //     color: getRemainingTime() == "Expired" ? Colors.red : Colors.orange,
-                        //     fontSize: 12,
-                        //     fontWeight: FontWeight.bold,
-                        //   ),
-                        // ),
+
                       ],
                     ),
-                    const SizedBox(height: 4),
 
                     // Promotion / availability & delete button
                     Row(

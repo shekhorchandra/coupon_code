@@ -55,11 +55,13 @@ class VendorLoginController extends GetxController {
     try {
       // Step 1: Listen for deep link callback
       sub = appLinks.uriLinkStream.listen((Uri uri) async {
-        if (uri.scheme == "myapp" && uri.host == "google-login") {
-          final accessToken = uri.queryParameters['token'];
+        if (uri.scheme == "yeppapp" && uri.path == "/auth/google") {
+          final accessToken = uri.queryParameters['access'];
+          final refreshToken = uri.queryParameters['refresh'];
 
-          if (accessToken != null) {
+          if (accessToken != null && refreshToken != null) {
             _storageService.setAccessToken(accessToken);
+            _storageService.setRefreshToken(refreshToken);
 
             _storeUserId();
 

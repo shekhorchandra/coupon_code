@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../../../../services/contants/api_constants.dart';
+import '../../../../services/geolocator_helper/current_location_picker.dart';
 import '../model/category_deal_model.dart';
 
 class CategoryDetailsApiService {
@@ -10,13 +11,24 @@ class CategoryDetailsApiService {
       String categoryId, {
         String sort = "reguler_price",
       }) async {
-    final String url = "${ApiConstants.baseUrl}${ApiConstants.categoryDeals(categoryId)}";
+
+    final position = await getCurrentLocation();
+
+    if (position == null) {
+      throw Exception("Location not available");
+    }
+
+    final double lng = position.longitude;
+    final double lat = position.latitude;
+
+    final String url =
+        "${ApiConstants.baseUrl}${ApiConstants.categoryDeals(categoryId)}";
 
     final response = await _dio.get(
       url,
       queryParameters: {
-        "lng": "90.4293804",
-        "lat": "23.7587992",
+        "lng": lng,
+        "lat": lat,
         "sort": sort,
       },
     );

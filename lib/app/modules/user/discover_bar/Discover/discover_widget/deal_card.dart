@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import '../../../../../core/values/app_assets.dart';
 import '../../../../../core/values/app_color.dart';
 import '../../../../../core/widgets/App_button.dart';
+import '../../../../../core/widgets/skeleton.dart';
 import '../../../../../data/models/deal_model.dart';
 import '../../../../../data/services/storage_service.dart';
 import 'deal_badge.dart';
@@ -39,7 +40,7 @@ class DealCard extends StatelessWidget {
     final isShort = index % 2 == 0;
     final imageUrl = deal.images.isNotEmpty
         ? deal.images.first
-        : 'https://picsum.photos/300';
+        : ' ';
 
     final priceAfterDiscount =
     DealCardModel.afterDiscountPrice(deal.regularPrice, deal.discountPercent);
@@ -66,14 +67,11 @@ class DealCard extends StatelessWidget {
                   fit: BoxFit.cover,
                   loadingBuilder: (context, child, loadingProgress) {
                     if (loadingProgress == null) return child;
-                    return Container(
-                      height: isShort ? 160 : 260,
-                      alignment: Alignment.center,
-                      color: Colors.grey.shade200,
-                      child: const CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: AppColor.primary,
-                      ),
+
+                    return const Skeleton(
+                      height: 200,
+                      width: double.infinity,
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
                     );
                   },
                   errorBuilder: (context, error, stackTrace) => Container(
@@ -122,7 +120,7 @@ class DealCard extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.redAccent,
+                    color: AppColor.primary,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
