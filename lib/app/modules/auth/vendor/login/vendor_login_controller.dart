@@ -40,7 +40,7 @@ class VendorLoginController extends GetxController {
     final accessToken = _storageService.accessToken;
 
     if (accessToken != null) {
-      Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR);
+      isVerifiedOrIsShopCreated();
     }
   }
 
@@ -65,7 +65,32 @@ class VendorLoginController extends GetxController {
 
             _storeUserId();
 
-            Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR);
+            // Register FCM and Device
+            //
+            // bool fcmRegistered = await _registerFCM();
+            //
+
+            // if (!fcmRegistered) {
+            //
+            //   Get.snackbar('Error', 'An error occurred while initializing notifications!');
+            //   return;
+            // }
+
+            //
+            // bool deviceRegistered = await _registerDevice(data);
+            //
+
+            // if (!deviceRegistered) {
+            //
+            //   Get.snackbar('Error', 'An error occurred while registering the device.');
+            //   return;
+            // }
+
+            _storageService.write('loggedIn', true);
+
+            isVerifiedOrIsShopCreated();
+
+            Get.snackbar("Login Successful", "");
           } else {
             Get.snackbar("Error", "Failed to get token from Google login");
           }
@@ -119,25 +144,25 @@ class VendorLoginController extends GetxController {
         debugPrint("User ID stored");
 
         // Register FCM and Device
-        debugPrint("Registering FCM...");
-        bool fcmRegistered = await _registerFCM();
-        debugPrint("FCM registration result: $fcmRegistered");
+        // debugPrint("Registering FCM...");
+        // bool fcmRegistered = await _registerFCM();
+        // debugPrint("FCM registration result: $fcmRegistered");
 
-        if (!fcmRegistered) {
-          debugPrint("FCM registration failed");
-          Get.snackbar('Error', 'An error occurred while initializing notifications!');
-          return;
-        }
+        // if (!fcmRegistered) {
+        //   debugPrint("FCM registration failed");
+        //   Get.snackbar('Error', 'An error occurred while initializing notifications!');
+        //   return;
+        // }
 
-        debugPrint("Registering device...");
-        bool deviceRegistered = await _registerDevice(data);
-        debugPrint("Device registration result: $deviceRegistered");
+        // debugPrint("Registering device...");
+        // bool deviceRegistered = await _registerDevice(data);
+        // debugPrint("Device registration result: $deviceRegistered");
 
-        if (!deviceRegistered) {
-          debugPrint("Device registration failed");
-          Get.snackbar('Error', 'An error occurred while registering the device.');
-          return;
-        }
+        // if (!deviceRegistered) {
+        //   debugPrint("Device registration failed");
+        //   Get.snackbar('Error', 'An error occurred while registering the device.');
+        //   return;
+        // }
 
         debugPrint("Saving loggedIn flag in storage...");
         _storageService.write('loggedIn', true);
@@ -181,17 +206,17 @@ class VendorLoginController extends GetxController {
         _storeUserId();
 
         // Register FCM and Device
-        bool fcmRegistered = await _registerFCM();
-        if (!fcmRegistered) {
-          Get.snackbar('Error', 'An error occurred while initializing notifications!');
-          return;
-        }
+        // bool fcmRegistered = await _registerFCM();
+        // if (!fcmRegistered) {
+        //   Get.snackbar('Error', 'An error occurred while initializing notifications!');
+        //   return;
+        // }
 
-        bool deviceRegistered = await _registerDevice(data);
-        if (!deviceRegistered) {
-          Get.snackbar('Error', 'An error occurred while registering the device.');
-          return;
-        }
+        // bool deviceRegistered = await _registerDevice(data);
+        // if (!deviceRegistered) {
+        //   Get.snackbar('Error', 'An error occurred while registering the device.');
+        //   return;
+        // }
 
         _storageService.write('loggedIn', true);
 

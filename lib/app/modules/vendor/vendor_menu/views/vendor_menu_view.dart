@@ -90,8 +90,12 @@ class VendorMenuPage extends GetView<VendorAccountController> {
                 const SizedBox(height: 20),
 
                 // AppButton(
-                //   text: 'Deal Publish Notice',
-                //   onPressed: () => Get.toNamed(AppRoutes.DEAL_PUBLISH_NOTICE),
+                //   text: 'User ID',
+                //   onPressed: () async {
+                //     StorageService _storageService = StorageService();
+
+                //     print(await _storageService.userId);
+                //   },
                 // ), // TODO: remove this debug button
               ],
             ),
