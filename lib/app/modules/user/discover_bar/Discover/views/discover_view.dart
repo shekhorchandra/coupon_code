@@ -1,13 +1,12 @@
 import 'dart:async';
-
-import 'package:flutter/material.dart' as AppTextStyle;
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import '../../../../../core/values/app_color.dart';
 import '../../../../../core/values/app_text_styles.dart';
-import '../../../../../core/widgets/App_button.dart';
 import '../../../../../core/widgets/custom_text_field.dart';
+import '../../../../../core/widgets/deal_card_skeleton.dart';
+import '../../../../../core/widgets/skeleton.dart';
 import '../../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
 import '../../../categories/Category/controllers/categories_controller.dart';
 import '../../../categories/category_details/views/categoty_details_view.dart';
@@ -86,7 +85,26 @@ class DiscoverView extends GetView<DiscoverController> {
                         height: 80,
                         child: Obx(() {
                           if (controller.isLoading.value) {
-                            return const Center(child: CircularProgressIndicator(color: AppColor.primary));
+                            return ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: 6,
+                              itemBuilder: (_, __) {
+                                return const Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 6),
+                                  child: Column(
+                                    children: [
+                                      Skeleton(
+                                        height: 56,
+                                        width: 56,
+                                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                                      ),
+                                      SizedBox(height: 6),
+                                      Skeleton(height: 10, width: 50),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
                           }
                           if (controller.categories.isEmpty) {
                             return const Center(child: Text("No categories"));
@@ -148,18 +166,31 @@ class DiscoverView extends GetView<DiscoverController> {
 
                 // DEALS
                 Obx(() {
+                  /// Loading → show skeleton
                   if (discoverController.isLoading.value) {
-                    return const Padding(
-                      padding: EdgeInsets.all(20),
-                      child: Center(child: CircularProgressIndicator(color: AppColor.primary)),
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: MasonryGridView.count(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 12,
+                        crossAxisSpacing: 12,
+                        itemCount: 6,
+                        itemBuilder: (_, __) => const DealCardSkeleton(),
+                      ),
                     );
                   }
+
+                  /// Empty state
                   if (discoverController.deals.isEmpty) {
                     return const SizedBox(
                       height: 300,
                       child: Center(child: Text("No deals available")),
                     );
                   }
+
+                  /// Deals grid
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 4.0),
                     child: MasonryGridView.count(

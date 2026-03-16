@@ -49,7 +49,7 @@ class DiscoverController extends GetxController {
     await fetchDeals();
   }
 
-  /// fetach all deals
+  /// fetch all deals
   Future<void> fetchDeals({int page = 1}) async {
     try {
       isLoading.value = true;
@@ -64,7 +64,7 @@ class DiscoverController extends GetxController {
       final lng = position.longitude;
       final lat = position.latitude;
 
-      print("Location: lat=$lat, lng=$lng");
+      print("Location-------------------------------: lat=$lat, lng=$lng");
 
       final response = await Dio().get(
         '${ApiConstants.baseUrl}/service/deals/$lng/$lat',
@@ -122,9 +122,10 @@ class DiscoverController extends GetxController {
           : response.data;
 
       if (response.statusCode == 200 && res['success'] == true) {
-        final List items = res['data']['deals'];
+        final List items = res['data']?['deals'] ?? [];
         deals.value = items.map((e) => DealCardModel.fromJson(e)).toList();
-        print("Search deals loaded: ${deals.length}");
+
+        print("Deals loaded: ${deals.length}");
       } else {
         deals.clear();
         final msg = HttpStatusHandler.getMessage(

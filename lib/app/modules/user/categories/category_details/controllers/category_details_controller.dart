@@ -92,9 +92,10 @@ class CategoryDetailsController extends GetxController {
           : response.data;
 
       if (response.statusCode == 200 && res['success'] == true) {
-        final List items = res['data']['deals'];
+        final List items = res['data']?['deals'] ?? [];
         deals.value = items.map((e) => CategoryDealModel.fromJson(e)).toList();
-        print("Search deals loaded: ${deals.length}");
+
+        print("Deals loaded: ${deals.length}");
       } else {
         deals.clear();
         final msg = HttpStatusHandler.getMessage(

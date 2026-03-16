@@ -141,8 +141,8 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       crossAxisCount: 2,
-                      mainAxisSpacing: 12,
-                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 3,
+                      crossAxisSpacing: 2,
                       itemCount: controller.deals.length,
                       itemBuilder: (context, index) {
                         final deal = controller.deals[index];
@@ -226,7 +226,7 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.redAccent,
+                    color: AppColor.primary,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
@@ -345,11 +345,11 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
       style: const TextStyle(color: Colors.black, fontSize: 10, fontWeight: FontWeight.bold),
     ),
   );
-
-  Widget _textOverlay(String text) => Text(
-    text,
-    style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
-  );
+  //
+  // Widget _textOverlay(String text) => Text(
+  //   text,
+  //   style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+  // );
 
   //Helper function to format remaining time
   String _formatRemainingTime(DateTime endTime) {
