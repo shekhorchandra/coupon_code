@@ -104,6 +104,10 @@ class VendorMenuController extends GetxController {
     loading.value = true;
 
     try {
+      // Unregister FCM
+      String? deviceId = await _storageService.read('device_id');
+      _dioClient.client.patch(ApiConstants.fcmUnregister, data: {"deviceId": deviceId});
+
       // Clear local storage (tokens, user data)
       await _storageService.clear();
 

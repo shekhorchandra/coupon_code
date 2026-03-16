@@ -2,96 +2,108 @@ import 'package:coupon_code/app/data/services/storage_service.dart';
 import 'package:coupon_code/app/modules/services/contants/api_constants.dart';
 import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:dio/dio.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Response;
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class DioClient {
   final StorageService _storageService = StorageService();
+  late final Dio _dio;
+
+  bool _isRefreshing = false;
 
   Dio get client => _dio;
 
-  final Dio _dio = Dio(
-    BaseOptions(
-      baseUrl: ApiConstants.baseUrl,
-      connectTimeout: const Duration(seconds: 6000),
-      receiveTimeout: const Duration(seconds: 6000),
-      responseType: ResponseType.json,
-      contentType: 'application/json',
-    ),
-  );
-
   DioClient() {
-    // Add PrettyDioLogger for pretty logging
-    _dio.interceptors.add(
-      PrettyDioLogger(
-        requestHeader: true, // Show request headers
-        requestBody: true, // Show request body
-        responseHeader: true, // Show response headers
-        responseBody: true, // Show response body
-        error: true, // Show errors
-        compact: false, // Use compact mode (set to false for pretty print)
-        maxWidth: 90, // Set the maximum width of the log
+    _dio = Dio(
+      BaseOptions(
+        baseUrl: ApiConstants.baseUrl,
+        connectTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 30),
+        responseType: ResponseType.json,
+        contentType: 'application/json',
       ),
     );
 
     _dio.interceptors.add(
-      InterceptorsWrapper(
-        onRequest: (options, handler) async {
-          // Set Authorization header
-          options.headers["Accept"] = "application/json";
-          String? token = _storageService.accessToken;
-          if (token != null) options.headers["Authorization"] = 'Bearer $token';
+      PrettyDioLogger(requestBody: true, responseBody: true, error: true, compact: true),
+    );
 
-          print("Request to: ${options.method} ${options.uri}");
-          print("Headers: ${options.headers}");
-          print("Request Body: ${options.data}");
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          options.headers["Accept"] = "application/json";
+
+          final token = _storageService.accessToken;
+
+          if (token != null && token.isNotEmpty && !_isAuthEndpoint(options.path)) {
+            options.headers["Authorization"] = "Bearer $token";
+          }
 
           return handler.next(options);
         },
-        onError: (error, handler) async {
-          print("Error Status: ${error.response?.statusCode}");
-          print("Error Message: ${error.message}");
-          if (error.response != null) {
-            print("Error Response Data: ${error.response?.data}");
+
+        onError: (DioException error, handler) async {
+          final requestOptions = error.requestOptions;
+
+          final isUnauthorized =
+              error.response?.statusCode == 401 ||
+              error.response?.statusCode == 403 ||
+              (error.response?.data is Map && error.response?.data['message'] == "jwt expired");
+
+          // Prevent infinite loop
+          final alreadyRetried = requestOptions.extra['retried'] == true;
+
+          if (isUnauthorized &&
+              !alreadyRetried &&
+              !_isAuthEndpoint(requestOptions.path) &&
+              _storageService.refreshToken != null) {
+            requestOptions.extra['retried'] = true;
+
+            if (!_isRefreshing) {
+              _isRefreshing = true;
+
+              final newToken = await refreshToken();
+
+              _isRefreshing = false;
+
+              if (newToken != null) {
+                final response = await _retry(requestOptions);
+                return handler.resolve(response);
+              } else {
+                _handleLogout();
+              }
+            } else {
+              await Future.delayed(const Duration(milliseconds: 500));
+              final response = await _retry(requestOptions);
+              return handler.resolve(response);
+            }
           }
 
-          onError: (error, handler) async {
-            print("Error Status: ${error.response?.statusCode}");
-            print("Error Message: ${error.message}");
-
-            final data = error.response?.data;
-
-            if (data != null) {
-              print("Error Response Data: $data");
-            }
-
-            // Only try to read message if response is JSON
-            if (data is Map && data['message'] == "jwt expired") {
-              final newAccessToken = await refreshToken();
-
-              if (newAccessToken != null) {
-                error.requestOptions.headers["Authorization"] = 'Bearer $newAccessToken';
-                final opts = Options(
-                  method: error.requestOptions.method,
-                  headers: error.requestOptions.headers,
-                );
-
-                final cloneReq = await _dio.request(
-                  error.requestOptions.path,
-                  options: opts,
-                  data: error.requestOptions.data,
-                  queryParameters: error.requestOptions.queryParameters,
-                );
-
-                return handler.resolve(cloneReq);
-              }
-            }
-
-            return handler.next(error);
-          };
           return handler.next(error);
         },
       ),
+    );
+  }
+
+  bool _isAuthEndpoint(String path) {
+    return path.contains(ApiConstants.vendorLogin) || path.contains(ApiConstants.refreshToken);
+  }
+
+  Future<Response> _retry(RequestOptions requestOptions) {
+    final options = Options(
+      method: requestOptions.method,
+      headers: {
+        ...requestOptions.headers,
+        "Authorization": "Bearer ${_storageService.accessToken}",
+      },
+      extra: requestOptions.extra,
+    );
+
+    return _dio.request(
+      requestOptions.path,
+      data: requestOptions.data,
+      queryParameters: requestOptions.queryParameters,
+      options: options,
     );
   }
 
@@ -99,27 +111,46 @@ class DioClient {
     try {
       final refreshToken = _storageService.refreshToken;
 
-      final response = await _dio.post(
+      if (refreshToken == null) return null;
+
+      final refreshDio = Dio(BaseOptions(baseUrl: ApiConstants.baseUrl));
+
+      final response = await refreshDio.post(
         ApiConstants.refreshToken,
-        data: {'refreshToken': refreshToken},
+        data: {"refreshToken": refreshToken},
       );
 
       if (response.statusCode == 200) {
-        final newAccessToken = response.data['data']['newAccessToken'];
-        _storageService.setAccessToken(newAccessToken);
+        final data = response.data['data'];
 
-        final newRefreshToken = response.data['data']['newRefreshToken'];
-        _storageService.setRefreshToken(newRefreshToken);
+        final newAccessToken = data['newAccessToken'];
+        final newRefreshToken = data['newRefreshToken'];
+
+        await _storageService.setAccessToken(newAccessToken);
+        await _storageService.setRefreshToken(newRefreshToken);
 
         return newAccessToken;
-      } else {
-        _storageService.clear();
-        Get.offAllNamed(AppRoutes.VENDOR_LOGIN);
       }
     } catch (e) {
-      _storageService.clear();
-      Get.offAllNamed(AppRoutes.VENDOR_LOGIN);
+      _handleLogout();
     }
+
     return null;
+  }
+
+  void _handleLogout() async {
+    try {
+      String? deviceId = await _storageService.read('device_id');
+
+      if (deviceId != null) {
+        _dio.patch(ApiConstants.fcmUnregister, data: {"deviceId": deviceId});
+      }
+    } catch (_) {}
+
+    await _storageService.clear();
+
+    Get.snackbar("Session Expired", "Please login again");
+
+    Get.offAllNamed(AppRoutes.USER_BOTTOM_NAV);
   }
 }

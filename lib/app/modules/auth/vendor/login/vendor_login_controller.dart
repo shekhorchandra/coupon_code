@@ -19,8 +19,8 @@ class VendorLoginController extends GetxController {
   final obscure = true.obs;
 
   /// Default values for email and password
-  final emailController = TextEditingController(text: "").obs;
-  final passwordController = TextEditingController(text: "").obs;
+  final emailController = TextEditingController(text: "nayemalways.sm@gmail.com").obs;
+  final passwordController = TextEditingController(text: "nayem@@Ahmed007").obs;
   RxBool loading = false.obs;
 
   final DioClient _dioClient = DioClient();
@@ -89,53 +89,85 @@ class VendorLoginController extends GetxController {
 
   /// Login API call
   Future<void> loginApi() async {
+    debugPrint("loginApi started");
+
     loading.value = true;
+    debugPrint("Loading set to true");
+
     try {
+      debugPrint("Calling _performLoginRequest...");
       final response = await _performLoginRequest();
+      debugPrint("Login request completed");
+
+      debugPrint("Response status code: ${response.statusCode}");
+      debugPrint("Response data: ${response.data}");
 
       if (response.statusCode == 200) {
+        debugPrint("Login success (status 200)");
+
         // Handle successful login response
         var data = response.data;
+        debugPrint("Parsed response data");
+
         _storeLoginTokens(data);
+        debugPrint("Login tokens stored");
+
         _storeUserId();
+        debugPrint("User ID stored");
 
         // Register FCM and Device
+        debugPrint("Registering FCM...");
         bool fcmRegistered = await _registerFCM();
+        debugPrint("FCM registration result: $fcmRegistered");
+
         if (!fcmRegistered) {
+          debugPrint("FCM registration failed");
           Get.snackbar('Error', 'An error occurred while initializing notifications!');
           return;
         }
 
+        debugPrint("Registering device...");
         bool deviceRegistered = await _registerDevice(data);
+        debugPrint("Device registration result: $deviceRegistered");
+
         if (!deviceRegistered) {
+          debugPrint("Device registration failed");
           Get.snackbar('Error', 'An error occurred while registering the device.');
           return;
         }
 
+        debugPrint("Saving loggedIn flag in storage...");
         _storageService.write('loggedIn', true);
+        debugPrint("loggedIn flag saved");
 
-        // Proceed to the next screen
+        debugPrint("Checking verification/shop creation...");
         isVerifiedOrIsShopCreated();
+        debugPrint("Verification check executed");
 
         // Get.snackbar("Login Successful", "");
         // Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR);
       } else {
+        debugPrint("Login failed with status code: ${response.statusCode}");
         _handleError(response.statusCode ?? 0);
       }
     } catch (e, stackTrace) {
+      debugPrint("Exception occurred: $e");
+      debugPrint("StackTrace: $stackTrace");
       _handleException(e, stackTrace);
     } finally {
       loading.value = false;
+      debugPrint("Loading set to false");
+      debugPrint("loginApi finished");
     }
   }
 
   // Login with Apple
   Future<void> loginWithApple(AuthorizationCredentialAppleID credential) async {
     loading.value = true;
-    // print(credential);
-    // print(credential.authorizationCode);
-    // print(credential.identityToken);
-    // print(credential.userIdentifier);
+    // debugPrint(credential);
+    // debugPrint(credential.authorizationCode);
+    // debugPrint(credential.identityToken);
+    // debugPrint(credential.userIdentifier);
     try {
       final response = await _performAppleLoginRequest(credential.authorizationCode);
 
