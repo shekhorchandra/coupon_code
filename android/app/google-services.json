@@ -23,25 +23,6 @@
           "other_platform_oauth_client": []
         }
       }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:191216477482:android:d7d6bd0292329e6ec2ea53",
-        "android_client_info": {
-          "package_name": "com.app.coupon_code"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyB-ZPA1YKlwArS_C8JJ4wZgjSaga3OUglM"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
     }
   ],
   "configuration_version": "1"

@@ -32,7 +32,7 @@ class DeviceInfoService {
   Future<String> _generateDeviceName() async {
     if (Platform.isAndroid) {
       AndroidDeviceInfo androidInfo = await _deviceInfoPlugin.androidInfo;
-      return "${androidInfo.model} (${androidInfo.brand} ${androidInfo.version.release})";
+      return "${androidInfo.model} (${androidInfo.brand}, Android ${androidInfo.version.release})";
     } else if (Platform.isIOS) {
       IosDeviceInfo iosInfo = await _deviceInfoPlugin.iosInfo;
       return "${iosInfo.utsname.machine} (${iosInfo.systemVersion})";

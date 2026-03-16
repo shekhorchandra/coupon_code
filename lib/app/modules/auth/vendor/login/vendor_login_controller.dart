@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:app_links/app_links.dart';
@@ -144,8 +145,8 @@ class VendorLoginController extends GetxController {
         isVerifiedOrIsShopCreated();
         debugPrint("Verification check executed");
 
-        // Get.snackbar("Login Successful", "");
-        // Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR);
+        Get.snackbar("Login Successful", "");
+        Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR);
       } else {
         debugPrint("Login failed with status code: ${response.statusCode}");
         _handleError(response.statusCode ?? 0);
@@ -195,8 +196,8 @@ class VendorLoginController extends GetxController {
         // Proceed to the next screen
         isVerifiedOrIsShopCreated();
 
-        // Get.snackbar("Login Successful", "");
-        // Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR);
+        Get.snackbar("Login Successful", "");
+        Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR);
       } else {
         _handleError(response.statusCode ?? 0);
       }
@@ -231,15 +232,22 @@ class VendorLoginController extends GetxController {
     try {
       // Device and Token
       var deviceInfo = await _deviceInfoService.getDeviceInfo();
+      log(deviceInfo.toString());
       final deviceId = deviceInfo['deviceId'];
+      log(deviceId ?? '');
       final token = _storageService.read('fcm_token').toString();
+      log(token);
       final platform = Platform.isAndroid ? 'ANDROID' : 'IOS';
+      log(platform);
       final deviceName = deviceInfo['deviceName'];
+      log(deviceName ?? '');
 
       // Save to the local storage
-      _storageService.write('device_id', deviceId);
+      await _storageService.write('device_id', deviceId);
+      log("Device ID saved!");
 
       // Send to the backend
+      log("Sending to backend.....");
       final response = await _dioClient.client.post(
         ApiConstants.fcmRegister,
         data: {
@@ -249,6 +257,7 @@ class VendorLoginController extends GetxController {
           "deviceName": deviceName,
         },
       );
+      log("Sent.............");
 
       if (response.statusCode == 400) {
         Get.snackbar('Error', 'You are not verified! Contact with the administrator.');
