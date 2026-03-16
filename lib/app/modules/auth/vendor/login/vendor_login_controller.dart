@@ -12,6 +12,7 @@ import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart' hide Response;
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class VendorLoginController extends GetxController {
@@ -59,9 +60,7 @@ class VendorLoginController extends GetxController {
           if (accessToken != null) {
             _storageService.setAccessToken(accessToken);
 
-            _storeUserId({
-              "data": {"accessToken": accessToken},
-            });
+            _storeUserId();
 
             Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR);
           } else {
@@ -98,25 +97,72 @@ class VendorLoginController extends GetxController {
         // Handle successful login response
         var data = response.data;
         _storeLoginTokens(data);
-        _storeUserId(data);
+        _storeUserId();
 
         // Register FCM and Device
-        // bool fcmRegistered = await _registerFCM();
-        // if (!fcmRegistered) {
-        //   Get.snackbar('Error', 'An error occurred while initializing notifications!');
-        //   return;
-        // }
+        bool fcmRegistered = await _registerFCM();
+        if (!fcmRegistered) {
+          Get.snackbar('Error', 'An error occurred while initializing notifications!');
+          return;
+        }
 
-        // bool deviceRegistered = await _registerDevice(data);
-        // if (!deviceRegistered) {
-        //   Get.snackbar('Error', 'An error occurred while registering the device.');
-        //   return;
-        // }
+        bool deviceRegistered = await _registerDevice(data);
+        if (!deviceRegistered) {
+          Get.snackbar('Error', 'An error occurred while registering the device.');
+          return;
+        }
+
+        _storageService.write('loggedIn', true);
 
         // Proceed to the next screen
         isVerifiedOrIsShopCreated();
 
+        // Get.snackbar("Login Successful", "");
+        // Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR);
+      } else {
+        _handleError(response.statusCode ?? 0);
+      }
+    } catch (e, stackTrace) {
+      _handleException(e, stackTrace);
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  // Login with Apple
+  Future<void> loginWithApple(AuthorizationCredentialAppleID credential) async {
+    loading.value = true;
+    // print(credential);
+    // print(credential.authorizationCode);
+    // print(credential.identityToken);
+    // print(credential.userIdentifier);
+    try {
+      final response = await _performAppleLoginRequest(credential.authorizationCode);
+
+      if (response.statusCode == 200) {
+        // Handle successful login response
+        var data = response.data;
+        _storeLoginTokens(data);
+        _storeUserId();
+
+        // Register FCM and Device
+        bool fcmRegistered = await _registerFCM();
+        if (!fcmRegistered) {
+          Get.snackbar('Error', 'An error occurred while initializing notifications!');
+          return;
+        }
+
+        bool deviceRegistered = await _registerDevice(data);
+        if (!deviceRegistered) {
+          Get.snackbar('Error', 'An error occurred while registering the device.');
+          return;
+        }
+
         _storageService.write('loggedIn', true);
+
+        // Proceed to the next screen
+        isVerifiedOrIsShopCreated();
+
         // Get.snackbar("Login Successful", "");
         // Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR);
       } else {
@@ -135,6 +181,11 @@ class VendorLoginController extends GetxController {
       ApiConstants.vendorLogin,
       data: {"email": emailController.value.text, "password": passwordController.value.text},
     );
+  }
+
+  /// Perform Apple login request
+  Future<Response<dynamic>> _performAppleLoginRequest(String authorizationCode) {
+    return _dioClient.client.post(ApiConstants.vendorAppleLogin, data: {"code": authorizationCode});
   }
 
   /// Register FCM
@@ -195,7 +246,7 @@ class VendorLoginController extends GetxController {
   }
 
   /// Store user id in local storage
-  void _storeUserId(Map<String, dynamic> data) async {
+  void _storeUserId() async {
     try {
       final response = await _dioClient.client.get(ApiConstants.getMe);
 

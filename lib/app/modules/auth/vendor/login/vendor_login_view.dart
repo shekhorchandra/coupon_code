@@ -174,7 +174,7 @@ class VendorLoginView extends GetView<VendorLoginController> {
                           ),
                         );
 
-                        print(credential);
+                        controller.loginWithApple(credential);
                       },
                     ),
                   ),
