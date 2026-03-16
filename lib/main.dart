@@ -1,4 +1,5 @@
 import 'package:coupon_code/app/core/theme/checkbox_theme.dart';
+import 'package:coupon_code/app/data/services/deep_link_service.dart';
 import 'package:coupon_code/app/data/services/notification_service.dart';
 import 'package:coupon_code/app/data/services/storage_service.dart';
 import 'package:coupon_code/firebase_options.dart';
@@ -22,6 +23,9 @@ void main() async {
 
   // Handle FCM messages while in background
   FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
+
+  // Deep Link Initialization
+  DeepLinkService().init();
 
   runApp(const CouponDiscountApp());
 }
