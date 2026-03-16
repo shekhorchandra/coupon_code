@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../services/Helper_status_code/HttpStatusHandler.dart';
 import '../../../../services/contants/api_constants.dart';
@@ -16,6 +17,9 @@ class CategoryDetailsController extends GetxController {
 
   late String categoryId;
   late String title;
+
+  final searchController = TextEditingController();
+  final zipController = TextEditingController();
 
   /// Debounce timer for search
   Timer? _debounce;
@@ -56,12 +60,26 @@ class CategoryDetailsController extends GetxController {
   }
 
   /// Search deals dynamically with debounce
-  void onSearchDeals(String value) {
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
+  /// SEARCH BUTTON CLICK
+  void onSearchButton() {
+    final keyword = searchController.text.trim();
+    final zip = zipController.text.trim();
 
-    _debounce = Timer(const Duration(milliseconds: 500), () {
-      fetchDealsWithSearch(searchTerm: value);
-    });
+    String term = "";
+
+    if (keyword.isNotEmpty) {
+      term = keyword;
+    }
+
+    if (zip.isNotEmpty) {
+      term = zip;
+    }
+
+    if (term.isEmpty) {
+      fetchDeals();
+    } else {
+      fetchDealsWithSearch(searchTerm: term);
+    }
   }
 
   /// SEARCH DEALS API

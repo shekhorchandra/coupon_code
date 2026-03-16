@@ -40,27 +40,87 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                 children: [
                   // Search + Zip Code + Location
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Search Bar + Zip Code Button
-                        Row(
-                          children: [
-                            // Search Field
-                            Expanded(
-                              child: CustomTextField(
-                                hint: "Search for Deals or Zip Code...",
-                                icon: Icons.search,
-                                onChanged: controller.onSearchDeals, // use controller method
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(50),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 6,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
 
+                          /// SEARCH ICON
+                          const Icon(Icons.search, color: Colors.grey, size: 20),
+                          const SizedBox(width: 8),
 
+                          /// SEARCH FIELD
+                          Expanded(
+                            child: TextField(
+                              controller: controller.searchController,
+                              decoration: const InputDecoration(
+                                hintText: "Search deals...",
+                                border: InputBorder.none,
+                                isDense: true,
                               ),
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                      ],
+                          ),
+
+                          /// DIVIDER
+                          Container(
+                            height: 24,
+                            width: 1,
+                            color: Colors.grey.shade300,
+                            margin: const EdgeInsets.symmetric(horizontal: 12),
+                          ),
+
+                          /// ZIP ICON
+                          const Icon(Icons.location_on, color: Colors.grey, size: 20),
+                          const SizedBox(width: 6),
+
+                          /// ZIP FIELD
+                          SizedBox(
+                            width: 70,
+                            child: TextField(
+                              controller: controller.zipController,
+                              keyboardType: TextInputType.number,
+                              decoration: const InputDecoration(
+                                hintText: "Zip",
+                                border: InputBorder.none,
+                                isDense: true,
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(width: 10),
+
+                          /// SEARCH BUTTON
+                          GestureDetector(
+                            onTap: controller.onSearchButton,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: AppColor.primary,
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              child: const Text(
+                                "Search",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
 

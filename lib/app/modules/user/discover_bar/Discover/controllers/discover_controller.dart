@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../services/Helper_status_code/HttpStatusHandler.dart';
 import '../../../../services/contants/api_constants.dart';
@@ -11,6 +12,12 @@ class DiscoverController extends GetxController {
   final deals = <DealCardModel>[].obs;
   final isLoading = false.obs;
 
+  final TextEditingController searchController = TextEditingController();
+  final TextEditingController zipController = TextEditingController();
+
+  // final deals = <DealCardModel>[].obs;
+  // final isLoading = false.obs;
+
   @override
   void onInit() {
     fetchDeals();
@@ -18,16 +25,37 @@ class DiscoverController extends GetxController {
   }
 
   /// SEARCH HANDLER
-  void onSearch(String value) {
-    searchQuery.value = value;
+  // void onSearch(String value) {
+  //   searchQuery.value = value;
+  //
+  //   final term = value.trim();
+  //
+  //   /// if search empty → show default deals
+  //   if (term.isEmpty) {
+  //     fetchDeals();
+  //   } else {
+  //     /// if keyword exists → search API
+  //     fetchDealsWithSearch(searchTerm: term);
+  //   }
+  // }
 
-    final term = value.trim();
+  void onSearchButton() {
+    final keyword = searchController.text.trim();
+    final zip = zipController.text.trim();
 
-    /// if search empty → show default deals
+    String term = "";
+
+    if (keyword.isNotEmpty) {
+      term = keyword;
+    }
+
+    if (zip.isNotEmpty) {
+      term = zip;
+    }
+
     if (term.isEmpty) {
       fetchDeals();
     } else {
-      /// if keyword exists → search API
       fetchDealsWithSearch(searchTerm: term);
     }
   }
