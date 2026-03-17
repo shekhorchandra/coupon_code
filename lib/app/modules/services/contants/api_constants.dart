@@ -49,4 +49,7 @@ class ApiConstants {
 
   /// category details
   static String categoryDeals(String categoryId) => "/service/c/$categoryId";
+
+  /// Notification
+  static const String notifications = '/notification';
 }
