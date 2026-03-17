@@ -2,9 +2,9 @@ import 'package:coupon_code/app/core/values/app_assets.dart';
 import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:flutter/material.dart' hide MenuController;
 import 'package:get/get.dart';
+
 import '../../../../../core/values/app_color.dart';
 import '../../../../../core/values/app_text_styles.dart';
-import '../../../../../core/widgets/App_button.dart';
 import '../../../../../core/widgets/common_app_bar.dart';
 import '../menu_controller/menu_controller.dart';
 
@@ -45,7 +45,6 @@ class MenuView extends GetView<MenuController> {
                       ),
                     ),
 
-
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
@@ -72,7 +71,6 @@ class MenuView extends GetView<MenuController> {
                 ),
               ),
             ),
-
 
             const SizedBox(height: 24),
 

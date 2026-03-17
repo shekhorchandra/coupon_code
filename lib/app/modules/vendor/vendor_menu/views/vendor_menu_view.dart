@@ -1,3 +1,5 @@
+import 'package:coupon_code/app/core/values/app_assets.dart';
+import 'package:coupon_code/app/core/values/app_color.dart';
 import 'package:coupon_code/app/core/values/app_sizes.dart';
 import 'package:coupon_code/app/core/widgets/App_button.dart';
 import 'package:coupon_code/app/core/widgets/section_heading.dart';
@@ -30,6 +32,58 @@ class VendorMenuPage extends GetView<VendorAccountController> {
               children: [
                 // User Info
                 ProfileOverviewCard(),
+                const SizedBox(height: 20),
+
+                GestureDetector(
+                  onTap: () => Get.toNamed(AppRoutes.USER_BOTTOM_NAV),
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: const [
+                        BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 2)),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 30,
+                          backgroundColor: AppColor.primary.withAlpha(30),
+                          child: Image.asset(
+                            AppAssets.vendor,
+                            height: 50,
+                            width: 50,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  const Text(
+                                    "Switch to User",
+                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 4),
+                              const Text(
+                                "Continue as a User",
+                                style: TextStyle(fontSize: 13, color: Colors.grey),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Icon(Icons.arrow_forward_ios, size: 16),
+                      ],
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 20),
 
                 // Settings
