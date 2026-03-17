@@ -53,4 +53,6 @@ abstract class AppRoutes {
 
   static const VENDOR_MENU = '/vendor/menu';
   static const VENDOR_NAVIGATION_BAR = '/vendor/navigation_bar';
+
+  static const NOTIFICATIONS = '/notifications';
 }
