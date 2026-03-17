@@ -1,6 +1,8 @@
 import 'package:coupon_code/app/data/models/deal_model.dart';
 import 'package:coupon_code/app/modules/auth/vendor/verification/vendor_verification_binding.dart';
 import 'package:coupon_code/app/modules/auth/vendor/verification/vendor_verification_view.dart';
+import 'package:coupon_code/app/modules/vendor/notification/bindings/notification_binding.dart';
+import 'package:coupon_code/app/modules/vendor/notification/views/notification_view.dart';
 import 'package:coupon_code/app/modules/vendor/payment_method/bindings/payment_method_binding.dart';
 import 'package:coupon_code/app/modules/vendor/payment_method/view/add_new_card_view.dart';
 import 'package:coupon_code/app/modules/vendor/payment_method/view/payment_methods_view.dart';
@@ -278,6 +280,11 @@ class AppPages {
       name: AppRoutes.VENDOR_NAVIGATION_BAR,
       page: () => VendorNavigationBarPage(),
       binding: VendorNavigationBarBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.NOTIFICATIONS,
+      page: () => NotificationView(),
+      binding: NotificationBinding(),
     ),
 
     /// Contact Us
