@@ -1,49 +1,76 @@
-
-import 'dart:developer';
-
+import 'dart:async';
 import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import '../../../../../core/values/app_assets.dart';
 import '../../../../../core/values/app_color.dart';
 import '../../../../../core/widgets/App_button.dart';
 import '../../../../../core/widgets/skeleton.dart';
-import '../../../../../data/models/deal_model.dart';
-import '../../../../../data/services/storage_service.dart';
-import 'deal_badge.dart';
 import '../models/deal_card_model.dart';
-import 'deal_overlay_text.dart';
 
-
-class DealCard extends StatelessWidget {
+class DealCard extends StatefulWidget {
   final DealCardModel deal;
   final int index;
 
-  DealCard({super.key, required this.deal, required this.index});
+  const DealCard({super.key, required this.deal, required this.index});
 
-  // Calculate time left for promotion
-  String getTimeLeft(DateTime? promotedUntil) {
-    if (promotedUntil == null) return "";
+  @override
+  State<DealCard> createState() => _DealCardState();
+}
+
+class _DealCardState extends State<DealCard> {
+  late Timer _timer;
+
+  @override
+  void initState() {
+    super.initState();
+
+    /// rebuild every second
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (mounted) setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  /// Live countdown (day, hour, min, sec)
+  String getTimeLeft(DateTime? endTime) {
+    if (endTime == null) return "";
+
     final now = DateTime.now();
-    if (promotedUntil.isBefore(now)) return "Expired";
+    if (endTime.isBefore(now)) return "Expired";
 
-    final difference = promotedUntil.difference(now);
+    final difference = endTime.difference(now);
+
     final days = difference.inDays;
     final hours = difference.inHours % 24;
+    final minutes = difference.inMinutes % 60;
+    final seconds = difference.inSeconds % 60;
 
-    return "${days}d ${hours}h";
+    if (days > 0) {
+      return "${days}d ${hours.toString().padLeft(2, '0')}h "
+          "${minutes.toString().padLeft(2, '0')}m "
+          "${seconds.toString().padLeft(2, '0')}s";
+    } else {
+      return "${hours.toString().padLeft(2, '0')}h "
+          "${minutes.toString().padLeft(2, '0')}m "
+          "${seconds.toString().padLeft(2, '0')}s";
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final isShort = index % 2 == 0;
-    final imageUrl = deal.images.isNotEmpty
-        ? deal.images.first
-        : ' ';
+    final isShort = widget.index % 2 == 0;
 
-    final priceAfterDiscount =
-    DealCardModel.afterDiscountPrice(deal.regularPrice, deal.discountPercent);
+    final imageUrl = widget.deal.images.isNotEmpty ? widget.deal.images.first : '';
+
+    final priceAfterDiscount = DealCardModel.afterDiscountPrice(
+      widget.deal.regularPrice,
+      widget.deal.discountPercent,
+    );
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 6),
@@ -55,7 +82,7 @@ class DealCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// Image with overlay
+          /// IMAGE + OVERLAY
           Stack(
             children: [
               ClipRRect(
@@ -96,7 +123,7 @@ class DealCard extends StatelessWidget {
                 ),
               ),
 
-              /// Distance badge (top-left)
+              /// Distance
               Positioned(
                 top: 8,
                 left: 8,
@@ -107,13 +134,13 @@ class DealCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    "${(deal.distance / 1000).toStringAsFixed(2)} km away",
-                    style: const TextStyle(color: Colors.white, fontSize: 12),
+                    "${(widget.deal.distance / 1000).toStringAsFixed(2)} km away",
+                    style: const TextStyle(color: Colors.white, fontSize: 10),
                   ),
                 ),
               ),
 
-              /// Discount badge (bottom-right)
+              /// Discount
               Positioned(
                 bottom: 8,
                 right: 8,
@@ -124,49 +151,48 @@ class DealCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    "${deal.discountPercent.toInt()}% OFF",
+                    "${widget.deal.discountPercent.toInt()}% OFF",
                     style: const TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 10,
+                    ),
                   ),
                 ),
               ),
             ],
           ),
 
-          /// Deal Info
+          /// CONTENT
           Padding(
             padding: const EdgeInsets.all(12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                /// Title
+                /// TITLE
                 Text(
-                  deal.title,
+                  widget.deal.title,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                 ),
+
                 const SizedBox(height: 4),
 
-                /// Shop Name
+                /// SHOP
                 GestureDetector(
                   onTap: () {
-                    Get.toNamed(
-                      AppRoutes.shopDetails,
-                      arguments: {"shopId": deal.shopId},
-                    );
+                    Get.toNamed(AppRoutes.shopDetails, arguments: {"shopId": widget.deal.shopId});
                   },
                   child: Text(
-                    deal.shopName,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: Colors.blue,
-                    ),
+                    widget.deal.shopName,
+                    style: const TextStyle(fontSize: 12, color: Colors.blue),
                   ),
                 ),
+
                 const SizedBox(height: 8),
 
-                /// Price + Original Price + Time Left
+                /// PRICE + TIMER
                 Row(
                   children: [
                     Text(
@@ -175,38 +201,50 @@ class DealCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      "\$${deal.regularPrice.toStringAsFixed(0)}",
+                      "\$${widget.deal.regularPrice.toStringAsFixed(0)}",
                       style: const TextStyle(
                         fontSize: 12,
                         color: Colors.grey,
                         decoration: TextDecoration.lineThrough,
                       ),
                     ),
-                    const Spacer(),
-                    if (deal.promotedUntil != null)
+
+
+                  ],
+                ),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    /// LIVE TIMER
+                    if (widget.deal.promotedUntil != null)
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                         decoration: BoxDecoration(
                           color: Colors.orange.shade100,
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(10),
                         ),
                         child: Text(
-                          getTimeLeft(deal.promotedUntil),
+                          getTimeLeft(widget.deal.promotedUntil),
                           style: const TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.bold, color: Colors.orange),
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.orange,
+                          ),
                         ),
                       ),
                   ],
                 ),
+
                 const SizedBox(height: 8),
 
-                /// Redeem Button
+                /// BUTTON
                 AppButton(
                   text: "Redeem Now",
                   height: 36,
                   width: double.infinity,
                   onPressed: () {
-                    Get.toNamed('/discover-details', arguments: {'id': deal.id});
+                    Get.toNamed('/discover-details', arguments: {'id': widget.deal.id});
                   },
                 ),
               ],

@@ -31,6 +31,9 @@ class CategoryDetailsController extends GetxController {
   final searchController = TextEditingController();
   final zipController = TextEditingController();
 
+  var currentTime = DateTime.now().obs;
+  Timer? _timer;
+
 
 
   @override
@@ -50,6 +53,11 @@ class CategoryDetailsController extends GetxController {
 
     // Fetch initial deals
     fetchDeals();
+
+    /// global timer (every second)
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      currentTime.value = DateTime.now();
+    });
   }
 
   void _handleSearchTextChange() {
@@ -60,6 +68,7 @@ class CategoryDetailsController extends GetxController {
 
   @override
   void onClose() {
+    _timer?.cancel();
     searchController.removeListener(_handleSearchTextChange);
     zipController.removeListener(_handleSearchTextChange);
     super.onClose();

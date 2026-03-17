@@ -319,7 +319,7 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                   deal.title,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 4),
 
@@ -330,7 +330,7 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                   },
                   child: Text(
                     deal.businessName,
-                    style: const TextStyle(fontSize: 13, color: Colors.blueAccent),
+                    style: const TextStyle(fontSize: 12, color: Colors.blueAccent),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -351,22 +351,28 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                         decoration: TextDecoration.lineThrough,
                       ),
                     ),
-                    const Spacer(),
+                  ],
+                ),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
                     if (deal.promotedUntil != null)
+
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: const EdgeInsets.symmetric(horizontal:6, vertical: 3),
                         decoration: BoxDecoration(
                           color: Colors.orange.shade100,
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Text(
+                        child: Obx(() => Text(
                           _formatRemainingTime(deal.promotedUntil!),
                           style: const TextStyle(
-                            fontSize: 12,
+                            fontSize: 10,
                             fontWeight: FontWeight.bold,
                             color: Colors.orange,
                           ),
-                        ),
+                        )),
                       ),
                   ],
                 ),
@@ -395,15 +401,26 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
 
   //Helper function to format remaining time
   String _formatRemainingTime(DateTime endTime) {
-    final now = DateTime.now();
+    final now = controller.currentTime.value;
+
     if (endTime.isBefore(now)) return "Expired";
 
     final difference = endTime.difference(now);
 
     final days = difference.inDays;
     final hours = difference.inHours % 24;
+    final minutes = difference.inMinutes % 60;
+    final seconds = difference.inSeconds % 60;
 
-    return "${days}d ${hours.toString().padLeft(2, '0')}h";
+    if (days > 0) {
+      return "${days}d ${hours.toString().padLeft(2, '0')}h "
+          "${minutes.toString().padLeft(2, '0')}m "
+          "${seconds.toString().padLeft(2, '0')}s";
+    } else {
+      return "${hours.toString().padLeft(2, '0')}h "
+          "${minutes.toString().padLeft(2, '0')}m "
+          "${seconds.toString().padLeft(2, '0')}s";
+    }
   }
 
   /// sorting helper function

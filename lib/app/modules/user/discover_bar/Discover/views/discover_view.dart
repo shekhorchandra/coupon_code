@@ -52,16 +52,11 @@ class DiscoverView extends GetView<DiscoverController> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(50),
                       boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 6,
-                          offset: Offset(0, 3),
-                        ),
+                        BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 3)),
                       ],
                     ),
                     child: Row(
                       children: [
-
                         /// SEARCH FIELD
                         const Icon(Icons.search, color: Colors.grey, size: 20),
                         const SizedBox(width: 8),
@@ -115,10 +110,7 @@ class DiscoverView extends GetView<DiscoverController> {
                             ),
                             child: const Text(
                               "Search",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
@@ -190,10 +182,10 @@ class DiscoverView extends GetView<DiscoverController> {
                                 child: InkWell(
                                   borderRadius: BorderRadius.circular(40),
                                   onTap: () {
-                                    Get.to(() => const CategotyDetails(), arguments: {
-                                      "id": category.id,
-                                      "title": category.name,
-                                    });
+                                    Get.to(
+                                      () => const CategotyDetails(),
+                                      arguments: {"id": category.id, "title": category.name},
+                                    );
                                   },
                                   child: Column(
                                     children: [
@@ -207,7 +199,7 @@ class DiscoverView extends GetView<DiscoverController> {
                                             height: 56,
                                             fit: BoxFit.cover,
                                             errorBuilder: (_, __, ___) =>
-                                            const Icon(Icons.image_not_supported),
+                                                const Icon(Icons.image_not_supported),
                                           ),
                                         ),
                                       ),
