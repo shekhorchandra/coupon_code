@@ -5,6 +5,7 @@ import 'package:coupon_code/app/core/values/app_text.dart';
 import 'package:coupon_code/app/core/widgets/App_button.dart';
 import 'package:coupon_code/app/core/widgets/app_circular_avatar.dart';
 import 'package:coupon_code/app/core/widgets/section_heading.dart';
+import 'package:coupon_code/app/data/services/storage_service.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_dashboard/controllers/vendor_dashboard_controller.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_dashboard/views/widgets/overview_card.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_dashboard/views/widgets/overview_chart.dart';
@@ -72,7 +73,16 @@ class VendorDashboardPage extends GetView<VendorDashboardController> {
                     const SizedBox(width: 12),
 
                     // Notification bell
-                    Icon(Iconsax.notification_copy, color: AppColor.bw.s700, size: 24),
+                    IconButton(
+                      onPressed: () {
+                        StorageService _storageService = StorageService();
+                        final userId = _storageService.userId;
+
+                        if (userId != null)
+                          Get.toNamed(AppRoutes.NOTIFICATIONS, parameters: {"userId": userId});
+                      },
+                      icon: Icon(Iconsax.notification_copy),
+                    ),
                   ],
                 ),
                 const SizedBox(height: AppSizes.denseButtonHeight),
