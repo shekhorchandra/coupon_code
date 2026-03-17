@@ -47,12 +47,95 @@ class DiscoverView extends GetView<DiscoverController> {
                 const SizedBox(height: 12),
 
                 // SEARCH
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(horizontal: 8),
+                //   child: CustomTextField(
+                //     hint: "Search for Deals or Zip Code...",
+                //     icon: Icons.search,
+                //     onChanged: discoverController.onSearch,
+                //   ),
+                // ),
+
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: CustomTextField(
-                    hint: "Search for Deals or Zip Code...",
-                    icon: Icons.search,
-                    onChanged: discoverController.onSearch,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(50),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 6,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+
+                        /// SEARCH FIELD
+                        const Icon(Icons.search, color: Colors.grey, size: 20),
+                        const SizedBox(width: 8),
+
+                        Expanded(
+                          child: TextField(
+                            controller: discoverController.searchController,
+                            decoration: const InputDecoration(
+                              hintText: "Search deals...",
+                              border: InputBorder.none,
+                              isDense: true,
+                            ),
+                          ),
+                        ),
+
+                        /// DIVIDER
+                        Container(
+                          height: 24,
+                          width: 1,
+                          color: Colors.grey.shade300,
+                          margin: const EdgeInsets.symmetric(horizontal: 12),
+                        ),
+
+                        /// ZIP FIELD
+                        const Icon(Icons.location_on, color: Colors.grey, size: 20),
+                        const SizedBox(width: 8),
+
+                        SizedBox(
+                          width: 70,
+                          child: TextField(
+                            controller: discoverController.zipController,
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              hintText: "Zip",
+                              border: InputBorder.none,
+                              isDense: true,
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(width: 12),
+
+                        /// SEARCH BUTTON
+                        GestureDetector(
+                          onTap: discoverController.onSearchButton,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: AppColor.primary,
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: const Text(
+                              "Search",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
 

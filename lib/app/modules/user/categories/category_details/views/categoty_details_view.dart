@@ -19,13 +19,9 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
   Widget build(BuildContext context) {
     final navController = Get.find<UserNavigationBarController>();
     final controller = Get.put(CategoryDetailsController());
-    final FilterController filterController = Get.put(FilterController());
 
     return Scaffold(
-      appBar: CommonAppBar(
-        title: controller.title,
-        showBack: true,
-      ),
+      appBar: CommonAppBar(title: controller.title, showBack: true),
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
@@ -40,99 +36,133 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                 children: [
                   // Search + Zip Code + Location
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Search Bar + Zip Code Button
-                        Row(
-                          children: [
-                            // Search Field
-                            Expanded(
-                              child: CustomTextField(
-                                hint: "Search for Deals or Zip Code...",
-                                icon: Icons.search,
-                                onChanged: controller.onSearchDeals, // use controller method
-
-
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                      ],
-                    ),
-                  ),
-
-                  // Dropdown
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                    color: Colors.grey.shade100,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(50),
+                        boxShadow: const [
+                          BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 3)),
+                        ],
+                      ),
                       child: Row(
                         children: [
-                          filterDropdown(
-                            hint: "Sort By",
-                            selectedValue: filterController.sortBy,
-                            items: filterController.sortOptions,
-                          ),
+                          /// SEARCH ICON
+                          const Icon(Icons.search, color: Colors.grey, size: 20),
                           const SizedBox(width: 8),
 
-                          filterDropdown(
-                            hint: "Categories",
-                            selectedValue: filterController.category,
-                            items: filterController.categoryOptions,
-                          ),
-                          const SizedBox(width: 8),
-
-                          filterDropdown(
-                            hint: "Price",
-                            selectedValue: filterController.price,
-                            items: filterController.priceOptions,
-                          ),
-                          const SizedBox(width: 8),
-
-                          filterDropdown(
-                            hint: "Availability",
-                            selectedValue: filterController.availability,
-                            items: filterController.availabilityOptions,
+                          /// SEARCH FIELD
+                          Expanded(
+                            child: TextField(
+                              controller: controller.searchController,
+                              decoration: const InputDecoration(
+                                hintText: "Search deals...",
+                                border: InputBorder.none,
+                                isDense: true,
+                              ),
+                            ),
                           ),
 
-                          const SizedBox(width: 8),
-
-                          filterDropdown(
-                            hint: "Distance",
-                            selectedValue: filterController.distance,
-                            items: filterController.distanceOptions,
+                          /// DIVIDER
+                          Container(
+                            height: 24,
+                            width: 1,
+                            color: Colors.grey.shade300,
+                            margin: const EdgeInsets.symmetric(horizontal: 12),
                           ),
 
-                          const SizedBox(width: 8),
+                          /// ZIP ICON
+                          const Icon(Icons.location_on, color: Colors.grey, size: 20),
+                          const SizedBox(width: 6),
 
-                          filterDropdown(
-                            hint: "Location",
-                            selectedValue: filterController.location,
-                            items: filterController.locationOptions,
+                          /// ZIP FIELD
+                          SizedBox(
+                            width: 70,
+                            child: TextField(
+                              controller: controller.zipController,
+                              keyboardType: TextInputType.number,
+                              decoration: const InputDecoration(
+                                hintText: "Zip",
+                                border: InputBorder.none,
+                                isDense: true,
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(width: 10),
+
+                          /// SEARCH BUTTON
+                          GestureDetector(
+                            onTap: controller.onSearchButton,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: AppColor.primary,
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              child: const Text(
+                                "Search",
+                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                              ),
+                            ),
                           ),
                         ],
                       ),
                     ),
                   ),
 
-                  const SizedBox(height: 8),
+                  /// sorting categories deals
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Obx(() {
+                      return SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            _sortChip(
+                              label: "Ascending",
+                              icon: Icons.arrow_upward,
+                              value: "Price: Low to High",
+                            ),
+                            _sortChip(
+                              label: "Descending",
+                              icon: Icons.arrow_downward,
+                              value: "Price: High to Low",
+                            ),
+                            _sortChip(
+                              label: "Distance",
+                              icon: Icons.location_on_outlined,
+                              value: "Distance",
+                            ),
+                            _sortChip(
+                              label: "Discount",
+                              icon: Icons.local_offer_outlined,
+                              value: "Discount",
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
+                  ),
 
                   // Deals Grid
-
                   Obx(() {
                     if (controller.isLoading.value) {
-                      return const Center(child: CircularProgressIndicator(color: AppColor.primary,));
+                      return const SizedBox(
+                        height: 300,
+                        child: Center(child: CircularProgressIndicator(color: AppColor.primary)),
+                      );
                     }
 
                     if (controller.deals.isEmpty) {
-                      return const Center(
-                        child: Text(
-                          "No deals found",
-                          style: TextStyle(fontSize: 16, color: Colors.black),
+                      return const SizedBox(
+                        height: 300,
+                        child: Center(
+                          child: Text(
+                            "No deals found",
+                            style: TextStyle(fontSize: 16, color: Colors.black),
+                          ),
                         ),
                       );
                     }
@@ -160,7 +190,11 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
     );
   }
 
-  Widget _dealCard(UserNavigationBarController navController, CategoryDealModel deal, bool isShort) {
+  Widget _dealCard(
+    UserNavigationBarController navController,
+    CategoryDealModel deal,
+    bool isShort,
+  ) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
       decoration: BoxDecoration(
@@ -190,7 +224,10 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                       height: isShort ? 160 : 260,
                       alignment: Alignment.center,
                       color: Colors.grey.shade200,
-                      child: const CircularProgressIndicator(strokeWidth: 2, color: AppColor.primary),
+                      child: const CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: AppColor.primary,
+                      ),
                     );
                   },
                   errorBuilder: (context, error, stackTrace) => Container(
@@ -231,7 +268,11 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                   ),
                   child: Text(
                     "${deal.discount.toInt()}% OFF",
-                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
                   ),
                 ),
               ),
@@ -308,7 +349,11 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                         ),
                         child: Text(
                           _formatRemainingTime(deal.promotedUntil!),
-                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.orange),
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.orange,
+                          ),
                         ),
                       ),
                   ],
@@ -322,11 +367,10 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                   height: 36,
                   width: double.infinity,
                   onPressed: () {
-                    Get.toNamed(AppRoutes.DISCOVERDETAILS, arguments: {
-                      'id': deal.id,
-                      'dealItem': deal,
-                      'isNetworkImage': true,
-                    });
+                    Get.toNamed(
+                      AppRoutes.DISCOVERDETAILS,
+                      arguments: {'id': deal.id, 'dealItem': deal, 'isNetworkImage': true},
+                    );
                   },
                 ),
               ],
@@ -336,20 +380,6 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
       ),
     );
   }
-
-  Widget _badge(String text) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-    decoration: BoxDecoration(color: AppColor.primary, borderRadius: BorderRadius.circular(4)),
-    child: Text(
-      text,
-      style: const TextStyle(color: Colors.black, fontSize: 10, fontWeight: FontWeight.bold),
-    ),
-  );
-  //
-  // Widget _textOverlay(String text) => Text(
-  //   text,
-  //   style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
-  // );
 
   //Helper function to format remaining time
   String _formatRemainingTime(DateTime endTime) {
@@ -362,5 +392,47 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
     final hours = difference.inHours % 24;
 
     return "${days}d ${hours.toString().padLeft(2, '0')}h";
+  }
+
+  Widget _sortChip({required String label, required IconData icon, required String value}) {
+    final controller = Get.find<CategoryDetailsController>();
+    final isSelected = controller.sortBy.value == value;
+
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: GestureDetector(
+        onTap: () {
+          controller.sortBy.value = value;
+          controller.applySorting();
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 3),
+          decoration: BoxDecoration(
+            color: isSelected ? AppColor.primary : Colors.white,
+            borderRadius: BorderRadius.circular(25),
+            border: Border.all(color: isSelected ? AppColor.primary : Colors.grey.shade300),
+            boxShadow: [
+              if (isSelected)
+                const BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
+            ],
+          ),
+          child: Row(
+            children: [
+              Icon(icon, size: 16, color: isSelected ? Colors.white : Colors.black54),
+              const SizedBox(width: 6),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: isSelected ? Colors.white : Colors.black87,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
