@@ -144,69 +144,81 @@ class DealModel {
   }
 
   factory DealModel.fromMap(Map<String, dynamic> map) {
-    // 1. Safe parsing for Lists (converts objects to strings if they aren't already)
+    // 1. Safe parsing for Lists
     List<String> parseStringList(dynamic list) {
       if (list == null || list is! List) return [];
-      return list.map((e) => e is Map ? e.toString() : e.toString()).toList();
+      return list.map((e) => e.toString()).toList();
     }
 
-    var imagesList = parseStringList(map['images']);
+    final imagesList = parseStringList(map['images']);
     final highlightList = parseStringList(map['highlight']);
 
-    // 2. Safe parsing for Outlets
-    final outlets = map['available_outlet'] as List?;
+    // 2. Safe parsing for Outlets (The JSON key is 'available_in_outlet')
+    final outlets = map['available_in_outlet'] as List?;
     String? address;
     double? distance;
 
     if (outlets != null && outlets.isNotEmpty) {
-      final nearestOutlet = outlets.reduce((a, b) {
-        final distA = (a['distance'] ?? double.infinity) as num;
-        final distB = (b['distance'] ?? double.infinity) as num;
-        return distA < distB ? a : b;
-      });
+      // Check if first element is a Map before accessing it
+      if (outlets.first is Map) {
+        final nearestOutlet = outlets.reduce((a, b) {
+          final distA = (a['distance'] ?? double.infinity) as num;
+          final distB = (b['distance'] ?? double.infinity) as num;
+          return distA < distB ? a : b;
+        });
 
-      address = nearestOutlet['address']?.toString();
-      distance = nearestOutlet['distance'] != null
-          ? (nearestOutlet['distance'] as num).toDouble()
-          : null;
+        address = nearestOutlet['address']?.toString();
+        distance = nearestOutlet['distance'] != null
+            ? (nearestOutlet['distance'] as num).toDouble()
+            : null;
+      }
     }
 
-    imagesList =
-        (map['images'] as List?)?.map((e) => e.toString()).toList() ?? [];
+    // 3. Handle 'shop' being either a String (ID) or a Map (Populated object)
+    final shopData = map['shop'];
+    String? shopId;
+    String? businessName;
+    String? website;
+
+    if (shopData is Map) {
+      shopId = shopData['_id']?.toString();
+      businessName = shopData['business_name']?.toString();
+      website = shopData['website']?.toString();
+    } else {
+      shopId = shopData?.toString();
+    }
+
+    // Use 'reguler_price' as per your JSON spelling
+    final double regPrice = (map['reguler_price'] ?? 0).toDouble();
+    final double disc = (map['discount'] ?? 0).toDouble();
 
     return DealModel(
       id: map['_id']?.toString() ?? '',
-      // shopId: map['shop']?.toString() ?? '',
-      shopId: map['shop']['_id'] ?? '',
+      shopId: shopId ?? '',
       userId: map['user']?.toString() ?? '',
       categoryId: map['category']?.toString() ?? '',
       activePromotion: map['activePromotion']?.toString(),
       title: map['title']?.toString() ?? '',
-      regular_price: (map['reguler_price'] ?? 0).toDouble(),
-      discountPercent: (map['discount'] ?? 0).toDouble(),
-      highlights: map['highlight'] != null
-          ? (map['highlight'] as List).map((e) => e.toString()).toList()
-          : [],
+      regular_price: regPrice,
+      discountPercent: disc,
+      highlights: highlightList,
       description: map['description']?.toString() ?? '',
       images: imagesList,
-      isPromoted: map['isPromoted'] as bool?,
+      isPromoted: map['isPromoted'] as bool? ?? false,
       promotedUntil: map['promotedUntil'] != null
-          ? DateTime.tryParse(map['promotedUntil'])
+          ? DateTime.tryParse(map['promotedUntil'].toString())
           : null,
       coupon: map['coupon']?.toString() ?? '',
       totalViews: map['total_views'] ?? 0,
       totalImpression: map['total_impression'] ?? 0,
-      website: map['shop'] is Map ? map['shop']['website']?.toString() : null,
+      website: website,
       address: address,
       distance: distance,
-      businessName: map['shop']?['business_name']?.toString() ?? '',
+      businessName: businessName ?? '',
       subtitle: map['description']?.toString() ?? '',
       image: imagesList.isNotEmpty ? imagesList.first : '',
-      price: DealModel.afterDiscountPrice(
-        (map['reguler_price'] ?? 0).toDouble(),
-        (map['discount'] ?? 0).toDouble(),
-      ),
-      originalPrice: (map['reguler_price'] ?? 0).toDouble(),
+      price: DealModel.afterDiscountPrice(regPrice, disc),
+      originalPrice: regPrice,
       duration: "N/A",
     );
   }

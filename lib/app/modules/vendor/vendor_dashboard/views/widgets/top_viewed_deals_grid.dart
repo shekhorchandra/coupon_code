@@ -62,6 +62,7 @@ class TopViewedDealsGrid extends GetView<VendorDashboardController> {
               childAspectRatio: dynamicRatio,
             ),
             itemBuilder: (context, index) {
+              print(controller.deals[index]);
               return DealGrid(deal: controller.deals[index]);
             },
           );
