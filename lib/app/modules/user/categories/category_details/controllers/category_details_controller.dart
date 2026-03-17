@@ -14,6 +14,7 @@ class CategoryDetailsController extends GetxController {
 
   var deals = <CategoryDealModel>[].obs;
   var isLoading = false.obs;
+  RxString currentSearchTerm = "".obs;
 
   late String categoryId;
   late String title;
@@ -43,8 +44,25 @@ class CategoryDetailsController extends GetxController {
       title = args["title"] ?? "";
     }
 
-    // Fetch category deals initially
+    // Listen to search/zip fields to clear text automatically
+    searchController.addListener(_handleSearchTextChange);
+    zipController.addListener(_handleSearchTextChange);
+
+    // Fetch initial deals
     fetchDeals();
+  }
+
+  void _handleSearchTextChange() {
+    if (searchController.text.isEmpty && zipController.text.isEmpty) {
+      currentSearchTerm.value = ""; // hide the text when fields are empty
+    }
+  }
+
+  @override
+  void onClose() {
+    searchController.removeListener(_handleSearchTextChange);
+    zipController.removeListener(_handleSearchTextChange);
+    super.onClose();
   }
 
   void applySorting() {
@@ -73,6 +91,9 @@ class CategoryDetailsController extends GetxController {
 
   /// for refresh
   Future<void> refreshDeals() async {
+    currentSearchTerm.value = ""; // hide text
+    searchController.clear();
+    zipController.clear();
     await fetchDeals();
   }
 
@@ -102,16 +123,13 @@ class CategoryDetailsController extends GetxController {
 
     String term = "";
 
-    if (keyword.isNotEmpty) {
-      term = keyword;
-    }
+    if (keyword.isNotEmpty) term = keyword;
+    if (zip.isNotEmpty) term = zip;
 
-    if (zip.isNotEmpty) {
-      term = zip;
-    }
+    currentSearchTerm.value = term; // <-- show the text
 
     if (term.isEmpty) {
-      fetchDeals();
+      fetchDeals(); // show default deals
     } else {
       fetchDealsWithSearch(searchTerm: term);
     }

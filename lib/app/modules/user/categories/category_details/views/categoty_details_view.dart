@@ -35,7 +35,7 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(horizontal: 12,),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(50),
@@ -142,6 +142,21 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                       );
                     }),
                   ),
+
+                  Obx(() {
+                    if (controller.currentSearchTerm.value.isEmpty) return const SizedBox.shrink();
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                      child: Text(
+                        "Showing results for '${controller.currentSearchTerm.value}'",
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black54,
+                        ),
+                      ),
+                    );
+                  }),
 
                   // Deals Grid
                   Obx(() {

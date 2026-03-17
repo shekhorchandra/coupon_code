@@ -14,7 +14,6 @@ import '../discover_widget/deal_card.dart';
 
 class DiscoverView extends GetView<DiscoverController> {
   const DiscoverView({super.key});
-  static Timer? _debounce;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +26,7 @@ class DiscoverView extends GetView<DiscoverController> {
           color: AppColor.primary,
           onRefresh: () async {
             await controller.fetchCategories();
-            await discoverController.fetchDeals();
+            await discoverController.refreshDeals();
           },
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
@@ -43,7 +42,7 @@ class DiscoverView extends GetView<DiscoverController> {
                   ),
                 ),
 
-                const SizedBox(height: 12),
+                const SizedBox(height: 6),
 
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -236,6 +235,25 @@ class DiscoverView extends GetView<DiscoverController> {
 
                 const SizedBox(height: 16),
 
+                // SHOW SEARCH TERM
+                Obx(() {
+                  if (discoverController.currentSearchTerm.value.isEmpty) {
+                    return const SizedBox.shrink();
+                  }
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                    child: Text(
+                      "Showing results for '${discoverController.currentSearchTerm.value}'",
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  );
+                }),
+
+                // DEALS
                 // DEALS
                 Obx(() {
                   /// Loading → show skeleton
