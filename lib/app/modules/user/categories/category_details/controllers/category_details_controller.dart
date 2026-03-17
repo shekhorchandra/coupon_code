@@ -17,12 +17,20 @@ class CategoryDetailsController extends GetxController {
 
   late String categoryId;
   late String title;
+  final sortBy = "Price: Low to High".obs;
+
+  final sortOptions = [
+    "Price: Low to High",
+    "Price: High to Low",
+    "Distance",
+    "Discount",
+  ];
+
 
   final searchController = TextEditingController();
   final zipController = TextEditingController();
 
-  /// Debounce timer for search
-  Timer? _debounce;
+
 
   @override
   void onInit() {
@@ -39,19 +47,46 @@ class CategoryDetailsController extends GetxController {
     fetchDeals();
   }
 
+  void applySorting() {
+    final sorted = deals.toList();
+
+    switch (sortBy.value) {
+      case "Price: Low to High":
+        sorted.sort((a, b) => a.finalPrice.compareTo(b.finalPrice));
+        break;
+
+      case "Price: High to Low":
+        sorted.sort((a, b) => b.finalPrice.compareTo(a.finalPrice));
+        break;
+
+      case "Distance":
+        sorted.sort((a, b) => a.distance.compareTo(b.distance));
+        break;
+
+      case "Discount":
+        sorted.sort((a, b) => b.discount.compareTo(a.discount));
+        break;
+    }
+
+    deals.assignAll(sorted);
+  }
+
   /// for refresh
   Future<void> refreshDeals() async {
     await fetchDeals();
   }
 
   /// Fetch deals for this category
-  Future<void> fetchDeals({String sort = "reguler_price"}) async {
+  Future<void> fetchDeals({String sort = "regular_price"}) async {
     try {
       isLoading.value = true;
 
       final result = await _api.getCategoryDeals(categoryId, sort: sort);
 
       deals.assignAll(result);
+
+      applySorting();
+
     } catch (e) {
       print("Category Deals Error: $e");
     } finally {
@@ -59,7 +94,7 @@ class CategoryDetailsController extends GetxController {
     }
   }
 
-  /// Search deals dynamically with debounce
+
   /// SEARCH BUTTON CLICK
   void onSearchButton() {
     final keyword = searchController.text.trim();
