@@ -4,7 +4,6 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import '../../../../../core/values/app_color.dart';
 import '../../../../../core/values/app_text_styles.dart';
-import '../../../../../core/widgets/custom_text_field.dart';
 import '../../../../../core/widgets/deal_card_skeleton.dart';
 import '../../../../../core/widgets/skeleton.dart';
 import '../../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
@@ -45,16 +44,6 @@ class DiscoverView extends GetView<DiscoverController> {
                 ),
 
                 const SizedBox(height: 12),
-
-                // SEARCH
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(horizontal: 8),
-                //   child: CustomTextField(
-                //     hint: "Search for Deals or Zip Code...",
-                //     icon: Icons.search,
-                //     onChanged: discoverController.onSearch,
-                //   ),
-                // ),
 
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),

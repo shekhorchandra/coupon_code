@@ -2,11 +2,11 @@ import 'package:barcode_widget/barcode_widget.dart';
 import 'package:coupon_code/app/core/values/app_color.dart';
 import 'package:coupon_code/app/core/widgets/App_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import '../Controller/coupon_controller.dart';
-
 
 class CouponPopupView extends GetView<CouponController> {
   const CouponPopupView({super.key});
@@ -14,9 +14,7 @@ class CouponPopupView extends GetView<CouponController> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: LayoutBuilder(
         builder: (context, constraints) {
           final maxHeight = MediaQuery.of(context).size.height * .85;
@@ -27,7 +25,6 @@ class CouponPopupView extends GetView<CouponController> {
               child: Padding(
                 padding: const EdgeInsets.all(20),
                 child: Obx(() {
-
                   if (controller.isLoading.value) {
                     return const SizedBox(
                       height: 200,
@@ -35,8 +32,7 @@ class CouponPopupView extends GetView<CouponController> {
                     );
                   }
 
-                  if (controller.couponCode == null ||
-                      controller.couponCode!.isEmpty) {
+                  if (controller.couponCode.value.isEmpty) {
                     return const SizedBox(
                       height: 200,
                       child: Center(child: Text("No coupon available")),
@@ -46,7 +42,6 @@ class CouponPopupView extends GetView<CouponController> {
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-
                       /// IMAGE + TITLE
                       if (controller.dealTitle != null) ...[
                         ClipRRect(
@@ -75,33 +70,27 @@ class CouponPopupView extends GetView<CouponController> {
 
                         const SizedBox(height: 10),
 
-                        if (controller.regularPrice != null &&
-                            controller.discountPercent != null)
+                        if (controller.regularPrice != null && controller.discountPercent != null)
                           Column(
                             children: [
                               _priceRow(
                                 title: "Price",
-                                value:
-                                "\$${controller.discountedPrice.toStringAsFixed(0)}",
+                                value: "\$${controller.discountedPrice.toStringAsFixed(0)}",
                                 valueColor: AppColor.primary,
                                 isBold: true,
                               ),
                               _priceRow(
                                 title: "Regular",
-                                value:
-                                "\$${controller.regularPrice!.toStringAsFixed(0)}",
+                                value: "\$${controller.regularPrice!.toStringAsFixed(0)}",
                                 isStrike: true,
                               ),
                               _priceRow(
                                 title: "Discount",
-                                value:
-                                "${controller.discountPercent!.toStringAsFixed(0)}% OFF",
+                                value: "${controller.discountPercent!.toStringAsFixed(0)}% OFF",
                                 valueColor: Colors.green,
                                 isBold: true,
                               ),
-
                               const SizedBox(height: 6),
-
                               Text(
                                 "You save \$${(controller.regularPrice! - controller.discountedPrice).toStringAsFixed(0)}",
                                 style: const TextStyle(
@@ -137,40 +126,65 @@ class CouponPopupView extends GetView<CouponController> {
                       if (controller.selectedIndex.value == 0)
                         _buildCouponCode(controller.couponCode.value),
 
+                      // QR Tab
                       if (controller.selectedIndex.value == 1)
-                        QrImageView(
-                          data: controller.qrData,
-                          size: MediaQuery.of(context).size.width * .5,
-                        ),
-
-                      if (controller.selectedIndex.value == 2)
                         Column(
                           children: [
-                            BarcodeWidget(
-                              barcode: Barcode.code128(),
+                            controller.qrImage.value.isNotEmpty
+                                ? Image.network(
+                              controller.qrImage.value,
+                              width: MediaQuery.of(context).size.width * 0.6,
+                              height: MediaQuery.of(context).size.width * 0.6,
+                              fit: BoxFit.contain,
+                            )
+                                : QrImageView(
                               data: controller.qrData,
-                              width: 280,
-                              height: 100,
-                              drawText: false,
+                              size: MediaQuery.of(context).size.width * 0.5,
                             ),
-
                             const SizedBox(height: 8),
-
-                            /// Show full code under barcode
-                            Text(
-                              controller.qrData,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 2,
-                              ),
-                            ),
+                            // Text(
+                            //   controller.qrData,
+                            //   style: const TextStyle(
+                            //     fontSize: 16,
+                            //     fontWeight: FontWeight.bold,
+                            //     letterSpacing: 2,
+                            //   ),
+                            // ),
                           ],
                         ),
 
+// Barcode Tab
+                      if (controller.selectedIndex.value == 2)
+                        Column(
+                          children: [
+                            controller.barcodeImage.value.isNotEmpty
+                                ? Image.network(
+                              controller.barcodeImage.value,
+                              width: 280,
+                              height: 100,
+                              fit: BoxFit.contain,
+                            )
+                                : BarcodeWidget(
+                              barcode: Barcode.code128(),
+                              data: controller.qrData,
+                              width: 280,
+                              height: 200,
+                              drawText: false,
+                            ),
+                            const SizedBox(height: 8),
+                            // Text(
+                            //   controller.qrData,
+                            //   style: const TextStyle(
+                            //     fontSize: 16,
+                            //     fontWeight: FontWeight.bold,
+                            //     letterSpacing: 2,
+                            //   ),
+                            // ),
+                          ],
+                        ),
                       const SizedBox(height: 20),
 
-                      /// CLOSE BUTTON
+                      /// CLOSE BUTTON (always at bottom)
                       AppButton(
                         text: "Close",
                         height: 42,
@@ -189,26 +203,27 @@ class CouponPopupView extends GetView<CouponController> {
 
   ///  Segmented Button
   Widget _segmentButton(String title, int index) {
+    final isSelected = controller.selectedIndex.value == index;
+
     return Expanded(
       child: GestureDetector(
         onTap: () => controller.changeTab(index),
-        child: Container(
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeInOut,
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            color: controller.selectedIndex.value == index
-                ? AppColor.primary
-                : Colors.transparent,
+            color: isSelected ? AppColor.primary : Colors.transparent,
             borderRadius: BorderRadius.circular(30),
           ),
           alignment: Alignment.center,
-          child: Text(
-            title,
+          child: AnimatedDefaultTextStyle(
+            duration: const Duration(milliseconds: 200),
             style: TextStyle(
-              color: controller.selectedIndex.value == index
-                  ? Colors.white
-                  : Colors.black54,
+              color: isSelected ? Colors.white : Colors.black54,
               fontWeight: FontWeight.bold,
             ),
+            child: Text(title),
           ),
         ),
       ),
@@ -220,25 +235,63 @@ class CouponPopupView extends GetView<CouponController> {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           decoration: BoxDecoration(
-            color: AppColor.primary.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(14),
+            color: AppColor.primary.withOpacity(0.08),
+            borderRadius: BorderRadius.circular(16),
             border: Border.all(color: AppColor.primary),
           ),
-          child: Text(
-            code,
-            style: const TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1.4,
-            ),
+          child: Column(
+            children: [
+              /// Coupon Code
+              Text(
+                code,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 2,
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
+              /// Copy Button
+              InkWell(
+                onTap: () {
+                  Clipboard.setData(ClipboardData(text: code));
+                  Get.snackbar("Copied", "Coupon code copied");
+                },
+                borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: AppColor.primary,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.copy, size: 16, color: Colors.white),
+                      SizedBox(width: 6),
+                      Text(
+                        "Copy",
+                        style: TextStyle(color: Colors.white, fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
-        const SizedBox(height: 12),
+
+        const SizedBox(height: 14),
+
         const Text(
           "Show this coupon at the merchant to redeem.",
-          style: TextStyle(fontSize: 12, color: Colors.black),
+          style: TextStyle(fontSize: 12, color: Colors.black54),
           textAlign: TextAlign.center,
         ),
       ],
@@ -257,21 +310,14 @@ class CouponPopupView extends GetView<CouponController> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            "$title:",
-            style: const TextStyle(
-              fontSize: 13,
-              color: Colors.black,
-            ),
-          ),
+          Text("$title:", style: const TextStyle(fontSize: 13, color: Colors.black)),
           Text(
             value,
             style: TextStyle(
               fontSize: 14,
               fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
               color: valueColor,
-              decoration:
-              isStrike ? TextDecoration.lineThrough : TextDecoration.none,
+              decoration: isStrike ? TextDecoration.lineThrough : TextDecoration.none,
             ),
           ),
         ],

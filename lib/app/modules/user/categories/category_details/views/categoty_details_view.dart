@@ -4,11 +4,8 @@ import 'package:get/get.dart';
 import '../../../../../core/values/app_color.dart';
 import '../../../../../core/widgets/App_button.dart';
 import '../../../../../core/widgets/common_app_bar.dart';
-import '../../../../../core/widgets/custom_text_field.dart';
 import '../../../../../routes/app_routes.dart';
 import '../../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
-import '../category_details_filter_widget/category_filter_controller/category_filter_controller.dart';
-import '../category_details_filter_widget/category_fliter_view/category_filter_dropdown.dart';
 import '../controllers/category_details_controller.dart';
 import '../model/category_deal_model.dart';
 
@@ -394,6 +391,7 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
     return "${days}d ${hours.toString().padLeft(2, '0')}h";
   }
 
+  /// sorting helper function
   Widget _sortChip({required String label, required IconData icon, required String value}) {
     final controller = Get.find<CategoryDetailsController>();
     final isSelected = controller.sortBy.value == value;
