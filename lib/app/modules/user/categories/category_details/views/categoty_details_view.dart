@@ -112,22 +112,21 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                     ),
                   ),
 
-
                   /// sorting categories deals
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12,),
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: Obx(() {
                       return SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: [
                             _sortChip(
-                              label: "Price",
+                              label: "Ascending",
                               icon: Icons.arrow_upward,
                               value: "Price: Low to High",
                             ),
                             _sortChip(
-                              label: "Price",
+                              label: "Descending",
                               icon: Icons.arrow_downward,
                               value: "Price: High to Low",
                             ),
@@ -150,16 +149,20 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                   // Deals Grid
                   Obx(() {
                     if (controller.isLoading.value) {
-                      return const Center(
-                        child: CircularProgressIndicator(color: AppColor.primary),
+                      return const SizedBox(
+                        height: 300,
+                        child: Center(child: CircularProgressIndicator(color: AppColor.primary)),
                       );
                     }
 
                     if (controller.deals.isEmpty) {
-                      return const Center(
-                        child: Text(
-                          "No deals found",
-                          style: TextStyle(fontSize: 16, color: Colors.black),
+                      return const SizedBox(
+                        height: 300,
+                        child: Center(
+                          child: Text(
+                            "No deals found",
+                            style: TextStyle(fontSize: 16, color: Colors.black),
+                          ),
                         ),
                       );
                     }
@@ -391,11 +394,7 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
     return "${days}d ${hours.toString().padLeft(2, '0')}h";
   }
 
-  Widget _sortChip({
-    required String label,
-    required IconData icon,
-    required String value,
-  }) {
+  Widget _sortChip({required String label, required IconData icon, required String value}) {
     final controller = Get.find<CategoryDetailsController>();
     final isSelected = controller.sortBy.value == value;
 
@@ -408,29 +407,19 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
         },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 250),
-          padding: const EdgeInsets.symmetric(horizontal: 14,),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 3),
           decoration: BoxDecoration(
             color: isSelected ? AppColor.primary : Colors.white,
             borderRadius: BorderRadius.circular(25),
-            border: Border.all(
-              color: isSelected ? AppColor.primary : Colors.grey.shade300,
-            ),
+            border: Border.all(color: isSelected ? AppColor.primary : Colors.grey.shade300),
             boxShadow: [
               if (isSelected)
-                const BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 4,
-                  offset: Offset(0, 2),
-                ),
+                const BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
             ],
           ),
           child: Row(
             children: [
-              Icon(
-                icon,
-                size: 16,
-                color: isSelected ? Colors.white : Colors.black54,
-              ),
+              Icon(icon, size: 16, color: isSelected ? Colors.white : Colors.black54),
               const SizedBox(width: 6),
               Text(
                 label,
