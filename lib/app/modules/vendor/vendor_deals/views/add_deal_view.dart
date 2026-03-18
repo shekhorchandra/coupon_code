@@ -101,7 +101,103 @@ class _AddDealViewState extends State<AddDealView> {
               CustomTextField(hint: 'Title', controller: controller.titleController),
               const SizedBox(height: 10),
 
-              // TODO: Add Category
+              Text('Discount/Promo', style: AppText.body1.semiBold),
+              const SizedBox(height: 10),
+              Obx(() {
+                return CustomDropdownField<String>(
+                  hint: 'Select coupon type',
+                  value: controller.selectedCouponType.value,
+                  items: controller.couponTypes,
+                  itemLabel: (item) => item,
+                  onChanged: (value) {
+                    controller.selectedCouponType.value = value ?? 'Select Discount/Promo';
+                  },
+                );
+              }),
+
+              const SizedBox(height: 10),
+
+              Obx(() {
+                // Show TextField if 'Coupon Code' is selected
+                if (controller.selectedCouponType.value == 'Coupon Code') {
+                  return CustomTextField(
+                    hint: 'e.g. 50%OFF',
+                    controller: controller.couponController,
+                  );
+                }
+                // Show Image Uploader if 'QR Code' or 'Barcode' is selected
+                else {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Upload ${controller.selectedCouponType.value} Image',
+                        style: AppText.body1.semiBold,
+                      ),
+                      const SizedBox(height: 10),
+                      InkWell(
+                        onTap: controller.pickCouponImage,
+                        child: Container(
+                          height: 120,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[100],
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.grey[300]!, width: 1),
+                          ),
+                          child: controller.couponImageFile.value != null
+                              ? Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: Image.file(
+                                        controller.couponImageFile.value!,
+                                        width: double.infinity,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                    Positioned(
+                                      right: 8,
+                                      top: 8,
+                                      child: CircleAvatar(
+                                        backgroundColor: Colors.white,
+                                        radius: 15,
+                                        child: IconButton(
+                                          padding: EdgeInsets.zero,
+                                          icon: const Icon(
+                                            Icons.close,
+                                            size: 18,
+                                            color: Colors.red,
+                                          ),
+                                          onPressed: () => controller.couponImageFile.value = null,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.qr_code_scanner_rounded,
+                                      size: 40,
+                                      color: Colors.grey[400],
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      "Tap to upload ${controller.selectedCouponType.value}",
+                                      style: TextStyle(color: Colors.grey[600]),
+                                    ),
+                                  ],
+                                ),
+                        ),
+                      ),
+                    ],
+                  );
+                }
+              }),
+              const SizedBox(height: 20),
+
               Text('Category', style: AppText.body1.semiBold),
               const SizedBox(height: 5),
               Obx(() {
@@ -143,48 +239,39 @@ class _AddDealViewState extends State<AddDealView> {
               ),
               const SizedBox(height: 10),
 
-              Text('Coupon Code', style: AppText.body1.semiBold),
-              Text(
-                'Enter a coupon code that users can redeem to access your deal.',
-                style: AppText.body2.medium.copyWith(color: AppColor.bw.s500),
-              ),
-              const SizedBox(height: 5),
-              CustomTextField(hint: 'Coupon Code', controller: controller.couponController),
-              const SizedBox(height: 20),
-
               // Deal Pricing
-              SectionHeading(title: 'Deal Pricing'),
-              const SizedBox(height: 10),
+              // SectionHeading(title: 'Deal Pricing'),
+              // const SizedBox(height: 10),
 
-              Text('Regular Price', style: AppText.body1.semiBold),
-              const SizedBox(height: 5),
-              CustomTextField(
-                hint: '50',
-                icon: Icons.attach_money_rounded,
-                controller: controller.priceController,
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(height: 10),
+              // Text('Regular Price', style: AppText.body1.semiBold),
+              // const SizedBox(height: 5),
+              // CustomTextField(
+              //   hint: '50',
+              //   icon: Icons.attach_money_rounded,
+              //   controller: controller.priceController,
+              //   keyboardType: TextInputType.number,
+              // ),
+              // const SizedBox(height: 10),
 
-              Text('Discount Percentage', style: AppText.body1.semiBold),
-              const SizedBox(height: 5),
-              CustomTextField(
-                hint: '20',
-                controller: controller.discountController,
-                keyboardType: TextInputType.number,
-                suffix: Icon(Icons.percent_rounded),
-              ),
-              const SizedBox(height: 10),
+              // Text('Discount Percentage', style: AppText.body1.semiBold),
+              // const SizedBox(height: 5),
+              // CustomTextField(
+              //   hint: '20',
+              //   controller: controller.discountController,
+              //   keyboardType: TextInputType.number,
+              //   suffix: Icon(Icons.percent_rounded),
+              // ),
+              // const SizedBox(height: 10),
 
-              Text('Final Price After Discount', style: AppText.body1.semiBold),
-              const SizedBox(height: 5),
-              CustomTextField(
-                hint: '40',
-                icon: Icons.attach_money_rounded,
-                controller: controller.finalPriceController,
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(height: 20),
+              // Text('Final Price After Discount', style: AppText.body1.semiBold),
+              // const SizedBox(height: 5),
+              // CustomTextField(
+              //   hint: '40',
+              //   icon: Icons.attach_money_rounded,
+              //   controller: controller.finalPriceController,
+              //   keyboardType: TextInputType.number,
+              // ),
+              // const SizedBox(height: 20),
 
               // Note
               Text(
