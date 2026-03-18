@@ -7,6 +7,7 @@ import 'package:coupon_code/app/core/widgets/custom_dropdown_field.dart';
 import 'package:coupon_code/app/core/widgets/custom_text_field.dart';
 import 'package:coupon_code/app/core/widgets/section_heading.dart';
 import 'package:coupon_code/app/data/models/deal_category_model.dart';
+import 'package:coupon_code/app/data/models/deal_image_model.dart';
 import 'package:coupon_code/app/data/models/deal_model.dart';
 import 'package:coupon_code/app/data/models/deal_plan_model.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/controllers/vendor_deals_controller.dart';
@@ -39,6 +40,9 @@ class _AddDealViewState extends State<AddDealView> {
 
     // If no deal is provided (Add New Deal), clear all fields
     if (deal == null) {
+      // Logo as thumbnail
+      controller.fetchShopLogo();
+
       controller.titleController.clear();
       controller.selectedCategory.value = '';
       controller.highlightController.clear();
@@ -53,6 +57,8 @@ class _AddDealViewState extends State<AddDealView> {
       ); // Default date range
       controller.acceptedTnC.value = false;
       controller.selectedDealPlan.value = dealPlans[2];
+      controller.images.clear();
+      controller.currentImageIndex.value = 0;
     } else {
       // Prefill data for updating
       controller.titleController.text = deal.title;
@@ -66,6 +72,16 @@ class _AddDealViewState extends State<AddDealView> {
         deal.regular_price ?? deal.originalPrice,
         deal.discountPercent,
       ).toStringAsFixed(2);
+      controller.currentImageIndex.value = 0;
+      controller.images.value = deal.images.asMap().entries.map((entry) {
+        int index = entry.key;
+        String url = entry.value;
+
+        return DealImageModel(
+          url: url,
+          isThumbnail: index == 0, // Set first image as thumbnail
+        );
+      }).toList();
     }
   }
 
@@ -101,7 +117,103 @@ class _AddDealViewState extends State<AddDealView> {
               CustomTextField(hint: 'Title', controller: controller.titleController),
               const SizedBox(height: 10),
 
-              // TODO: Add Category
+              Text('Discount/Promo', style: AppText.body1.semiBold),
+              const SizedBox(height: 10),
+              Obx(() {
+                return CustomDropdownField<String>(
+                  hint: 'Select coupon type',
+                  value: controller.selectedCouponType.value,
+                  items: controller.couponTypes,
+                  itemLabel: (item) => item,
+                  onChanged: (value) {
+                    controller.selectedCouponType.value = value ?? 'Select Discount/Promo';
+                  },
+                );
+              }),
+
+              const SizedBox(height: 10),
+
+              Obx(() {
+                // Show TextField if 'Coupon Code' is selected
+                if (controller.selectedCouponType.value == 'Coupon Code') {
+                  return CustomTextField(
+                    hint: 'e.g. 50%OFF',
+                    controller: controller.couponController,
+                  );
+                }
+                // Show Image Uploader if 'QR Code' or 'Barcode' is selected
+                else {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Upload ${controller.selectedCouponType.value} Image',
+                        style: AppText.body1.semiBold,
+                      ),
+                      const SizedBox(height: 10),
+                      InkWell(
+                        onTap: controller.pickCouponImage,
+                        child: Container(
+                          height: 120,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[100],
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.grey[300]!, width: 1),
+                          ),
+                          child: controller.couponImageFile.value != null
+                              ? Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: Image.file(
+                                        controller.couponImageFile.value!,
+                                        width: double.infinity,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                    Positioned(
+                                      right: 8,
+                                      top: 8,
+                                      child: CircleAvatar(
+                                        backgroundColor: Colors.white,
+                                        radius: 15,
+                                        child: IconButton(
+                                          padding: EdgeInsets.zero,
+                                          icon: const Icon(
+                                            Icons.close,
+                                            size: 18,
+                                            color: Colors.red,
+                                          ),
+                                          onPressed: () => controller.couponImageFile.value = null,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.qr_code_scanner_rounded,
+                                      size: 40,
+                                      color: Colors.grey[400],
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      "Tap to upload ${controller.selectedCouponType.value}",
+                                      style: TextStyle(color: Colors.grey[600]),
+                                    ),
+                                  ],
+                                ),
+                        ),
+                      ),
+                    ],
+                  );
+                }
+              }),
+              const SizedBox(height: 20),
+
               Text('Category', style: AppText.body1.semiBold),
               const SizedBox(height: 5),
               Obx(() {
@@ -143,48 +255,39 @@ class _AddDealViewState extends State<AddDealView> {
               ),
               const SizedBox(height: 10),
 
-              Text('Coupon Code', style: AppText.body1.semiBold),
-              Text(
-                'Enter a coupon code that users can redeem to access your deal.',
-                style: AppText.body2.medium.copyWith(color: AppColor.bw.s500),
-              ),
-              const SizedBox(height: 5),
-              CustomTextField(hint: 'Coupon Code', controller: controller.couponController),
-              const SizedBox(height: 20),
-
               // Deal Pricing
-              SectionHeading(title: 'Deal Pricing'),
-              const SizedBox(height: 10),
+              // SectionHeading(title: 'Deal Pricing'),
+              // const SizedBox(height: 10),
 
-              Text('Regular Price', style: AppText.body1.semiBold),
-              const SizedBox(height: 5),
-              CustomTextField(
-                hint: '50',
-                icon: Icons.attach_money_rounded,
-                controller: controller.priceController,
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(height: 10),
+              // Text('Regular Price', style: AppText.body1.semiBold),
+              // const SizedBox(height: 5),
+              // CustomTextField(
+              //   hint: '50',
+              //   icon: Icons.attach_money_rounded,
+              //   controller: controller.priceController,
+              //   keyboardType: TextInputType.number,
+              // ),
+              // const SizedBox(height: 10),
 
-              Text('Discount Percentage', style: AppText.body1.semiBold),
-              const SizedBox(height: 5),
-              CustomTextField(
-                hint: '20',
-                controller: controller.discountController,
-                keyboardType: TextInputType.number,
-                suffix: Icon(Icons.percent_rounded),
-              ),
-              const SizedBox(height: 10),
+              // Text('Discount Percentage', style: AppText.body1.semiBold),
+              // const SizedBox(height: 5),
+              // CustomTextField(
+              //   hint: '20',
+              //   controller: controller.discountController,
+              //   keyboardType: TextInputType.number,
+              //   suffix: Icon(Icons.percent_rounded),
+              // ),
+              // const SizedBox(height: 10),
 
-              Text('Final Price After Discount', style: AppText.body1.semiBold),
-              const SizedBox(height: 5),
-              CustomTextField(
-                hint: '40',
-                icon: Icons.attach_money_rounded,
-                controller: controller.finalPriceController,
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(height: 20),
+              // Text('Final Price After Discount', style: AppText.body1.semiBold),
+              // const SizedBox(height: 5),
+              // CustomTextField(
+              //   hint: '40',
+              //   icon: Icons.attach_money_rounded,
+              //   controller: controller.finalPriceController,
+              //   keyboardType: TextInputType.number,
+              // ),
+              // const SizedBox(height: 20),
 
               // Note
               Text(
