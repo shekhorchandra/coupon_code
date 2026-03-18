@@ -18,10 +18,7 @@ class CategoriesView extends GetView<CategoriesController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CommonAppBar(
-        title: "Categories",
-        showBack: false,
-      ),
+      appBar: const CommonAppBar(title: "Categories", showBack: false),
       body: Column(
         children: [
           // Search
@@ -41,9 +38,7 @@ class CategoriesView extends GetView<CategoriesController> {
               child: Obx(() {
                 // Loading state
                 if (controller.isLoading.value) {
-                  return const Center(
-                    child: CircularProgressIndicator(color: AppColor.primary),
-                  );
+                  return const Center(child: CircularProgressIndicator(color: AppColor.primary));
                 }
 
                 // Empty state
@@ -68,11 +63,8 @@ class CategoriesView extends GetView<CategoriesController> {
                       title: item.name,
                       onTap: () {
                         Get.to(
-                              () => const CategotyDetails(),
-                          arguments: {
-                            "id": item.id,
-                            "title": item.name,
-                          },
+                          () => const CategotyDetails(),
+                          arguments: {"id": item.id, "title": item.name},
                         );
                       },
                     );
@@ -106,8 +98,7 @@ class CategoriesView extends GetView<CategoriesController> {
                 width: 60,
                 height: 60,
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) =>
-                const Icon(Icons.image_not_supported),
+                errorBuilder: (_, __, ___) => const Icon(Icons.image_not_supported),
               ),
             ),
           ),
@@ -117,10 +108,7 @@ class CategoriesView extends GetView<CategoriesController> {
             textAlign: TextAlign.center,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: AppTextStyles.Text.copyWith(
-              fontSize: 10,
-              fontWeight: FontWeight.w600,
-            ),
+            style: AppTextStyles.Text.copyWith(fontSize: 10, fontWeight: FontWeight.w600),
           ),
         ],
       ),

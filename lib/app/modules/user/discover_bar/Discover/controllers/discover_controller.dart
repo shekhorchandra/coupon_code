@@ -15,29 +15,26 @@ class DiscoverController extends GetxController {
   final TextEditingController searchController = TextEditingController();
   final TextEditingController zipController = TextEditingController();
 
-  // final deals = <DealCardModel>[].obs;
-  // final isLoading = false.obs;
-
+  RxString currentSearchTerm = "".obs;
   @override
   void onInit() {
-    fetchDeals();
     super.onInit();
-  }
 
-  /// SEARCH HANDLER
-  // void onSearch(String value) {
-  //   searchQuery.value = value;
-  //
-  //   final term = value.trim();
-  //
-  //   /// if search empty → show default deals
-  //   if (term.isEmpty) {
-  //     fetchDeals();
-  //   } else {
-  //     /// if keyword exists → search API
-  //     fetchDealsWithSearch(searchTerm: term);
-  //   }
-  // }
+    fetchDeals();
+
+    // Hide "Showing results for..." when search field changes
+    searchController.addListener(() {
+      if (searchController.text.isEmpty && zipController.text.isEmpty) {
+        currentSearchTerm.value = ""; // hide the text
+      }
+    });
+
+    zipController.addListener(() {
+      if (searchController.text.isEmpty && zipController.text.isEmpty) {
+        currentSearchTerm.value = ""; // hide the text
+      }
+    });
+  }
 
   void onSearchButton() {
     final keyword = searchController.text.trim();
@@ -52,6 +49,8 @@ class DiscoverController extends GetxController {
     if (zip.isNotEmpty) {
       term = zip;
     }
+
+    currentSearchTerm.value = term;
 
     if (term.isEmpty) {
       fetchDeals();
@@ -74,10 +73,12 @@ class DiscoverController extends GetxController {
 
   /// for refresh
   Future<void> refreshDeals() async {
+    currentSearchTerm.value = "";
+    searchController.clear();
+    zipController.clear();
     await fetchDeals();
   }
 
-  /// fetch all deals
   Future<void> fetchDeals({int page = 1}) async {
     try {
       isLoading.value = true;
@@ -85,14 +86,11 @@ class DiscoverController extends GetxController {
       final position = await getCurrentLocation();
       if (position == null) {
         deals.clear();
-        print("Could not get current location");
         return;
       }
 
       final lng = position.longitude;
       final lat = position.latitude;
-
-      print("Location-------------------------------: lat=$lat, lng=$lng");
 
       final response = await Dio().get(
         '${ApiConstants.baseUrl}/service/deals/$lng/$lat',
@@ -106,34 +104,25 @@ class DiscoverController extends GetxController {
       if (response.statusCode == 200 && res['success'] == true) {
         final List items = res['data']['deals'];
         deals.value = items.map((e) => DealCardModel.fromJson(e)).toList();
-        print("Deals loaded: ${deals.length}");
       } else {
         deals.clear();
       }
     } catch (e) {
-      if (e is DioException) {
-        print("Status: ${e.response?.statusCode}");
-        print("Response: ${e.response?.data}");
-      } else {
-        print("Error: $e");
-      }
+      deals.clear();
+      print("Error: $e");
     } finally {
       isLoading.value = false;
     }
   }
 
-  /// SEARCH DEALS API
   Future<void> fetchDealsWithSearch({int page = 1, String? searchTerm}) async {
-    if (searchTerm == null || searchTerm.isEmpty) return; // don't call if empty
+    if (searchTerm == null || searchTerm.isEmpty) return;
 
     try {
       isLoading.value = true;
 
       final position = await getCurrentLocation();
-      if (position == null) {
-        print("Could not get current location");
-        return;
-      }
+      if (position == null) return;
 
       final double lng = position.longitude;
       final double lat = position.latitude;
@@ -152,29 +141,15 @@ class DiscoverController extends GetxController {
       if (response.statusCode == 200 && res['success'] == true) {
         final List items = res['data']?['deals'] ?? [];
         deals.value = items.map((e) => DealCardModel.fromJson(e)).toList();
-
-        print("Deals loaded: ${deals.length}");
       } else {
         deals.clear();
-        final msg = HttpStatusHandler.getMessage(
-          response.statusCode ?? 0,
-          fallback: res['message']?.toString(),
-        );
-        print("Failed: $msg");
       }
     } catch (e) {
-      if (e is DioException) {
-        final msg = HttpStatusHandler.getMessage(
-          e.response?.statusCode ?? 0,
-          fallback: e.response?.data?['message']?.toString(),
-        );
-        print("Dio error: $msg");
-      } else {
-        print("Error: $e");
-      }
+      deals.clear();
+      print("Error: $e");
     } finally {
       isLoading.value = false;
     }
   }
-
 }
+

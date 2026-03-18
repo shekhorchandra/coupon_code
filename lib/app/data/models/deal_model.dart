@@ -3,6 +3,8 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
+import '../../modules/user/discover_bar/coupon_code/model/CouponOption_model.dart';
+
 class DealModel {
   final String? id;
   final String? shopId;
@@ -29,6 +31,7 @@ class DealModel {
   final String? website;
   final String? address;
   final String? businessName;
+  final CouponOption? couponOption;
 
   DealModel({
     this.id,
@@ -56,6 +59,7 @@ class DealModel {
     this.price,
     required this.originalPrice,
     this.duration,
+    this.couponOption,
   });
 
   DealModel copyWith({
@@ -84,6 +88,7 @@ class DealModel {
     String? website,
     String? address,
     String? businessName,
+    CouponOption? couponOption,
   }) {
     return DealModel(
       id: id ?? this.id,
@@ -110,6 +115,7 @@ class DealModel {
       price: price ?? this.price,
       originalPrice: originalPrice ?? this.originalPrice,
       duration: duration ?? this.duration,
+      couponOption: couponOption ?? this.couponOption,
     );
   }
 
@@ -140,6 +146,12 @@ class DealModel {
       'address': address,
       'businessName': businessName,
       'distance': distance,
+      'coupon_option': couponOption != null
+          ? {
+        'qr': couponOption!.qr,
+        'upc': couponOption!.upc,
+      }
+          : null,
     };
   }
 
@@ -154,7 +166,7 @@ class DealModel {
     final highlightList = parseStringList(map['highlight']);
 
     // 2. Safe parsing for Outlets (The JSON key is 'available_in_outlet')
-    final outlets = map['available_in_outlet'] as List?;
+    final outlets = map['available_outlet'] as List?;
     String? address;
     double? distance;
 
@@ -192,6 +204,11 @@ class DealModel {
     final double regPrice = (map['reguler_price'] ?? 0).toDouble();
     final double disc = (map['discount'] ?? 0).toDouble();
 
+    CouponOption? couponOption;
+    if (map['coupon_option'] != null && map['coupon_option'] is Map) {
+      couponOption = CouponOption.fromMap(map['coupon_option']);
+    }
+
     return DealModel(
       id: map['_id']?.toString() ?? '',
       shopId: shopId ?? '',
@@ -220,6 +237,7 @@ class DealModel {
       price: DealModel.afterDiscountPrice(regPrice, disc),
       originalPrice: regPrice,
       duration: "N/A",
+      couponOption: couponOption,
     );
   }
 

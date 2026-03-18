@@ -74,8 +74,8 @@ class UserMySavesPage extends GetView<SavesController> {
                           price: item.price,
                           originalPrice: item.originalPrice,
                           isAvailable: item.isAvailable,
-                          promotedUntil: item.promotedUntil, // promotion expiry
-                          status: item.status,               // ✅ fix: lowercase
+                          promotedUntil: item.promotedUntil,
+                          status: item.status,
                           onTap: () {
                             Get.toNamed(
                               AppRoutes.DISCOVERDETAILS,

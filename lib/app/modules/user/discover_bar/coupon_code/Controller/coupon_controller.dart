@@ -20,6 +20,9 @@ class CouponController extends GetxController {
   RxString couponCode = "".obs; // Fetched from deal API
   String get qrData => "$productId|${couponCode.value}";
 
+  RxString qrImage = "".obs;
+  RxString barcodeImage = "".obs;
+
   // ---------------- UI state ----------------
   RxInt selectedIndex = 0.obs;
   RxBool isLoading = false.obs;
@@ -36,5 +39,8 @@ class CouponController extends GetxController {
     discountPercent = deal.discountPercent;
 
     couponCode.value = deal.coupon ?? "No coupon available";
+
+    qrImage.value = deal.couponOption?.qr ?? "";
+    barcodeImage.value = deal.couponOption?.upc ?? "";
   }
 }

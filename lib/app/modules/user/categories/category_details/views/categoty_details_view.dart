@@ -4,11 +4,8 @@ import 'package:get/get.dart';
 import '../../../../../core/values/app_color.dart';
 import '../../../../../core/widgets/App_button.dart';
 import '../../../../../core/widgets/common_app_bar.dart';
-import '../../../../../core/widgets/custom_text_field.dart';
 import '../../../../../routes/app_routes.dart';
 import '../../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
-import '../category_details_filter_widget/category_filter_controller/category_filter_controller.dart';
-import '../category_details_filter_widget/category_fliter_view/category_filter_dropdown.dart';
 import '../controllers/category_details_controller.dart';
 import '../model/category_deal_model.dart';
 
@@ -38,7 +35,7 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(horizontal: 12,),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(50),
@@ -145,6 +142,21 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                       );
                     }),
                   ),
+
+                  Obx(() {
+                    if (controller.currentSearchTerm.value.isEmpty) return const SizedBox.shrink();
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                      child: Text(
+                        "Showing results for '${controller.currentSearchTerm.value}'",
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black54,
+                        ),
+                      ),
+                    );
+                  }),
 
                   // Deals Grid
                   Obx(() {
@@ -307,7 +319,7 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                   deal.title,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 4),
 
@@ -318,7 +330,7 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                   },
                   child: Text(
                     deal.businessName,
-                    style: const TextStyle(fontSize: 13, color: Colors.blueAccent),
+                    style: const TextStyle(fontSize: 12, color: Colors.blueAccent),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -339,22 +351,28 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                         decoration: TextDecoration.lineThrough,
                       ),
                     ),
-                    const Spacer(),
+                  ],
+                ),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
                     if (deal.promotedUntil != null)
+
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: const EdgeInsets.symmetric(horizontal:6, vertical: 3),
                         decoration: BoxDecoration(
                           color: Colors.orange.shade100,
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Text(
+                        child: Obx(() => Text(
                           _formatRemainingTime(deal.promotedUntil!),
                           style: const TextStyle(
-                            fontSize: 12,
+                            fontSize: 10,
                             fontWeight: FontWeight.bold,
                             color: Colors.orange,
                           ),
-                        ),
+                        )),
                       ),
                   ],
                 ),
@@ -383,17 +401,29 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
 
   //Helper function to format remaining time
   String _formatRemainingTime(DateTime endTime) {
-    final now = DateTime.now();
+    final now = controller.currentTime.value;
+
     if (endTime.isBefore(now)) return "Expired";
 
     final difference = endTime.difference(now);
 
     final days = difference.inDays;
     final hours = difference.inHours % 24;
+    final minutes = difference.inMinutes % 60;
+    final seconds = difference.inSeconds % 60;
 
-    return "${days}d ${hours.toString().padLeft(2, '0')}h";
+    if (days > 0) {
+      return "${days}d ${hours.toString().padLeft(2, '0')}h "
+          "${minutes.toString().padLeft(2, '0')}m "
+          "${seconds.toString().padLeft(2, '0')}s";
+    } else {
+      return "${hours.toString().padLeft(2, '0')}h "
+          "${minutes.toString().padLeft(2, '0')}m "
+          "${seconds.toString().padLeft(2, '0')}s";
+    }
   }
 
+  /// sorting helper function
   Widget _sortChip({required String label, required IconData icon, required String value}) {
     final controller = Get.find<CategoryDetailsController>();
     final isSelected = controller.sortBy.value == value;

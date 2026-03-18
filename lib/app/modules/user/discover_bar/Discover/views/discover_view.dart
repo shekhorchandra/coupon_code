@@ -4,7 +4,6 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import '../../../../../core/values/app_color.dart';
 import '../../../../../core/values/app_text_styles.dart';
-import '../../../../../core/widgets/custom_text_field.dart';
 import '../../../../../core/widgets/deal_card_skeleton.dart';
 import '../../../../../core/widgets/skeleton.dart';
 import '../../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
@@ -15,7 +14,6 @@ import '../discover_widget/deal_card.dart';
 
 class DiscoverView extends GetView<DiscoverController> {
   const DiscoverView({super.key});
-  static Timer? _debounce;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +26,7 @@ class DiscoverView extends GetView<DiscoverController> {
           color: AppColor.primary,
           onRefresh: () async {
             await controller.fetchCategories();
-            await discoverController.fetchDeals();
+            await discoverController.refreshDeals();
           },
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
@@ -44,17 +42,7 @@ class DiscoverView extends GetView<DiscoverController> {
                   ),
                 ),
 
-                const SizedBox(height: 12),
-
-                // SEARCH
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(horizontal: 8),
-                //   child: CustomTextField(
-                //     hint: "Search for Deals or Zip Code...",
-                //     icon: Icons.search,
-                //     onChanged: discoverController.onSearch,
-                //   ),
-                // ),
+                const SizedBox(height: 6),
 
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -64,16 +52,11 @@ class DiscoverView extends GetView<DiscoverController> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(50),
                       boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 6,
-                          offset: Offset(0, 3),
-                        ),
+                        BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 3)),
                       ],
                     ),
                     child: Row(
                       children: [
-
                         /// SEARCH FIELD
                         const Icon(Icons.search, color: Colors.grey, size: 20),
                         const SizedBox(width: 8),
@@ -127,10 +110,7 @@ class DiscoverView extends GetView<DiscoverController> {
                             ),
                             child: const Text(
                               "Search",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
@@ -202,10 +182,10 @@ class DiscoverView extends GetView<DiscoverController> {
                                 child: InkWell(
                                   borderRadius: BorderRadius.circular(40),
                                   onTap: () {
-                                    Get.to(() => const CategotyDetails(), arguments: {
-                                      "id": category.id,
-                                      "title": category.name,
-                                    });
+                                    Get.to(
+                                      () => const CategotyDetails(),
+                                      arguments: {"id": category.id, "title": category.name},
+                                    );
                                   },
                                   child: Column(
                                     children: [
@@ -219,7 +199,7 @@ class DiscoverView extends GetView<DiscoverController> {
                                             height: 56,
                                             fit: BoxFit.cover,
                                             errorBuilder: (_, __, ___) =>
-                                            const Icon(Icons.image_not_supported),
+                                                const Icon(Icons.image_not_supported),
                                           ),
                                         ),
                                       ),
@@ -247,6 +227,25 @@ class DiscoverView extends GetView<DiscoverController> {
 
                 const SizedBox(height: 16),
 
+                // SHOW SEARCH TERM
+                Obx(() {
+                  if (discoverController.currentSearchTerm.value.isEmpty) {
+                    return const SizedBox.shrink();
+                  }
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                    child: Text(
+                      "Showing results for '${discoverController.currentSearchTerm.value}'",
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  );
+                }),
+
+                // DEALS
                 // DEALS
                 Obx(() {
                   /// Loading → show skeleton
