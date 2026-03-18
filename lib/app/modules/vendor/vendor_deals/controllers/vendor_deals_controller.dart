@@ -61,7 +61,6 @@ class VendorDealsController extends GetxController {
     finalPriceController.addListener(_calculateDiscount);
 
     await _fetchCategories();
-    await _fetchShopLogo();
     super.onInit();
   }
 
@@ -87,7 +86,7 @@ class VendorDealsController extends GetxController {
     }
   }
 
-  Future<void> _fetchShopLogo() async {
+  Future<void> fetchShopLogo() async {
     try {
       StorageService _storageService = StorageService();
 
