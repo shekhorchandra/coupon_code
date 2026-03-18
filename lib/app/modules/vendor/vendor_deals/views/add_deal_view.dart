@@ -7,6 +7,7 @@ import 'package:coupon_code/app/core/widgets/custom_dropdown_field.dart';
 import 'package:coupon_code/app/core/widgets/custom_text_field.dart';
 import 'package:coupon_code/app/core/widgets/section_heading.dart';
 import 'package:coupon_code/app/data/models/deal_category_model.dart';
+import 'package:coupon_code/app/data/models/deal_image_model.dart';
 import 'package:coupon_code/app/data/models/deal_model.dart';
 import 'package:coupon_code/app/data/models/deal_plan_model.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/controllers/vendor_deals_controller.dart';
@@ -39,6 +40,9 @@ class _AddDealViewState extends State<AddDealView> {
 
     // If no deal is provided (Add New Deal), clear all fields
     if (deal == null) {
+      // Logo as thumbnail
+      controller.fetchShopLogo();
+
       controller.titleController.clear();
       controller.selectedCategory.value = '';
       controller.highlightController.clear();
@@ -53,6 +57,8 @@ class _AddDealViewState extends State<AddDealView> {
       ); // Default date range
       controller.acceptedTnC.value = false;
       controller.selectedDealPlan.value = dealPlans[2];
+      controller.images.clear();
+      controller.currentImageIndex.value = 0;
     } else {
       // Prefill data for updating
       controller.titleController.text = deal.title;
@@ -66,6 +72,16 @@ class _AddDealViewState extends State<AddDealView> {
         deal.regular_price ?? deal.originalPrice,
         deal.discountPercent,
       ).toStringAsFixed(2);
+      controller.currentImageIndex.value = 0;
+      controller.images.value = deal.images.asMap().entries.map((entry) {
+        int index = entry.key;
+        String url = entry.value;
+
+        return DealImageModel(
+          url: url,
+          isThumbnail: index == 0, // Set first image as thumbnail
+        );
+      }).toList();
     }
   }
 
