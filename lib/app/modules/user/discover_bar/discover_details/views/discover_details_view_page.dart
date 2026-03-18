@@ -101,13 +101,13 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
         );
       }
 
-      return SafeArea(
-        child: Scaffold(
-          appBar: widget.id == null
-              ? DealCreationPreviewAppBar()
-              : CommonAppBar(title: 'Deal Details'),
+      return Scaffold(
+        appBar: widget.id == null
+            ? DealCreationPreviewAppBar()
+            : CommonAppBar(title: 'Deal Details'),
 
-          body: SingleChildScrollView(
+        body: SafeArea(
+          child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Column(
@@ -537,105 +537,105 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
               ),
             ),
           ),
+        ),
 
-          // ================= BOTTOM BUTTONS =================
-          bottomNavigationBar: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                // padding: const EdgeInsets.symmetric(horizontal: 16),
-                padding: const EdgeInsetsGeometry.only(top: 1, right: 16, bottom: 20, left: 16),
-                child: Row(
-                  children: [
-                    if (widget.id == null)
-                      Expanded(
-                        child: AppButton(
-                          text: 'Payment & Publish',
-                          onPressed: () => Get.toNamed(
-                            AppRoutes.PAYMENT_METHOD,
-                            arguments: {'isSelectable': true},
-                          ),
-                        ),
-                      ),
-
-                    // Expanded(
-                    //   child: AppButton(
-                    //     text: 'Save For Later',
-                    //     onPressed: () {
-                    //       final item = SaveItem(
-                    //         id: deal.id,
-                    //         // title: deal.title,
-                    //         // businessName: deal.businessName ?? 'Unknown',
-                    //         // imagePath: deal.image,
-                    //         // price: deal.price,
-                    //         // originalPrice: deal.originalPrice,
-                    //         // isAvailable: true,
-                    //         // status: 'active',
-                    //       );
-                    //
-                    //       // Save locally using the controller
-                    //       Get.find<SavesController>().saveForLater(item);
-                    //       Get.toNamed(AppRoutes.SAVEDLATER);
-                    //     },
-                    //     backgroundColor: Colors.white70,
-                    //     textColor: AppColor.primary,
-                    //     borderColor: AppColor.primary,
-                    //     leading: SvgPicture.asset(
-                    //       AppAssets.saved,
-                    //       width: 18,
-                    //       height: 18,
-                    //       colorFilter: const ColorFilter.mode(AppColor.primary, BlendMode.srcIn),
-                    //     ),
-                    //   ),
-                    // ),
+        // ================= BOTTOM BUTTONS =================
+        bottomNavigationBar: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              // padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsetsGeometry.only(top: 1, right: 16, bottom: 20, left: 16),
+              child: Row(
+                children: [
+                  if (widget.id == null)
                     Expanded(
                       child: AppButton(
-                        text: 'Save For Later',
-                        onPressed: () {
-                          final dealId = deal.id;
-                          final controller = Get.find<SavesController>();
-
-                          controller.saveForLater(dealId!);
-                          controller.fetchSavedDeals();
-                          Get.toNamed(AppRoutes.SAVEDLATER);
-                        },
-                        backgroundColor: Colors.white70,
-                        textColor: AppColor.primary,
-                        borderColor: AppColor.primary,
-                        leading: SvgPicture.asset(
-                          AppAssets.saved,
-                          width: 18,
-                          height: 18,
-                          colorFilter: const ColorFilter.mode(AppColor.primary, BlendMode.srcIn),
+                        text: 'Payment & Publish',
+                        onPressed: () => Get.toNamed(
+                          AppRoutes.PAYMENT_METHOD,
+                          arguments: {'isSelectable': true},
                         ),
                       ),
                     ),
 
-                    const SizedBox(width: 16),
+                  // Expanded(
+                  //   child: AppButton(
+                  //     text: 'Save For Later',
+                  //     onPressed: () {
+                  //       final item = SaveItem(
+                  //         id: deal.id,
+                  //         // title: deal.title,
+                  //         // businessName: deal.businessName ?? 'Unknown',
+                  //         // imagePath: deal.image,
+                  //         // price: deal.price,
+                  //         // originalPrice: deal.originalPrice,
+                  //         // isAvailable: true,
+                  //         // status: 'active',
+                  //       );
+                  //
+                  //       // Save locally using the controller
+                  //       Get.find<SavesController>().saveForLater(item);
+                  //       Get.toNamed(AppRoutes.SAVEDLATER);
+                  //     },
+                  //     backgroundColor: Colors.white70,
+                  //     textColor: AppColor.primary,
+                  //     borderColor: AppColor.primary,
+                  //     leading: SvgPicture.asset(
+                  //       AppAssets.saved,
+                  //       width: 18,
+                  //       height: 18,
+                  //       colorFilter: const ColorFilter.mode(AppColor.primary, BlendMode.srcIn),
+                  //     ),
+                  //   ),
+                  // ),
+                  Expanded(
+                    child: AppButton(
+                      text: 'Save For Later',
+                      onPressed: () {
+                        final dealId = deal.id;
+                        final controller = Get.find<SavesController>();
 
-                    Expanded(
-                      child: AppButton(
-                        onPressed: () async {
-                          final couponController = Get.put(CouponController());
-
-                          // Set deal info from the API response
-                          couponController.setDeal(deal);
-
-                          // Open the popup
-                          Get.dialog(const CouponPopupView()).then((_) {
-                            if (Get.isRegistered<CouponController>()) {
-                              Get.delete<CouponController>();
-                            }
-                          });
-                        },
-                        text: 'Show Coupon',
+                        controller.saveForLater(dealId!);
+                        controller.fetchSavedDeals();
+                        Get.toNamed(AppRoutes.SAVEDLATER);
+                      },
+                      backgroundColor: Colors.white70,
+                      textColor: AppColor.primary,
+                      borderColor: AppColor.primary,
+                      leading: SvgPicture.asset(
+                        AppAssets.saved,
+                        width: 18,
+                        height: 18,
+                        colorFilter: const ColorFilter.mode(AppColor.primary, BlendMode.srcIn),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+
+                  const SizedBox(width: 16),
+
+                  Expanded(
+                    child: AppButton(
+                      onPressed: () async {
+                        final couponController = Get.put(CouponController());
+
+                        // Set deal info from the API response
+                        couponController.setDeal(deal);
+
+                        // Open the popup
+                        Get.dialog(const CouponPopupView()).then((_) {
+                          if (Get.isRegistered<CouponController>()) {
+                            Get.delete<CouponController>();
+                          }
+                        });
+                      },
+                      text: 'Show Coupon',
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       );
     });
