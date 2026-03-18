@@ -12,6 +12,7 @@ import 'package:coupon_code/app/modules/vendor/vendor_dashboard/views/widgets/ov
 import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class VendorSingleDealView extends StatelessWidget {
   const VendorSingleDealView({super.key, required this.deal});
@@ -121,7 +122,7 @@ class VendorSingleDealView extends StatelessWidget {
                       ],
                     ),
                     child: Text(
-                      '${deal.promotedUntil}',
+                      '${DateFormat('MM/dd/yyyy hh:mm a').format(deal.promotedUntil!.toLocal())}',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.orange,
