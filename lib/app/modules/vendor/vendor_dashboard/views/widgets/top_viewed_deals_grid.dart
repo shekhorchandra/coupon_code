@@ -54,7 +54,7 @@ class TopViewedDealsGrid extends GetView<VendorDashboardController> {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             padding: const EdgeInsets.symmetric(vertical: 12),
-            itemCount: controller.deals.length < 10 ? controller.deals.length : 10,
+            itemCount: controller.deals.length < 2 ? controller.deals.length : 2,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 10,
@@ -62,8 +62,7 @@ class TopViewedDealsGrid extends GetView<VendorDashboardController> {
               childAspectRatio: dynamicRatio,
             ),
             itemBuilder: (context, index) {
-              print(controller.deals[index]);
-              return DealGrid(deal: controller.deals[index]);
+              return RepaintBoundary(child: DealGrid(deal: controller.deals[index]));
             },
           );
         }),

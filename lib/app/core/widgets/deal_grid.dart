@@ -48,6 +48,9 @@ class DealGrid extends StatelessWidget {
                             child: CachedNetworkImage(
                               imageUrl: deal.images.first,
                               fit: BoxFit.cover,
+                              memCacheWidth: 400,
+                              memCacheHeight: 300,
+                              maxWidthDiskCache: 600,
                               placeholder: (context, url) => Container(color: Colors.grey[200]),
                               errorWidget: (context, url, error) => const Icon(Icons.error),
                             ),

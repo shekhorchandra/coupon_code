@@ -21,8 +21,6 @@ import '../../../categories/category_details/model/category_deal_model.dart';
 import '../../../saved/controllers/save_controller.dart';
 import '../../coupon_code/Controller/coupon_controller.dart';
 import '../../coupon_code/views/coupon_popup_view.dart';
-import '../../vendor_shop_details/bindings/vendor_details_binding.dart';
-import '../../vendor_shop_details/views/vendor_details_view.dart';
 import '../controllers/discover_details_controller.dart';
 
 class ServiceDetailsPage extends StatefulWidget {
