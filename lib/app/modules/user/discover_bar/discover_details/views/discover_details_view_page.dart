@@ -20,8 +20,6 @@ import '../../../categories/category_details/model/category_deal_model.dart';
 import '../../../saved/controllers/save_controller.dart';
 import '../../coupon_code/Controller/coupon_controller.dart';
 import '../../coupon_code/views/coupon_popup_view.dart';
-import '../../vendor_shop_details/bindings/vendor_details_binding.dart';
-import '../../vendor_shop_details/views/vendor_details_view.dart';
 import '../controllers/discover_details_controller.dart';
 
 class ServiceDetailsPage extends StatefulWidget {
@@ -236,7 +234,10 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
                               AppAssets.category,
                               width: 14,
                               height: 14,
-                              colorFilter: const ColorFilter.mode(Colors.blueAccent, BlendMode.srcIn),
+                              colorFilter: const ColorFilter.mode(
+                                Colors.blueAccent,
+                                BlendMode.srcIn,
+                              ),
                             ),
                             const SizedBox(width: 4),
                             Text(
