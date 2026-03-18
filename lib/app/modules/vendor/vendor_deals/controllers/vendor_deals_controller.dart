@@ -48,6 +48,10 @@ class VendorDealsController extends GetxController {
 
   Rx<String?> shopLogo = ''.obs;
 
+  var selectedCouponType = 'Coupon Code'.obs;
+  final List<String> couponTypes = ['Coupon Code', 'QR Code', 'Barcode'];
+  Rxn<File> couponImageFile = Rxn<File>();
+
   DioClient _dioClient = DioClient();
 
   @override
@@ -107,6 +111,14 @@ class VendorDealsController extends GetxController {
     } catch (e) {
       Get.snackbar('Error', 'Unidentified error occured!');
       log(e.toString());
+    }
+  }
+
+  // Method to pick QR/Barcode image
+  Future<void> pickCouponImage() async {
+    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      couponImageFile.value = File(pickedFile.path);
     }
   }
 
@@ -250,27 +262,8 @@ class VendorDealsController extends GetxController {
     }
   }
 
-  DealModel buildDealModel() {
-    return DealModel(
-      categoryId: selectedCategory.value,
-      title: titleController.text.trim(),
-      originalPrice: double.tryParse(priceController.text) ?? 0.0,
-      discountPercent: double.tryParse(discountController.text) ?? 0.0,
-      highlights: highlightController.toList(),
-      description: descController.text.trim(),
-      // Map paths: thumbnail is at index 0
-      images: images.map((img) => img.url ?? img.file?.path ?? "").toList(),
-      isPromoted: true,
-      promotedUntil:
-          selectedValidityRange.value?.end ?? DateTime.now().add(const Duration(days: 30)),
-      coupon: couponController.text.trim(),
-      totalViews: 0,
-      totalImpression: 0,
-    );
-  }
-
   void validateAndSubmit() async {
-    // 1. Validations
+    // 1. Basic Validations
     if (images.isEmpty) {
       _showError("Please upload at least one image.");
       return;
@@ -283,28 +276,53 @@ class VendorDealsController extends GetxController {
       _showError("Please select a category.");
       return;
     }
-    if (priceController.text.isEmpty) {
-      _showError("Please enter the price.");
-      return;
+
+    // 2. Coupon Validation (NEW LOGIC)
+    final isTextCoupon = selectedCouponType.value == 'Coupon Code';
+    if (isTextCoupon) {
+      if (couponController.text.trim().isEmpty) {
+        _showError("Please enter the Coupon Code.");
+        return;
+      }
+    } else {
+      if (couponImageFile.value == null) {
+        _showError("Please upload the ${selectedCouponType.value} image.");
+        return;
+      }
     }
 
-    // 2. Clear error state
+    // // 3. Pricing Validation
+    // if (priceController.text.isEmpty) {
+    //   _showError("Please enter the price.");
+    //   return;
+    // }
+    // if (double.tryParse(priceController.text) == null) {
+    //   _showError("Invalid price format.");
+    //   return;
+    // }
+
+    // // 4. Date Validation
+    // if (selectedValidityRange.value == null) {
+    //   _showError("Please select a validity date range.");
+    //   return;
+    // }
+
+    // SUCCESS - Clear error state
     hasError.value = false;
 
     try {
-      // 3. Prepare Multipart Files
-      // Because of our setThumbnail logic, images[0] is the thumbnail
+      // Build the model for the preview screen
+      deal.value = buildDealModel();
+
+      // Start preparing Multipart data
       List<MultipartFile> multipartFileList = [];
 
       for (var img in images) {
         if (img.file != null) {
-          // Local File
           multipartFileList.add(
             await MultipartFile.fromFile(img.file!.path, filename: img.file!.path.split('/').last),
           );
         } else if (img.url != null) {
-          // Network Image: If backend requires files, you must download it first
-          // If backend accepts 'existing_images' as strings, handle that separately
           File downloadedFile = await _downloadFile(img.url!);
           multipartFileList.add(
             await MultipartFile.fromFile(
@@ -315,27 +333,57 @@ class VendorDealsController extends GetxController {
         }
       }
 
-      // 4. Construct FormData
+      // Construct FormData for the final API call
       FormData formData = FormData.fromMap({
         "category_id": selectedCategory.value,
         "title": titleController.text.trim(),
         "original_price": priceController.text,
         "discount_percent": discountController.text,
         "description": descController.text.trim(),
-        "coupon": couponController.text.trim(),
-        "highlights": highlightController, // List<String>
-        "images": multipartFileList, // The backend gets the thumbnail as the first file here
+        "coupon_type": selectedCouponType.value,
+        "coupon_data": isTextCoupon
+            ? couponController.text.trim()
+            : (couponImageFile.value != null
+                  ? await MultipartFile.fromFile(couponImageFile.value!.path)
+                  : null),
+        "highlights": highlightController.toList(),
+        "images": multipartFileList,
         "end_date": selectedValidityRange.value?.end.toIso8601String(),
       });
 
-      // 5. Send to API
+      // TODO: Actually post this formData to your API
       // await _dioClient.client.post(ApiConstants.addDeal, data: formData);
 
-      debugPrint("Submit Success: Thumbnail is the first file in the list.");
+      debugPrint("Validation passed and DealModel built.");
     } catch (e) {
-      log("Upload error: $e");
-      _showError("Failed to upload deal. Please try again.");
+      log("Preparation error: $e");
+      _showError("Something went wrong while preparing the deal.");
+      hasError.value = true;
     }
+  }
+
+  // Updated Build Model to include Thumbnail Reordering logic
+  DealModel buildDealModel() {
+    // Ensure the thumbnail is at index 0 for the preview model
+    List<String> imagePaths = images.map((img) => img.url ?? img.file?.path ?? "").toList();
+
+    return DealModel(
+      categoryId: selectedCategory.value,
+      title: titleController.text.trim(),
+      originalPrice: double.tryParse(priceController.text) ?? 0.0,
+      discountPercent: double.tryParse(discountController.text) ?? 0.0,
+      highlights: highlightController.toList(),
+      description: descController.text.trim(),
+      images: imagePaths, // index 0 is thumbnail
+      isPromoted: true,
+      promotedUntil:
+          selectedValidityRange.value?.end ?? DateTime.now().add(const Duration(days: 30)),
+      coupon: selectedCouponType.value == 'Coupon Code'
+          ? couponController.text.trim()
+          : "IMAGE_COUPON",
+      totalViews: 0,
+      totalImpression: 0,
+    );
   }
 
   // Helper for Network -> File conversion (requires path_provider and http)
