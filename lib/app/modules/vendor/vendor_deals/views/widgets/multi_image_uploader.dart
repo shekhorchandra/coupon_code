@@ -39,6 +39,8 @@ class MultiImageUploader extends StatelessWidget {
                                 imageUrl: item.url!,
                                 fit: .cover,
                                 width: double.infinity,
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.broken_image, size: 60),
                               )
                             : Image.file(item.file!, fit: BoxFit.cover, width: double.infinity),
                       );
