@@ -101,7 +101,7 @@ class VendorDealsController extends GetxController {
         final shop = ShopModel.fromJson(data);
         shopLogo.value = shop.businessLogo;
 
-        if (shopLogo.value != null) {
+        if (shopLogo.value != null || shopLogo.value!.isNotEmpty) {
           images.add(DealImageModel(url: shopLogo.value, isThumbnail: true));
         }
       } else {
