@@ -89,7 +89,11 @@ class MenuView extends GetView<MenuController> {
             _menuItem(Icons.privacy_tip_outlined, "Privacy Policy", controller.onPrivacyPolicyTap),
             _menuItem(Icons.description_outlined, "Terms & Condition", controller.onTermsTap),
             _menuItem(Icons.star_rate_outlined, "Rate the App", controller.onRateAppTap),
-            _menuItem(Icons.share_outlined, "Invite Friends", controller.onInviteFriendsTap),
+            _menuItem(
+              Icons.share_outlined,
+              "Invite Friends",
+                  () => controller.onInviteFriendsTap(context),
+            ),
 
             const SizedBox(height: 24),
 
