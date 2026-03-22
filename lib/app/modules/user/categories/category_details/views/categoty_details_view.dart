@@ -35,7 +35,7 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12,),
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(50),
@@ -118,12 +118,12 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                         child: Row(
                           children: [
                             _sortChip(
-                              label: "Ascending",
+                              label: "Price",
                               icon: Icons.arrow_upward,
                               value: "Price: Low to High",
                             ),
                             _sortChip(
-                              label: "Descending",
+                              label: "Price",
                               icon: Icons.arrow_downward,
                               value: "Price: High to Low",
                             ),
@@ -358,21 +358,22 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     if (deal.promotedUntil != null)
-
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal:6, vertical: 3),
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                         decoration: BoxDecoration(
                           color: Colors.orange.shade100,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Obx(() => Text(
-                          _formatRemainingTime(deal.promotedUntil!),
-                          style: const TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.orange,
+                        child: Obx(
+                          () => Text(
+                            _formatRemainingTime(deal.promotedUntil!),
+                            style: const TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange,
+                            ),
                           ),
-                        )),
+                        ),
                       ),
                   ],
                 ),
@@ -429,7 +430,7 @@ class CategotyDetails extends GetView<CategoryDetailsController> {
     final isSelected = controller.sortBy.value == value;
 
     return Padding(
-      padding: const EdgeInsets.only(right: 8),
+      padding: const EdgeInsets.all(8),
       child: GestureDetector(
         onTap: () {
           controller.sortBy.value = value;
