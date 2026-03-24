@@ -26,6 +26,7 @@ class ServiceDetailsController extends GetxController {
     curve: Curves.easeInOut,
   );
 
+
   // Get Deal Details
   Future<void> getDealDetails(String id, {required double lat, required double lng}) async {
     try {
