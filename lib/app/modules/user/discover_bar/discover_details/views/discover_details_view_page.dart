@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../../core/values/app_assets.dart';
@@ -43,6 +44,7 @@ class ServiceDetailsPage extends StatefulWidget {
 
 class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
   final controller = Get.put(ServiceDetailsController());
+  final SavesController savesController = Get.find<SavesController>();
 
   @override
   void initState() {
@@ -368,14 +370,43 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
                         IconButton(
                           icon: const Icon(Icons.favorite_border),
                           color: Colors.grey,
-                          onPressed: () {},
+                          onPressed: () {
+                            final dealId = controller.deal.value?.id;
+
+                            if (dealId == null || dealId.isEmpty) {
+                              Get.snackbar('Error', 'Deal not found');
+                              return;
+                            }
+
+                            savesController.saveForLater(dealId);
+                          },
                         ),
 
                         // Share
                         IconButton(
                           icon: const Icon(Icons.share_outlined),
                           color: AppColor.titleColor,
-                          onPressed: () {},
+                          onPressed: () {
+                            final dealData = controller.deal.value;
+
+                            if (dealData == null) {
+                              Get.snackbar('Error', 'No deal data to share');
+                              return;
+                            }
+
+                            final shareText =
+                                '''
+                            ${dealData.title ?? 'Amazing Deal!'}
+                            ${dealData.description ?? ''}
+                            Price: ${dealData.price ?? ''}
+                            Grab this deal now!
+                                ''';
+
+                            Share.share(
+                              shareText,
+                              subject: dealData.title ?? 'Check out this deal!',
+                            );
+                          },
                         ),
                       ],
                     ),
