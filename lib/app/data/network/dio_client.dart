@@ -17,8 +17,8 @@ class DioClient {
     _dio = Dio(
       BaseOptions(
         baseUrl: ApiConstants.baseUrl,
-        connectTimeout: const Duration(seconds: 30),
-        receiveTimeout: const Duration(seconds: 30),
+        connectTimeout: const Duration(seconds: 90),
+        receiveTimeout: const Duration(seconds: 90),
         responseType: ResponseType.json,
         contentType: 'application/json',
       ),
@@ -44,6 +44,11 @@ class DioClient {
 
         onError: (DioException error, handler) async {
           final requestOptions = error.requestOptions;
+
+          if (error.response?.statusCode == 400) {
+            print(error.response?.data);
+            Get.snackbar('Error', error.response?.data['message']);
+          }
 
           final isUnauthorized =
               error.response?.statusCode == 401 ||

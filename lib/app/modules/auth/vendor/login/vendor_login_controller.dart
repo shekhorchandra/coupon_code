@@ -192,10 +192,20 @@ class VendorLoginController extends GetxController {
   // Login with Apple
   Future<void> loginWithApple(AuthorizationCredentialAppleID credential) async {
     loading.value = true;
-    debugPrint(credential.toString());
+    // inspect(credential);
     debugPrint(credential.authorizationCode);
     debugPrint(credential.identityToken);
     debugPrint(credential.userIdentifier);
+
+    // Apple Login Response
+    // authorizationCode = "c679fb0a20bcf4ffd931cb5068278ccc6.0.sruvs.xKyowI2gKAPh..."
+    // email = null
+    // familyName = null
+    // givenName = null
+    // identityToken = "eyJraWQiOiI1aXEzM2xKQllqIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiYXVkIjoiYWdlbmN5LmJldXB0ZWNoLnllc…"
+    // state = null
+    // userIdentifier = "001452.2b850f37f0784c339308e5cee10e499a.01.."
+
     try {
       final response = await _performAppleLoginRequest(credential.authorizationCode);
 

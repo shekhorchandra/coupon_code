@@ -13,7 +13,7 @@ class DealPublishNoticeView extends GetView<VendorDealsController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CommonAppBar(title: ''),
-      body: SingleChildScrollView(
+      body: Padding(
         padding: EdgeInsets.all(30),
         child: Column(
           children: [
@@ -65,7 +65,11 @@ class DealPublishNoticeView extends GetView<VendorDealsController> {
 
             const SizedBox(height: 30),
 
-            AppButton(text: 'Agree & Continue', onPressed: () {}),
+            Obx(
+              () => controller.acceptedTnC.value
+                  ? AppButton(text: 'Agree & Continue', onPressed: () => Get.back())
+                  : SizedBox.shrink(),
+            ),
           ],
         ),
       ),

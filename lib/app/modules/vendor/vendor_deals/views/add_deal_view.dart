@@ -9,11 +9,10 @@ import 'package:coupon_code/app/core/widgets/section_heading.dart';
 import 'package:coupon_code/app/data/models/deal_category_model.dart';
 import 'package:coupon_code/app/data/models/deal_image_model.dart';
 import 'package:coupon_code/app/data/models/deal_model.dart';
-import 'package:coupon_code/app/data/models/deal_plan_model.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/controllers/vendor_deals_controller.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/data/deal_plans.dart';
+import 'package:coupon_code/app/modules/vendor/vendor_deals/views/deal_publish_notice_view.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/views/widgets/multi_image_uploader.dart';
-import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -35,16 +34,57 @@ class _AddDealViewState extends State<AddDealView> {
     _prefillData();
   }
 
+  void _showOutletSelector(BuildContext context) {
+    Get.bottomSheet(
+      Container(
+        padding: const EdgeInsets.all(20),
+        color: Colors.white,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text("Select Outlets"),
+            const SizedBox(height: 15),
+            Flexible(
+              child: Obx(
+                () => ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: controller.outlets?.length,
+                  itemBuilder: (context, index) {
+                    final outlet = controller.outlets?[index];
+                    final isSelected = controller.selectedOutlets?.contains(outlet);
+
+                    return CheckboxListTile(
+                      title: Text(outlet?.name ?? ""),
+                      value: isSelected,
+                      activeColor: AppColor.primary,
+                      onChanged: (_) => controller.toggleOutlet(outlet!),
+                    );
+                  },
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            AppButton(text: "Done", onPressed: () => Get.back()),
+            const SizedBox(height: 10),
+          ],
+        ),
+      ),
+      isScrollControlled: true,
+    );
+  }
+
   void _prefillData() {
     final deal = widget.deal;
 
     // If no deal is provided (Add New Deal), clear all fields
     if (deal == null) {
       // Logo as thumbnail
-      controller.fetchShopLogo();
+      controller.fetchShopLogoAndOutlets();
 
       controller.titleController.clear();
       controller.selectedCategory.value = '';
+      // TODO: fix this
+      // controller.selectedOutlets?.assignAll(deal?.selectedOutlets ?? []);
       controller.highlightController.clear();
       controller.descController.clear();
       controller.couponController.clear();
@@ -99,7 +139,7 @@ class _AddDealViewState extends State<AddDealView> {
               // Header
               SectionHeading(title: 'Media:'),
               Text(
-                'You can upload up to 6 images to showcase your deal.',
+                'You can upload up to 2 images to showcase your deal.',
                 style: AppText.body2.medium.copyWith(color: AppColor.bw.s500),
               ),
               const SizedBox(height: 12),
@@ -235,6 +275,76 @@ class _AddDealViewState extends State<AddDealView> {
               }),
               const SizedBox(height: 10),
 
+              // Text('Select Outlet', style: AppText.body1.semiBold),
+              // const SizedBox(height: 5),
+              // Obx(() {
+              //   final selected = controller.outlets
+              //       .where((outlet) => outlet == controller.selectedOutlet?.value)
+              //       .toList();
+
+              //   return CustomDropdownField<Outlets>(
+              //     hint: 'Select an outlet',
+              //     value: selected.isNotEmpty ? selected.first : null,
+              //     items: controller.outlets,
+              //     itemLabel: (item) =>
+              //         '${item.name ?? ''}${item.name == null ? '' : ' ('}${item.address})',
+              //     onChanged: (value) {
+              //       controller.selectedOutlet?.value = value ?? Outlets();
+              //     },
+              //   );
+              // }),
+              // const SizedBox(height: 10),
+              Text('Select Outlets', style: AppText.body1.semiBold),
+              const SizedBox(height: 5),
+
+              Obx(
+                () => InkWell(
+                  onTap: () => _showOutletSelector(context),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColor.bw.s300),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (controller.selectedOutlets!.isEmpty) Text("Tap to select outlets"),
+
+                        // Show selected outlets as Chips
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 4,
+                          children: controller.selectedOutlets!.map((outlet) {
+                            return Chip(
+                              label: Text(outlet.name!),
+                              onDeleted: () => controller.toggleOutlet(outlet),
+                              backgroundColor: AppColor.primary.withOpacity(0.1),
+                              deleteIcon: const Icon(Icons.cancel, size: 16),
+                            );
+                          }).toList(),
+                        ),
+
+                        // Indicator icon
+                        if (controller.selectedOutlets!.isNotEmpty) const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Icon(Icons.add_circle_outline, color: AppColor.primary, size: 20),
+                            const SizedBox(width: 4),
+                            Text(
+                              "Add/Edit",
+                              style: AppText.body2.semiBold.copyWith(color: AppColor.primary),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+
               // TODO: fix this
               // Text('Highlights', style: AppText.body1.semiBold),
               // const SizedBox(height: 5),
@@ -248,46 +358,80 @@ class _AddDealViewState extends State<AddDealView> {
               Text('Description', style: AppText.body1.semiBold),
               const SizedBox(height: 5),
               CustomTextField(
-                hint: 'Product Description',
+                hint: 'Enter Deal Description',
                 controller: controller.descController,
                 maxLength: 500,
                 maxLines: 5,
               ),
               const SizedBox(height: 10),
 
+              Text('Tags', style: AppText.body1.semiBold),
+              const SizedBox(height: 5),
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomTextField(
+                      hint: 'Enter tag (e.g. Halloween)',
+                      controller: controller.tagController,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(backgroundColor: AppColor.primary),
+                    onPressed: () => controller.addTag(controller.tagController.text),
+                    child: const Text('Add', style: TextStyle(color: Colors.white)),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Obx(
+                () => Wrap(
+                  spacing: 8,
+                  children: controller.tags.asMap().entries.map((entry) {
+                    return Chip(
+                      label: Text(entry.value),
+                      deleteIcon: const Icon(Icons.close, size: 16),
+                      onDeleted: () => controller.removeTag(entry.key),
+                      backgroundColor: AppColor.bw.s100,
+                    );
+                  }).toList(),
+                ),
+              ),
+              const SizedBox(height: 20),
+
               // Deal Pricing
-              // SectionHeading(title: 'Deal Pricing'),
-              // const SizedBox(height: 10),
+              SectionHeading(title: 'Deal Pricing'),
+              const SizedBox(height: 10),
 
-              // Text('Regular Price', style: AppText.body1.semiBold),
-              // const SizedBox(height: 5),
-              // CustomTextField(
-              //   hint: '50',
-              //   icon: Icons.attach_money_rounded,
-              //   controller: controller.priceController,
-              //   keyboardType: TextInputType.number,
-              // ),
-              // const SizedBox(height: 10),
+              Text('Regular Price', style: AppText.body1.semiBold),
+              const SizedBox(height: 5),
+              CustomTextField(
+                hint: 'Enter Regular Price',
+                icon: Icons.attach_money_rounded,
+                controller: controller.priceController,
+                keyboardType: TextInputType.number,
+              ),
+              const SizedBox(height: 10),
 
-              // Text('Discount Percentage', style: AppText.body1.semiBold),
-              // const SizedBox(height: 5),
-              // CustomTextField(
-              //   hint: '20',
-              //   controller: controller.discountController,
-              //   keyboardType: TextInputType.number,
-              //   suffix: Icon(Icons.percent_rounded),
-              // ),
-              // const SizedBox(height: 10),
+              Text('Discount Percentage', style: AppText.body1.semiBold),
+              const SizedBox(height: 5),
+              CustomTextField(
+                hint: 'Enter Discount Percentage (e.g.: 25)',
+                controller: controller.discountController,
+                keyboardType: TextInputType.number,
+                suffix: Icon(Icons.percent_rounded),
+              ),
+              const SizedBox(height: 10),
 
-              // Text('Final Price After Discount', style: AppText.body1.semiBold),
-              // const SizedBox(height: 5),
-              // CustomTextField(
-              //   hint: '40',
-              //   icon: Icons.attach_money_rounded,
-              //   controller: controller.finalPriceController,
-              //   keyboardType: TextInputType.number,
-              // ),
-              // const SizedBox(height: 20),
+              Text('Final Price After Discount', style: AppText.body1.semiBold),
+              const SizedBox(height: 5),
+              CustomTextField(
+                hint: 'Enter Sale Price',
+                icon: Icons.attach_money_rounded,
+                controller: controller.finalPriceController,
+                keyboardType: TextInputType.number,
+              ),
+              const SizedBox(height: 20),
 
               // Note
               Text(
@@ -303,91 +447,29 @@ class _AddDealViewState extends State<AddDealView> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(bottom: 25.0, left: 20, right: 20),
         child: Obx(() {
-          final plan = controller.selectedDealPlan.value;
-
           final buttonText = widget.deal != null ? 'Update' : 'Submit';
 
           return AppButton(
             text: buttonText,
-            onPressed: () {
-              controller.validateAndSubmit();
+            loading: controller.isLoading.value,
+            onPressed: () async {
+              final bool formValidationSuccess = controller.validateForm();
 
-              if (!controller.hasError.value) {
-                Get.toNamed(
-                  AppRoutes.DEAL_PLAN,
-                  arguments: {'dealItem': controller.deal.value, 'isNetworkImage': false},
-                );
+              if (formValidationSuccess) {
+                await showDialog(context: context, builder: (context) => DealPublishNoticeView());
+              }
+
+              if (!controller.acceptedTnC.value) {
+                controller.hasError.value = true;
+              }
+
+              if (!controller.hasError.value && controller.acceptedTnC.value) {
+                await controller.publishDeal();
               }
             },
           );
         }),
       ),
     );
-  }
-
-  Widget _dealPlan({required DealPlanModel dealPlan, required Color color}) {
-    return Obx(() {
-      bool isSelected = controller.selectedDealPlan.value?.id == dealPlan.id;
-      return Padding(
-        padding: const EdgeInsets.only(bottom: 10),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(10),
-          onTap: () {
-            controller.selectedDealPlan.value = dealPlan;
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              color: color.withAlpha(15),
-              border: Border.all(color: color),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            padding: EdgeInsets.all(15),
-            child: Row(
-              mainAxisAlignment: .spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    if (dealPlan.icon != null) Image.asset(dealPlan.icon!),
-                    const SizedBox(width: 10),
-
-                    Column(
-                      crossAxisAlignment: .start,
-                      children: [
-                        Text(dealPlan.name, style: AppText.body2.bold),
-                        if (dealPlan.description != null)
-                          Text(dealPlan.description!, style: AppText.body2.medium),
-                      ],
-                    ),
-                  ],
-                ),
-
-                Row(
-                  children: [
-                    Text(
-                      '\$${dealPlan.price.toStringAsFixed(0)}',
-                      style: AppText.h5.bold.copyWith(color: color),
-                    ),
-                    const SizedBox(width: 10),
-
-                    Container(
-                      width: 24,
-                      height: 24,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: color, width: 2),
-                        color: isSelected ? color : Colors.transparent,
-                      ),
-                      child: isSelected
-                          ? const Icon(Icons.check, size: 16, color: Colors.white)
-                          : null,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    });
   }
 }

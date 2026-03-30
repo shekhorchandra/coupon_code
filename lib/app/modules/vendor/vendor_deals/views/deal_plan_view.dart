@@ -87,7 +87,7 @@ class _DealPlanViewState extends State<DealPlanView> {
           return AppButton(
             text: buttonText,
             onPressed: () {
-              controller.validateAndSubmit();
+              controller.validateForm();
 
               if (!controller.hasError.value) {
                 // Get.toNamed(
