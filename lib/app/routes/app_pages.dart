@@ -25,6 +25,7 @@ import 'package:coupon_code/app/modules/vendor/vendor_menu/bindings/vendor_menu_
 import 'package:coupon_code/app/modules/vendor/vendor_menu/views/vendor_menu_view.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_navigation_bar/bindings/vendor_navigation_bar_binding.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_navigation_bar/views/vendor_navigation_bar_view.dart';
+import 'package:coupon_code/purchase_page.dart';
 import 'package:get/get.dart';
 
 import '../modules/auth/forget/forget_password/controllers/forgot_controller.dart';
@@ -70,6 +71,8 @@ import 'app_routes.dart';
 
 class AppPages {
   static final pages = [
+    GetPage(name: AppRoutes.PURCHASE_TEST, page: () => PurchasePage()),
+
     /// Splash Screen
     GetPage(name: AppRoutes.SPLASH, page: () => const SplashView(), binding: SplashBinding()),
 
