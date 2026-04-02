@@ -22,7 +22,7 @@ class VendorLoginController extends GetxController {
   /// Default values for email and password
   final emailController = TextEditingController(text: "").obs;
   final passwordController = TextEditingController(text: "").obs;
-  RxBool loading = false.obs;
+  RxBool loading = true.obs;
 
   final DioClient _dioClient = DioClient();
   final DeviceInfoService _deviceInfoService = DeviceInfoService();
@@ -384,6 +384,8 @@ class VendorLoginController extends GetxController {
       }
     } catch (e) {
       debugPrint("Error: $e");
+    } finally {
+      loading.value = false;
     }
   }
 }
