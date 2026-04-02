@@ -85,8 +85,8 @@ class VendorAccountController extends GetxController {
 
   /// Create vendor account - Map
   // Variables
-  var pickedLat = 0.0.obs;
-  var pickedLng = 0.0.obs;
+  var pickedLat = 51.5085.obs;
+  var pickedLng = (-0.1257).obs;
   var markers = <Marker>{
     Marker(
       markerId: const MarkerId("selected_location"),

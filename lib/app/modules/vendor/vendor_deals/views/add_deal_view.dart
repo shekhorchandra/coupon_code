@@ -75,6 +75,7 @@ class _AddDealViewState extends State<AddDealView> {
 
   void _prefillData() {
     final deal = widget.deal;
+    controller.deal.value = widget.deal;
 
     // If no deal is provided (Add New Deal), clear all fields
     if (deal == null) {
@@ -105,11 +106,11 @@ class _AddDealViewState extends State<AddDealView> {
       controller.selectedCategory.value = deal.categoryId;
       controller.highlightController.value = deal.highlights;
       controller.descController.text = deal.description;
-      controller.couponController.text = '';
-      controller.priceController.text = deal.regular_price.toString();
+      controller.couponController.text = deal.coupon!;
+      controller.priceController.text = deal.reguler_price.toString();
       controller.discountController.text = deal.discountPercent.toStringAsFixed(2);
       controller.finalPriceController.text = DealModel.afterDiscountPrice(
-        deal.regular_price ?? deal.originalPrice,
+        deal.reguler_price ?? deal.originalPrice,
         deal.discountPercent,
       ).toStringAsFixed(2);
       controller.currentImageIndex.value = 0;
@@ -463,8 +464,14 @@ class _AddDealViewState extends State<AddDealView> {
                 controller.hasError.value = true;
               }
 
-              if (!controller.hasError.value && controller.acceptedTnC.value) {
-                await controller.publishDeal();
+              if (widget.deal != null) {
+                if (!controller.hasError.value && controller.acceptedTnC.value) {
+                  await controller.updateDeal(widget.deal?.id);
+                }
+              } else {
+                if (!controller.hasError.value && controller.acceptedTnC.value) {
+                  await controller.publishDeal();
+                }
               }
             },
           );

@@ -10,7 +10,7 @@ class VendorDealsList extends GetView<VendorDashboardController> {
 
   @override
   Widget build(BuildContext context) {
-    final dealController = Get.put(VendorDealsController());
+    final dealController = Get.put(VendorDealsController(), permanent: false);
 
     return Obx(() {
       if (controller.isLoading.value) {

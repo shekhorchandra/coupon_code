@@ -66,12 +66,14 @@ class VendorDealsController extends GetxController {
 
   @override
   void onInit() async {
+    super.onInit();
+
     priceController.addListener(_calculateFromDiscount);
     discountController.addListener(_calculateFinalPrice);
     finalPriceController.addListener(_calculateDiscount);
 
     await _fetchCategories();
-    super.onInit();
+    await fetchShopLogoAndOutlets();
   }
 
   Future<void> _fetchCategories() async {
@@ -111,7 +113,7 @@ class VendorDealsController extends GetxController {
         final shop = ShopModel.fromJson(data);
         shopLogo.value = shop.businessLogo;
 
-        if (shopLogo.value != null || shopLogo.value!.isNotEmpty) {
+        if (shopLogo.value != null && shopLogo.value!.isNotEmpty) {
           images.add(DealImageModel(url: shopLogo.value, isThumbnail: true));
         }
 
@@ -356,10 +358,10 @@ class VendorDealsController extends GetxController {
     }
 
     // 4. Date Validation
-    if (selectedValidityRange.value == null) {
-      _showError("Please select a validity date range.");
-      return false;
-    }
+    // if (selectedValidityRange.value == null) {
+    //   _showError("Please select a validity date range.");
+    //   return false;
+    // }
 
     // SUCCESS - Clear error state
     hasError.value = false;
@@ -401,7 +403,7 @@ class VendorDealsController extends GetxController {
         "category": selectedCategory.value,
         "title": titleController.text.trim(),
         "available_in_outlet": selectedOutlets?.map((outlet) => outlet.sId).toList(),
-        "regular_price": num.tryParse(priceController.text),
+        "reguler_price": num.tryParse(priceController.text),
         "discount": num.tryParse(discountController.text),
         "description": descController.text.trim(),
         "highlights": highlightController.toList(),
@@ -434,7 +436,7 @@ class VendorDealsController extends GetxController {
 
       final response = await _dioClient.client.post(ApiConstants.addDeal, data: formData);
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         debugPrint("Deal successfully published.");
 
         Get.toNamed(
@@ -448,6 +450,96 @@ class VendorDealsController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  Future<void> updateDeal(String? id) async {
+    if (deal.value == null) return;
+
+    print(id);
+
+    final isTextCoupon = selectedCouponType.value == 'Coupon Code';
+
+    try {
+      isLoading.value = true;
+
+      // 1. Update the DealModel using copyWith
+      deal.value = deal.value!.copyWith(
+        categoryId: selectedCategory.value,
+        title: titleController.text.trim(),
+        reguler_price: double.tryParse(priceController.text) ?? deal.value!.originalPrice,
+        discount: double.tryParse(discountController.text) ?? deal.value!.discountPercent,
+        description: descController.text.trim(),
+        highlights: highlightController.toList(),
+        images: images.map((img) => img.url ?? img.file?.path ?? "").toList(),
+        coupon: isTextCoupon ? couponController.text.trim() : deal.value!.coupon,
+      );
+
+      // 2. Prepare gallery images
+      final formData = await _buildFormData(isTextCoupon);
+
+      // 6. Send PATCH request
+      final response = await _dioClient.client.patch(ApiConstants.dealDetails(id!), data: formData);
+
+      if (response.statusCode == 201) {
+        debugPrint("Deal successfully updated.");
+        Get.snackbar('Success', 'Deal successfully updated.');
+      }
+    } catch (e) {
+      hasError.value = true;
+      log("Update Deal Error: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<dio.FormData> _buildFormData(bool isTextCoupon) async {
+    List<dio.MultipartFile> multipartFileList = [];
+
+    for (var img in images) {
+      if (img.file != null) {
+        multipartFileList.add(
+          await dio.MultipartFile.fromFile(
+            img.file!.path,
+            filename: img.file!.path.split('/').last,
+          ),
+        );
+      } else if (img.url != null) {
+        File downloadedFile = await _downloadFile(img.url!);
+        multipartFileList.add(
+          await dio.MultipartFile.fromFile(
+            downloadedFile.path,
+            filename: downloadedFile.path.split('/').last,
+          ),
+        );
+      }
+    }
+
+    Map<String, dynamic> textPayload = {
+      "category": selectedCategory.value,
+      "title": titleController.text.trim(),
+      "available_in_outlet": selectedOutlets?.map((e) => e.sId).toList(),
+      "regular_price": num.tryParse(priceController.text),
+      "discount": num.tryParse(discountController.text),
+      "description": descController.text.trim(),
+      "highlights": highlightController.toList(),
+      "tags": tags.toList(),
+    };
+
+    if (isTextCoupon) {
+      textPayload["coupon"] = couponController.text.trim();
+    }
+
+    Map<String, dynamic> formDataMap = {
+      "data": jsonEncode(textPayload),
+      "files": multipartFileList,
+    };
+
+    if (!isTextCoupon && couponImageFile.value != null) {
+      String fileKey = selectedCouponType.value == 'QR Code' ? 'qr' : 'upc';
+      formDataMap[fileKey] = await dio.MultipartFile.fromFile(couponImageFile.value!.path);
+    }
+
+    return dio.FormData.fromMap(formDataMap);
   }
 
   // Updated Build Model to include Thumbnail Reordering logic
@@ -502,15 +594,39 @@ class VendorDealsController extends GetxController {
     );
   }
 
+  void resetForm() {
+    titleController.clear();
+    descController.clear();
+    couponController.clear();
+    priceController.clear();
+    discountController.clear();
+    finalPriceController.clear();
+
+    tags.clear();
+    highlightController.clear();
+
+    selectedCategory.value = '';
+    selectedOutlets?.clear();
+
+    images.clear();
+    couponImageFile.value = null;
+
+    deal.value = null;
+
+    hasError.value = true;
+  }
+
   @override
   void onClose() {
+    super.onClose();
+
+    resetForm();
     titleController.dispose();
     descController.dispose();
     couponController.dispose();
     priceController.dispose();
     discountController.dispose();
     finalPriceController.dispose();
-    super.onClose();
   }
 }
 

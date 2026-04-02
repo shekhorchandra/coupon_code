@@ -60,12 +60,12 @@ class VendorSingleDealView extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      "\$${DealModel.afterDiscountPrice(deal.regular_price ?? deal.originalPrice, deal.discountPercent).toStringAsFixed(2)}",
+                      "\$${DealModel.afterDiscountPrice(deal.reguler_price ?? deal.originalPrice, deal.discountPercent).toStringAsFixed(2)}",
                       style: const TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      "\$${deal.regular_price?.toStringAsFixed(2)}",
+                      "\$${deal.reguler_price?.toStringAsFixed(2)}",
                       style: const TextStyle(
                         fontSize: 20,
                         color: Colors.grey,

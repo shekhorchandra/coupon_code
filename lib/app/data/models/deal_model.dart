@@ -17,7 +17,7 @@ class DealModel {
   final double? price;
   final double originalPrice;
   final String? duration;
-  final double? regular_price;
+  final double? reguler_price;
   final double discountPercent;
   final List<String> highlights;
   final String description;
@@ -41,7 +41,7 @@ class DealModel {
     required this.categoryId,
     this.activePromotion,
     required this.title,
-    this.regular_price,
+    this.reguler_price,
     required this.discountPercent,
     required this.highlights,
     required this.description,
@@ -72,7 +72,7 @@ class DealModel {
     String? activePromotion,
     String? title,
     String? subtitle,
-    double? regularPrice,
+    double? reguler_price,
     double? discount,
     double? discountPercent,
     List<String>? highlights,
@@ -100,7 +100,7 @@ class DealModel {
       categoryId: categoryId ?? this.categoryId,
       activePromotion: activePromotion ?? this.activePromotion,
       title: title ?? this.title,
-      regular_price: regularPrice ?? this.regular_price,
+      reguler_price: reguler_price ?? this.reguler_price,
       discountPercent: discountPercent ?? this.discountPercent,
       highlights: highlights ?? this.highlights,
       description: description ?? this.description,
@@ -136,7 +136,7 @@ class DealModel {
       'price': price,
       'originalPrice': originalPrice,
       'duration': duration,
-      'reguler_price': regular_price,
+      'reguler_price': reguler_price,
       'discountPercent': discountPercent,
       'highlights': highlights,
       'description': description,
@@ -219,7 +219,7 @@ class DealModel {
       categoryId: map['category']?.toString() ?? '',
       activePromotion: map['activePromotion']?.toString(),
       title: map['title']?.toString() ?? '',
-      regular_price: regPrice,
+      reguler_price: regPrice,
       discountPercent: disc,
       highlights: highlightList,
       description: map['description']?.toString() ?? '',
@@ -252,7 +252,7 @@ class DealModel {
 
   @override
   String toString() {
-    return 'DealModel(id: $id, shopId: $shopId, userId: $userId, categoryId: $categoryId, activePromotion: $activePromotion, title: $title, regularPrice: $regular_price, discountPercent: $discountPercent, highlights: $highlights, description: $description, tags: $tags images: $images, isPromoted: $isPromoted, promotedUntil: $promotedUntil, coupon: $coupon, totalViews: $totalViews, totalImpression: $totalImpression), subtitle: $subtitle, image: $image, price: $price, originalPrice: $originalPrice, duration: $duration)';
+    return 'DealModel(id: $id, shopId: $shopId, userId: $userId, categoryId: $categoryId, activePromotion: $activePromotion, title: $title, reguler_price: $reguler_price, discountPercent: $discountPercent, highlights: $highlights, description: $description, tags: $tags images: $images, isPromoted: $isPromoted, promotedUntil: $promotedUntil, coupon: $coupon, totalViews: $totalViews, totalImpression: $totalImpression), subtitle: $subtitle, image: $image, price: $price, originalPrice: $originalPrice, duration: $duration)';
   }
 
   @override
@@ -265,7 +265,7 @@ class DealModel {
         other.categoryId == categoryId &&
         other.activePromotion == activePromotion &&
         other.title == title &&
-        other.regular_price == regular_price &&
+        other.reguler_price == reguler_price &&
         other.discountPercent == discountPercent &&
         listEquals(other.highlights, highlights) &&
         other.description == description &&
@@ -291,7 +291,7 @@ class DealModel {
         categoryId.hashCode ^
         activePromotion.hashCode ^
         title.hashCode ^
-        regular_price.hashCode ^
+        reguler_price.hashCode ^
         discountPercent.hashCode ^
         highlights.hashCode ^
         description.hashCode ^
@@ -328,7 +328,7 @@ class DealModel {
     return "${days}d ${hours}h ${minutes}m ${seconds}s";
   }
 
-  static double afterDiscountPrice(double regularPrice, double discountPercent) {
-    return regularPrice - (regularPrice * discountPercent / 100);
+  static double afterDiscountPrice(double reguler_price, double discountPercent) {
+    return reguler_price - (reguler_price * discountPercent / 100);
   }
 }
