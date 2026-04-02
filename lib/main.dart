@@ -43,7 +43,8 @@ class CouponDiscountApp extends StatelessWidget {
         checkboxTheme: checkboxTheme,
         fontFamily: 'FontMain',
       ),
-      initialRoute: AppRoutes.SPLASH,
+      // initialRoute: AppRoutes.SPLASH,
+      initialRoute: AppRoutes.PURCHASE_TEST,
       getPages: AppPages.pages,
     );
   }
