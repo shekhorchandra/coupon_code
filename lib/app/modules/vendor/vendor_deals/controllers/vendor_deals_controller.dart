@@ -23,12 +23,7 @@ import 'package:path_provider/path_provider.dart';
 class VendorDealsController extends GetxController {
   VendorDealsController();
 
-  var selectedTab = 0.obs;
   Rx<bool> isLoading = false.obs;
-
-  void setTab(int index) {
-    selectedTab.value = index;
-  }
 
   // void toggleDealStatus(String id, bool value) {
   //   // 1. Find the index of the deal in the mockDeals list (or your observable list)

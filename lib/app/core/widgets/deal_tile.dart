@@ -80,6 +80,10 @@ class DealTile extends StatelessWidget {
                           },
                           itemBuilder: (_) => [
                             PopupMenuItem(
+                              onTap: () => Get.toNamed(
+                                AppRoutes.VENDOR_DEAL_DETAILS,
+                                arguments: {'dealItem': deal},
+                              ),
                               value: dealType.toString(),
                               child: Row(
                                 children: [
@@ -103,7 +107,17 @@ class DealTile extends StatelessWidget {
                           text: 'Re-Activate',
                           width: 100,
                           height: 35,
-                          onPressed: () => Get.toNamed(AppRoutes.DEAL_PLAN),
+                          onPressed: () =>
+                              Get.toNamed(AppRoutes.DEAL_PLAN, arguments: {'dealItem': deal}),
+                        ),
+
+                      if (dealType == 2)
+                        AppButton(
+                          text: 'Activate',
+                          width: 100,
+                          height: 35,
+                          onPressed: () =>
+                              Get.toNamed(AppRoutes.DEAL_PLAN, arguments: {'dealItem': deal}),
                         ),
                     ],
                   ),

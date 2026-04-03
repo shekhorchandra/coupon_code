@@ -1,6 +1,8 @@
 import 'package:coupon_code/app/core/values/app_sizes.dart';
 import 'package:coupon_code/app/core/widgets/common_app_bar.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_dashboard/controllers/vendor_dashboard_controller.dart';
+import 'package:coupon_code/app/modules/vendor/vendor_deals/controllers/my_deals_controller.dart';
+import 'package:coupon_code/app/modules/vendor/vendor_deals/controllers/vendor_deals_controller.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/views/widgets/vendor_deals_filter.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/views/widgets/vendor_deals_header.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/views/widgets/vendor_deals_list.dart';
@@ -8,7 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class VendorDealsPage extends GetView<VendorDashboardController> {
-  const VendorDealsPage({super.key});
+  VendorDealsPage({super.key}) {
+    Get.put(MyDealsController());
+    Get.put(VendorDealsController());
+  }
 
   @override
   Widget build(BuildContext context) {

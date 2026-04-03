@@ -1,37 +1,21 @@
 import 'package:coupon_code/app/core/widgets/deal_tile.dart';
-import 'package:coupon_code/app/data/models/deal_model.dart';
-import 'package:coupon_code/app/modules/vendor/vendor_dashboard/controllers/vendor_dashboard_controller.dart';
-import 'package:coupon_code/app/modules/vendor/vendor_deals/controllers/vendor_deals_controller.dart';
+import 'package:coupon_code/app/modules/vendor/vendor_deals/controllers/my_deals_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class VendorDealsList extends GetView<VendorDashboardController> {
-  const VendorDealsList({super.key});
+class VendorDealsList extends GetView<MyDealsController> {
+  VendorDealsList({super.key});
+
+  final MyDealsController controller = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    final dealController = Get.put(VendorDealsController(), permanent: false);
-
     return Obx(() {
       if (controller.isLoading.value) {
-        return const Center(child: CircularProgressIndicator());
+        return const Center(child: CircularProgressIndicator.adaptive());
       }
 
-      List<DealModel> filteredDeals = [];
-      if (dealController.selectedTab.value == 0) {
-        filteredDeals = controller.deals.where((deal) {
-          DateTime validPromotedUntil =
-              deal.promotedUntil ?? DateTime.now().subtract(Duration(days: 1));
-          return (deal.activePromotion != null ? true : false) &&
-              validPromotedUntil.isAfter(DateTime.now());
-        }).toList();
-      } else {
-        filteredDeals = controller.deals.where((deal) {
-          return deal.promotedUntil != null && deal.promotedUntil!.isBefore(DateTime.now());
-        }).toList();
-      }
-
-      if (filteredDeals.isEmpty) {
+      if (controller.deals.isEmpty) {
         return const Center(
           child: Padding(
             padding: EdgeInsets.only(top: 20),
@@ -41,18 +25,15 @@ class VendorDealsList extends GetView<VendorDashboardController> {
       }
 
       return ListView.builder(
+        controller: controller.scrollController,
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
-        itemCount: filteredDeals.length,
+        itemCount: controller.deals.length,
         itemBuilder: (context, index) {
-          final deal = filteredDeals[index];
+          final deal = controller.deals[index];
           return Column(
             children: [
-              DealTile(
-                key: ValueKey(deal.id),
-                deal: deal,
-                dealType: dealController.selectedTab.value,
-              ),
+              DealTile(key: ValueKey(deal.id), deal: deal, dealType: controller.selectedTab.value),
               const SizedBox(height: 10),
             ],
           );
