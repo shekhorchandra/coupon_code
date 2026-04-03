@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:coupon_code/app/core/values/app_color.dart';
 import 'package:coupon_code/app/data/models/deal_category_model.dart';
@@ -11,7 +13,8 @@ import 'package:coupon_code/app/data/network/dio_client.dart';
 import 'package:coupon_code/app/data/services/storage_service.dart';
 import 'package:coupon_code/app/modules/services/contants/api_constants.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/data/deal_plans.dart';
-import 'package:dio/dio.dart';
+import 'package:coupon_code/app/routes/app_routes.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide MultipartFile, FormData;
 import 'package:image_picker/image_picker.dart';
@@ -20,11 +23,7 @@ import 'package:path_provider/path_provider.dart';
 class VendorDealsController extends GetxController {
   VendorDealsController();
 
-  var selectedTab = 0.obs;
-
-  void setTab(int index) {
-    selectedTab.value = index;
-  }
+  Rx<bool> isLoading = false.obs;
 
   // void toggleDealStatus(String id, bool value) {
   //   // 1. Find the index of the deal in the mockDeals list (or your observable list)
@@ -52,16 +51,24 @@ class VendorDealsController extends GetxController {
   final List<String> couponTypes = ['Coupon Code', 'QR Code', 'Barcode'];
   Rxn<File> couponImageFile = Rxn<File>();
 
+  final tagController = TextEditingController();
+  RxList<String> tags = <String>[].obs;
+
+  RxList<Outlets>? outlets = <Outlets>[].obs;
+  RxList<Outlets>? selectedOutlets = <Outlets>[].obs;
+
   DioClient _dioClient = DioClient();
 
   @override
   void onInit() async {
+    super.onInit();
+
     priceController.addListener(_calculateFromDiscount);
     discountController.addListener(_calculateFinalPrice);
     finalPriceController.addListener(_calculateDiscount);
 
     await _fetchCategories();
-    super.onInit();
+    await fetchShopLogoAndOutlets();
   }
 
   Future<void> _fetchCategories() async {
@@ -86,7 +93,7 @@ class VendorDealsController extends GetxController {
     }
   }
 
-  Future<void> fetchShopLogo() async {
+  Future<void> fetchShopLogoAndOutlets() async {
     try {
       StorageService _storageService = StorageService();
 
@@ -101,9 +108,12 @@ class VendorDealsController extends GetxController {
         final shop = ShopModel.fromJson(data);
         shopLogo.value = shop.businessLogo;
 
-        if (shopLogo.value != null || shopLogo.value!.isNotEmpty) {
+        if (shopLogo.value != null && shopLogo.value!.isNotEmpty) {
           images.add(DealImageModel(url: shopLogo.value, isThumbnail: true));
         }
+
+        // Outlets
+        if (shop.outlets != null) outlets?.value = shop.outlets!;
       } else {
         Get.snackbar('Error', 'Couldn\'t fetch shop logo!');
       }
@@ -111,6 +121,27 @@ class VendorDealsController extends GetxController {
       Get.snackbar('Error', 'Unidentified error occured!');
       log(e.toString());
     }
+  }
+
+  void toggleOutlet(Outlets outlet) {
+    if (selectedOutlets!.contains(outlet)) {
+      selectedOutlets?.remove(outlet);
+    } else {
+      selectedOutlets?.add(outlet);
+    }
+  }
+
+  // Tag related logics
+  void addTag(String value) {
+    final cleanTag = value.trim();
+    if (cleanTag.isNotEmpty && !tags.contains(cleanTag)) {
+      tags.add(cleanTag);
+      tagController.clear();
+    }
+  }
+
+  void removeTag(int index) {
+    tags.removeAt(index);
   }
 
   // Method to pick QR/Barcode image
@@ -261,70 +292,99 @@ class VendorDealsController extends GetxController {
     }
   }
 
-  void validateAndSubmit() async {
-    // 1. Basic Validations
+  bool validateForm() {
     if (images.isEmpty) {
       _showError("Please upload at least one image.");
-      return;
+      return false;
     }
     if (titleController.text.trim().isEmpty) {
       _showError("Deal title is required.");
-      return;
+      return false;
     }
     if (selectedCategory.value.isEmpty) {
       _showError("Please select a category.");
-      return;
+      return false;
     }
 
-    // 2. Coupon Validation (NEW LOGIC)
+    if (descController.value.text.length < 6) {
+      _showError("Description is too short.");
+      return false;
+    }
+
     final isTextCoupon = selectedCouponType.value == 'Coupon Code';
     if (isTextCoupon) {
       if (couponController.text.trim().isEmpty) {
         _showError("Please enter the Coupon Code.");
-        return;
+        return false;
       }
     } else {
       if (couponImageFile.value == null) {
         _showError("Please upload the ${selectedCouponType.value} image.");
-        return;
+        return false;
       }
     }
 
-    // // 3. Pricing Validation
-    // if (priceController.text.isEmpty) {
-    //   _showError("Please enter the price.");
-    //   return;
-    // }
-    // if (double.tryParse(priceController.text) == null) {
-    //   _showError("Invalid price format.");
-    //   return;
-    // }
+    // 3. Pricing Validation
+    if (priceController.text.isEmpty) {
+      _showError("Please enter the price.");
+      return false;
+    }
+    if (double.tryParse(priceController.text) == null) {
+      _showError("Invalid price format.");
+      return false;
+    }
 
-    // // 4. Date Validation
+    if (discountController.text.isEmpty) {
+      _showError("Please enter the discount percentage.");
+      return false;
+    }
+    if (double.tryParse(discountController.text) == null) {
+      _showError("Invalid discount format.");
+      return false;
+    }
+
+    if (finalPriceController.text.isEmpty) {
+      finalPriceController.value = discountController.value;
+      return false;
+    }
+    if (double.tryParse(finalPriceController.text) == null) {
+      finalPriceController.value = discountController.value;
+      return false;
+    }
+
+    // 4. Date Validation
     // if (selectedValidityRange.value == null) {
     //   _showError("Please select a validity date range.");
-    //   return;
+    //   return false;
     // }
 
     // SUCCESS - Clear error state
     hasError.value = false;
 
+    return true;
+  }
+
+  Future<void> publishDeal() async {
+    final isTextCoupon = selectedCouponType.value == 'Coupon Code';
+
     try {
-      // Build the model for the preview screen
+      isLoading.value = true;
       deal.value = buildDealModel();
 
-      // Start preparing Multipart data
-      List<MultipartFile> multipartFileList = [];
-
+      // 1. Prepare images for the 'files' array (as you were doing)
+      List<dio.MultipartFile> multipartFileList = [];
       for (var img in images) {
         if (img.file != null) {
           multipartFileList.add(
-            await MultipartFile.fromFile(img.file!.path, filename: img.file!.path.split('/').last),
+            await dio.MultipartFile.fromFile(
+              img.file!.path,
+              filename: img.file!.path.split('/').last,
+            ),
           );
         } else if (img.url != null) {
           File downloadedFile = await _downloadFile(img.url!);
           multipartFileList.add(
-            await MultipartFile.fromFile(
+            await dio.MultipartFile.fromFile(
               downloadedFile.path,
               filename: downloadedFile.path.split('/').last,
             ),
@@ -332,33 +392,151 @@ class VendorDealsController extends GetxController {
         }
       }
 
-      // Construct FormData for the final API call
-      FormData formData = FormData.fromMap({
-        "category_id": selectedCategory.value,
+      // 2. Construct the JSON payload (TEXT ONLY)
+      // REMOVE coupon_image from here!
+      Map<String, dynamic> textPayload = {
+        "category": selectedCategory.value,
         "title": titleController.text.trim(),
-        "original_price": priceController.text,
-        "discount_percent": discountController.text,
+        "available_in_outlet": selectedOutlets?.map((outlet) => outlet.sId).toList(),
+        "reguler_price": num.tryParse(priceController.text),
+        "discount": num.tryParse(discountController.text),
         "description": descController.text.trim(),
-        "coupon_type": selectedCouponType.value,
-        "coupon_data": isTextCoupon
-            ? couponController.text.trim()
-            : (couponImageFile.value != null
-                  ? await MultipartFile.fromFile(couponImageFile.value!.path)
-                  : null),
         "highlights": highlightController.toList(),
-        "images": multipartFileList,
-        "end_date": selectedValidityRange.value?.end.toIso8601String(),
-      });
+        "tags": tags.toList(),
+      };
 
-      // TODO: Actually post this formData to your API
-      // await _dioClient.client.post(ApiConstants.addDeal, data: formData);
+      if (isTextCoupon) {
+        textPayload["coupon"] = couponController.text.trim();
+      }
 
-      debugPrint("Validation passed and DealModel built.");
+      // 3. Create the FormData map
+      Map<String, dynamic> formDataMap = {
+        "data": jsonEncode(textPayload), // This now works because it's only text
+        "files": multipartFileList, // The list of gallery images
+      };
+
+      // 4. Add the Coupon Image separately (if applicable)
+      if (!isTextCoupon && couponImageFile.value != null) {
+        // Depending on your API, the key might be 'coupon_image', 'qr', or 'upc'
+        String fileKey = selectedCouponType.value == 'QR Code' ? 'qr' : 'upc';
+
+        formDataMap[fileKey] = await dio.MultipartFile.fromFile(
+          couponImageFile.value!.path,
+          // filename: 'coupon_image.png',
+        );
+      }
+
+      // 5. Build final FormData and send
+      dio.FormData formData = dio.FormData.fromMap(formDataMap);
+
+      final response = await _dioClient.client.post(ApiConstants.addDeal, data: formData);
+
+      if (response.statusCode == 201) {
+        debugPrint("Deal successfully published.");
+
+        deal.value = DealModel.fromMap(response.data['data']);
+
+        Get.toNamed(
+          AppRoutes.DEAL_PLAN,
+          arguments: {'dealItem': deal.value, 'isNetworkImage': true},
+        );
+      }
     } catch (e) {
-      log("Preparation error: $e");
-      _showError("Something went wrong while preparing the deal.");
+      // log("Preparation error: $e");
       hasError.value = true;
+    } finally {
+      isLoading.value = false;
     }
+  }
+
+  Future<void> updateDeal(String? id) async {
+    if (deal.value == null) return;
+
+    print(id);
+
+    final isTextCoupon = selectedCouponType.value == 'Coupon Code';
+
+    try {
+      isLoading.value = true;
+
+      // 1. Update the DealModel using copyWith
+      deal.value = deal.value!.copyWith(
+        categoryId: selectedCategory.value,
+        title: titleController.text.trim(),
+        reguler_price: double.tryParse(priceController.text) ?? deal.value!.originalPrice,
+        discount: double.tryParse(discountController.text) ?? deal.value!.discountPercent,
+        description: descController.text.trim(),
+        highlights: highlightController.toList(),
+        images: images.map((img) => img.url ?? img.file?.path ?? "").toList(),
+        coupon: isTextCoupon ? couponController.text.trim() : deal.value!.coupon,
+      );
+
+      // 2. Prepare gallery images
+      final formData = await _buildFormData(isTextCoupon);
+
+      // 6. Send PATCH request
+      final response = await _dioClient.client.patch(ApiConstants.dealDetails(id!), data: formData);
+
+      if (response.statusCode == 201) {
+        debugPrint("Deal successfully updated.");
+        Get.snackbar('Success', 'Deal successfully updated.');
+      }
+    } catch (e) {
+      hasError.value = true;
+      log("Update Deal Error: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<dio.FormData> _buildFormData(bool isTextCoupon) async {
+    List<dio.MultipartFile> multipartFileList = [];
+
+    for (var img in images) {
+      if (img.file != null) {
+        multipartFileList.add(
+          await dio.MultipartFile.fromFile(
+            img.file!.path,
+            filename: img.file!.path.split('/').last,
+          ),
+        );
+      } else if (img.url != null) {
+        File downloadedFile = await _downloadFile(img.url!);
+        multipartFileList.add(
+          await dio.MultipartFile.fromFile(
+            downloadedFile.path,
+            filename: downloadedFile.path.split('/').last,
+          ),
+        );
+      }
+    }
+
+    Map<String, dynamic> textPayload = {
+      "category": selectedCategory.value,
+      "title": titleController.text.trim(),
+      "available_in_outlet": selectedOutlets?.map((e) => e.sId).toList(),
+      "regular_price": num.tryParse(priceController.text),
+      "discount": num.tryParse(discountController.text),
+      "description": descController.text.trim(),
+      "highlights": highlightController.toList(),
+      "tags": tags.toList(),
+    };
+
+    if (isTextCoupon) {
+      textPayload["coupon"] = couponController.text.trim();
+    }
+
+    Map<String, dynamic> formDataMap = {
+      "data": jsonEncode(textPayload),
+      "files": multipartFileList,
+    };
+
+    if (!isTextCoupon && couponImageFile.value != null) {
+      String fileKey = selectedCouponType.value == 'QR Code' ? 'qr' : 'upc';
+      formDataMap[fileKey] = await dio.MultipartFile.fromFile(couponImageFile.value!.path);
+    }
+
+    return dio.FormData.fromMap(formDataMap);
   }
 
   // Updated Build Model to include Thumbnail Reordering logic
@@ -387,14 +565,19 @@ class VendorDealsController extends GetxController {
 
   // Helper for Network -> File conversion (requires path_provider and http)
   Future<File> _downloadFile(String url) async {
-    final response = await _dioClient.client.get<List<int>>(
-      url,
-      options: Options(responseType: ResponseType.bytes),
-    );
+    // Get the directory on the main thread (plugins don't work inside isolates)
     final tempDir = await getTemporaryDirectory();
-    final file = File('${tempDir.path}/${url.split('/').last}');
-    await file.writeAsBytes(response.data!);
-    return file;
+    final fileName = url.split('/').last;
+    final savePath = '${tempDir.path}/$fileName';
+
+    try {
+      // 2. Use Isolate.run to perform the heavy lifting
+      final String downloadedPath = await Isolate.run(() => _downloadTask(url, savePath));
+      return File(downloadedPath);
+    } catch (e) {
+      log("Isolate Download Error: $e");
+      rethrow;
+    }
   }
 
   void _showError(String message) {
@@ -408,14 +591,57 @@ class VendorDealsController extends GetxController {
     );
   }
 
+  void resetForm() {
+    titleController.clear();
+    descController.clear();
+    couponController.clear();
+    priceController.clear();
+    discountController.clear();
+    finalPriceController.clear();
+
+    tags.clear();
+    highlightController.clear();
+
+    selectedCategory.value = '';
+    selectedOutlets?.clear();
+
+    images.clear();
+    couponImageFile.value = null;
+
+    deal.value = null;
+
+    hasError.value = true;
+  }
+
   @override
   void onClose() {
+    super.onClose();
+
+    resetForm();
     titleController.dispose();
     descController.dispose();
     couponController.dispose();
     priceController.dispose();
     discountController.dispose();
     finalPriceController.dispose();
-    super.onClose();
+  }
+}
+
+Future<String> _downloadTask(String url, String savePath) async {
+  final client = HttpClient();
+  try {
+    final request = await client.getUrl(Uri.parse(url));
+    final response = await request.close();
+
+    if (response.statusCode == 200) {
+      final bytes = await response.fold<List<int>>([], (p, e) => p..addAll(e));
+      final file = File(savePath);
+      await file.writeAsBytes(bytes);
+      return file.path;
+    } else {
+      throw Exception("Failed to download file: ${response.statusCode}");
+    }
+  } finally {
+    client.close();
   }
 }

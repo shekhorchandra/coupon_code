@@ -50,6 +50,7 @@ abstract class AppRoutes {
 
   static const PAYMENT_METHOD = '/payment_method';
   static const ADD_PAYMENT_METHOD = '/payment_method/add';
+  static const PURCHASE_SUCCESS = '/payment/success';
 
   static const VENDOR_MENU = '/vendor/menu';
   static const VENDOR_NAVIGATION_BAR = '/vendor/navigation_bar';

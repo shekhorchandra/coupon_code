@@ -30,10 +30,6 @@ class VendorDashboardController extends GetxController {
       // Fetch deals from API
       final response = await _dioClient.client.get(ApiConstants.topViewedDeals);
 
-      print("Dealsss.......");
-
-      print(response);
-
       if (response.statusCode == 200) {
         final List<dynamic> responseData = response.data['data']['topDeals'];
         final List<DealModel> loadedDeals = responseData.map((dealData) {

@@ -65,7 +65,11 @@ class DealPublishNoticeView extends GetView<VendorDealsController> {
 
             const SizedBox(height: 30),
 
-            AppButton(text: 'Agree & Continue', onPressed: () {}),
+            Obx(
+              () => controller.acceptedTnC.value
+                  ? AppButton(text: 'Agree & Continue', onPressed: () => Get.back())
+                  : SizedBox.shrink(),
+            ),
           ],
         ),
       ),

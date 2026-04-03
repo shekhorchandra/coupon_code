@@ -85,8 +85,8 @@ class VendorAccountController extends GetxController {
 
   /// Create vendor account - Map
   // Variables
-  var pickedLat = 0.0.obs;
-  var pickedLng = 0.0.obs;
+  var pickedLat = 51.5085.obs;
+  var pickedLng = (-0.1257).obs;
   var markers = <Marker>{
     Marker(
       markerId: const MarkerId("selected_location"),
@@ -108,7 +108,7 @@ class VendorAccountController extends GetxController {
     if (businessAddressController.text.isNotEmpty) {
       outlets.add(
         Outlets(
-          shop: 'Outlet ${outlets.length + 1}',
+          name: 'Outlet ${outlets.length + 1}',
           address: businessAddressController.text,
           location: Location(coordinates: [pickedLng.value, pickedLat.value]),
           zipCode: zipCodeController.text,
@@ -128,7 +128,7 @@ class VendorAccountController extends GetxController {
 
     // Renumber remaining outlets
     for (int i = 0; i < outlets.length; i++) {
-      outlets[i].shop = 'Outlet ${i + 1}';
+      outlets[i].name = 'Outlet ${i + 1}';
     }
     outlets.refresh();
   }

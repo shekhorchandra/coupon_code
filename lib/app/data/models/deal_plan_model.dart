@@ -5,30 +5,38 @@ class DealPlanModel {
   final int id;
   final String name;
   final String? description;
-  final double price;
   final String? icon;
+  final double price;
+  final bool isCustom;
+  final double? pricePerDay;
 
   DealPlanModel({
     required this.id,
     required this.name,
     this.description,
-    required this.price,
     this.icon,
+    required this.price,
+    this.isCustom = false,
+    this.pricePerDay,
   });
 
   DealPlanModel copyWith({
     int? id,
     String? name,
     String? description,
-    double? price,
     String? icon,
+    double? price,
+    bool? isCustom,
+    double? pricePerDay,
   }) {
     return DealPlanModel(
       id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,
-      price: price ?? this.price,
       icon: icon ?? this.icon,
+      price: price ?? this.price,
+      isCustom: isCustom ?? this.isCustom,
+      pricePerDay: pricePerDay ?? this.pricePerDay,
     );
   }
 
@@ -37,18 +45,22 @@ class DealPlanModel {
       'id': id,
       'name': name,
       'description': description,
-      'price': price,
       'icon': icon,
+      'price': price,
+      'isCustom': isCustom,
+      'pricePerDay': pricePerDay,
     };
   }
 
   factory DealPlanModel.fromMap(Map<String, dynamic> map) {
     return DealPlanModel(
-      id: map['id'] ?? 0,
-      name: map['name'] ?? '',
-      description: map['description'] ?? '',
-      price: (map['price'] as num? ?? 0.0).toDouble(),
-      icon: (map['icon'] ?? ''),
+      id: map['id'] as int,
+      name: map['name'] as String,
+      description: map['description'] != null ? map['description'] as String : null,
+      icon: map['icon'] != null ? map['icon'] as String : null,
+      price: map['price'] as double,
+      isCustom: map['isCustom'] as bool,
+      pricePerDay: map['pricePerDay'] != null ? map['pricePerDay'] as double : null,
     );
   }
 
@@ -59,7 +71,7 @@ class DealPlanModel {
 
   @override
   String toString() {
-    return 'DealPlanModel(id: $id, name: $name, description: $description, price: $price, icon: $icon)';
+    return 'DealPlanModel(id: $id, name: $name, description: $description, icon: $icon, price: $price, isCustom: $isCustom, pricePerDay: $pricePerDay)';
   }
 
   @override
@@ -69,12 +81,20 @@ class DealPlanModel {
     return other.id == id &&
         other.name == name &&
         other.description == description &&
+        other.icon == icon &&
         other.price == price &&
-        other.icon == icon;
+        other.isCustom == isCustom &&
+        other.pricePerDay == pricePerDay;
   }
 
   @override
   int get hashCode {
-    return id.hashCode ^ name.hashCode ^ description.hashCode ^ price.hashCode ^ icon.hashCode;
+    return id.hashCode ^
+        name.hashCode ^
+        description.hashCode ^
+        icon.hashCode ^
+        price.hashCode ^
+        isCustom.hashCode ^
+        pricePerDay.hashCode;
   }
 }

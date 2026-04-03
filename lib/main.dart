@@ -19,7 +19,7 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // Get Storage initialization
-  StorageService().init();
+  await StorageService().init();
 
   // Handle FCM messages while in background
   FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
@@ -44,6 +44,8 @@ class CouponDiscountApp extends StatelessWidget {
         fontFamily: 'FontMain',
       ),
       initialRoute: AppRoutes.SPLASH,
+      // initialRoute: AppRoutes.PURCHASE_TEST,
+      // initialRoute: AppRoutes.DEAL_PLAN,
       getPages: AppPages.pages,
     );
   }

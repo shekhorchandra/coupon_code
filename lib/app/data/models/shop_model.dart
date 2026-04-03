@@ -92,7 +92,7 @@ class BusinessPhone {
 
 class Outlets {
   String? sId;
-  String? shop;
+  String? name;
   String? address;
   String? zipCode;
   Location? location;
@@ -103,7 +103,7 @@ class Outlets {
 
   Outlets({
     this.sId,
-    this.shop,
+    this.name,
     this.address,
     this.zipCode,
     this.location,
@@ -115,7 +115,7 @@ class Outlets {
 
   Outlets.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
-    shop = json['shop'];
+    name = json['outlet_name'];
     address = json['address'];
     zipCode = json['zip_code'];
     location = json['location'] != null ? new Location.fromJson(json['location']) : null;
@@ -128,7 +128,7 @@ class Outlets {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['_id'] = this.sId;
-    data['shop'] = this.shop;
+    data['name'] = this.name;
     data['address'] = this.address;
     data['zip_code'] = this.zipCode;
     if (this.location != null) {

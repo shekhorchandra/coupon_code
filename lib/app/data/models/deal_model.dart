@@ -17,11 +17,12 @@ class DealModel {
   final double? price;
   final double originalPrice;
   final String? duration;
-  final double? regular_price;
+  final double? reguler_price;
   final double discountPercent;
   final List<String> highlights;
   final String description;
   final List<String> images;
+  final List<String>? tags;
   final bool? isPromoted;
   final DateTime? promotedUntil;
   final String? coupon;
@@ -40,10 +41,11 @@ class DealModel {
     required this.categoryId,
     this.activePromotion,
     required this.title,
-    this.regular_price,
+    this.reguler_price,
     required this.discountPercent,
     required this.highlights,
     required this.description,
+    this.tags,
     required this.images,
     this.isPromoted,
     this.promotedUntil,
@@ -70,11 +72,12 @@ class DealModel {
     String? activePromotion,
     String? title,
     String? subtitle,
-    double? regularPrice,
+    double? reguler_price,
     double? discount,
     double? discountPercent,
     List<String>? highlights,
     String? description,
+    List<String>? tags,
     String? image,
     double? price,
     double? originalPrice,
@@ -97,10 +100,11 @@ class DealModel {
       categoryId: categoryId ?? this.categoryId,
       activePromotion: activePromotion ?? this.activePromotion,
       title: title ?? this.title,
-      regular_price: regularPrice ?? this.regular_price,
+      reguler_price: reguler_price ?? this.reguler_price,
       discountPercent: discountPercent ?? this.discountPercent,
       highlights: highlights ?? this.highlights,
       description: description ?? this.description,
+      tags: tags ?? this.tags,
       images: images ?? this.images,
       isPromoted: isPromoted ?? this.isPromoted,
       promotedUntil: promotedUntil ?? this.promotedUntil,
@@ -132,10 +136,11 @@ class DealModel {
       'price': price,
       'originalPrice': originalPrice,
       'duration': duration,
-      'reguler_price': regular_price,
+      'reguler_price': reguler_price,
       'discountPercent': discountPercent,
       'highlights': highlights,
       'description': description,
+      'tags': tags,
       'images': images,
       'isPromoted': isPromoted,
       'promotedUntil': promotedUntil?.millisecondsSinceEpoch,
@@ -147,10 +152,7 @@ class DealModel {
       'businessName': businessName,
       'distance': distance,
       'coupon_option': couponOption != null
-          ? {
-        'qr': couponOption!.qr,
-        'upc': couponOption!.upc,
-      }
+          ? {'qr': couponOption!.qr, 'upc': couponOption!.upc}
           : null,
     };
   }
@@ -163,6 +165,7 @@ class DealModel {
     }
 
     final imagesList = parseStringList(map['images']);
+    final tagsList = parseStringList(map['tags']);
     final highlightList = parseStringList(map['highlight']);
 
     // 2. Safe parsing for Outlets (The JSON key is 'available_in_outlet')
@@ -216,10 +219,11 @@ class DealModel {
       categoryId: map['category']?.toString() ?? '',
       activePromotion: map['activePromotion']?.toString(),
       title: map['title']?.toString() ?? '',
-      regular_price: regPrice,
+      reguler_price: regPrice,
       discountPercent: disc,
       highlights: highlightList,
       description: map['description']?.toString() ?? '',
+      tags: tagsList,
       images: imagesList,
       isPromoted: map['isPromoted'] as bool? ?? false,
       promotedUntil: map['promotedUntil'] != null
@@ -248,7 +252,7 @@ class DealModel {
 
   @override
   String toString() {
-    return 'DealModel(id: $id, shopId: $shopId, userId: $userId, categoryId: $categoryId, activePromotion: $activePromotion, title: $title, regularPrice: $regular_price, discountPercent: $discountPercent, highlights: $highlights, description: $description, images: $images, isPromoted: $isPromoted, promotedUntil: $promotedUntil, coupon: $coupon, totalViews: $totalViews, totalImpression: $totalImpression), subtitle: $subtitle, image: $image, price: $price, originalPrice: $originalPrice, duration: $duration)';
+    return 'DealModel(id: $id, shopId: $shopId, userId: $userId, categoryId: $categoryId, activePromotion: $activePromotion, title: $title, reguler_price: $reguler_price, discountPercent: $discountPercent, highlights: $highlights, description: $description, tags: $tags images: $images, isPromoted: $isPromoted, promotedUntil: $promotedUntil, coupon: $coupon, totalViews: $totalViews, totalImpression: $totalImpression), subtitle: $subtitle, image: $image, price: $price, originalPrice: $originalPrice, duration: $duration)';
   }
 
   @override
@@ -261,10 +265,11 @@ class DealModel {
         other.categoryId == categoryId &&
         other.activePromotion == activePromotion &&
         other.title == title &&
-        other.regular_price == regular_price &&
+        other.reguler_price == reguler_price &&
         other.discountPercent == discountPercent &&
         listEquals(other.highlights, highlights) &&
         other.description == description &&
+        listEquals(other.tags, tags) &&
         listEquals(other.images, images) &&
         other.isPromoted == isPromoted &&
         other.promotedUntil == promotedUntil &&
@@ -286,10 +291,11 @@ class DealModel {
         categoryId.hashCode ^
         activePromotion.hashCode ^
         title.hashCode ^
-        regular_price.hashCode ^
+        reguler_price.hashCode ^
         discountPercent.hashCode ^
         highlights.hashCode ^
         description.hashCode ^
+        tags.hashCode ^
         images.hashCode ^
         isPromoted.hashCode ^
         promotedUntil.hashCode ^
@@ -322,7 +328,7 @@ class DealModel {
     return "${days}d ${hours}h ${minutes}m ${seconds}s";
   }
 
-  static double afterDiscountPrice(double regularPrice, double discountPercent) {
-    return regularPrice - (regularPrice * discountPercent / 100);
+  static double afterDiscountPrice(double reguler_price, double discountPercent) {
+    return reguler_price - (reguler_price * discountPercent / 100);
   }
 }
