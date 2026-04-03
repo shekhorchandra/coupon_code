@@ -18,6 +18,7 @@ class VendorSignupView extends GetView<VendorSignupController> {
   VendorSignupView({super.key});
 
   late final VendorSignupController controller = Get.find<VendorSignupController>(); //instance
+  final VendorLoginController _loginController = Get.put(VendorLoginController());
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +134,7 @@ class VendorSignupView extends GetView<VendorSignupController> {
                     child: SocialButton(
                       text: "Google",
                       iconPath: AppAssets.google,
-                      onPressed: () => Get.find<VendorLoginController>().loginWithGoogleDeepLink(),
+                      onPressed: () => _loginController.loginWithGoogleDeepLink(),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -143,6 +144,12 @@ class VendorSignupView extends GetView<VendorSignupController> {
                       iconPath: AppAssets.apple,
                       onPressed: () async {
                         final credential = await SignInWithApple.getAppleIDCredential(
+                          webAuthenticationOptions: WebAuthenticationOptions(
+                            clientId: "agency.beuptech.yepp.auth",
+                            redirectUri: Uri.parse(
+                              "https://api.yeppapp.com/callbacks/sign_in_with_apple",
+                            ),
+                          ),
                           scopes: [
                             AppleIDAuthorizationScopes.email,
                             AppleIDAuthorizationScopes.fullName,

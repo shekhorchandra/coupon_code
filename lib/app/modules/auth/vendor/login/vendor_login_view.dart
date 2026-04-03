@@ -162,19 +162,19 @@ class VendorLoginView extends GetView<VendorLoginController> {
                       iconPath: AppAssets.apple,
                       onPressed: () async {
                         final credential = await SignInWithApple.getAppleIDCredential(
+                          webAuthenticationOptions: WebAuthenticationOptions(
+                            clientId: "agency.beuptech.yepp.auth",
+                            redirectUri: Uri.parse(
+                              "https://api.yeppapp.com/callbacks/sign_in_with_apple",
+                            ),
+                          ),
                           scopes: [
                             AppleIDAuthorizationScopes.email,
                             AppleIDAuthorizationScopes.fullName,
                           ],
-                          webAuthenticationOptions: WebAuthenticationOptions(
-                            clientId: 'agency.beuptech.yepp.auth',
-                            redirectUri: Uri.parse(
-                              'https://www.avizitrx.com/callbacks/sign_in_with_apple',
-                            ),
-                          ),
                         );
 
-                        controller.loginWithApple(credential);
+                        print(credential);
                       },
                     ),
                   ),
