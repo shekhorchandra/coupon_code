@@ -19,6 +19,7 @@ import 'package:coupon_code/app/modules/vendor/vendor_deals/bindings/vendor_deal
 import 'package:coupon_code/app/modules/vendor/vendor_deals/views/add_deal_view.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/views/deal_plan_view.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/views/deal_publish_notice_view.dart';
+import 'package:coupon_code/app/modules/vendor/vendor_deals/views/purchase_success_view.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/views/vendor_deals_view.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_deals/views/vendor_single_deal_view.dart';
 import 'package:coupon_code/app/modules/vendor/vendor_menu/bindings/vendor_menu_binding.dart';
@@ -226,6 +227,7 @@ class AppPages {
       page: () => AddNewCardView(),
       binding: PaymentMethodBinding(),
     ),
+    GetPage(name: AppRoutes.PURCHASE_SUCCESS, page: () => PurchaseSuccessView()),
 
     /// User Forget password
     GetPage(

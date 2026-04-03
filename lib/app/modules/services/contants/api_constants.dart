@@ -53,4 +53,7 @@ class ApiConstants {
 
   /// Notification
   static const String notifications = '/notification';
+
+  /// Purchase
+  static const String verifyPurchase = '/payment/api/verify-purchase';
 }

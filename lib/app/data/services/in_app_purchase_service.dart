@@ -1,48 +1,76 @@
 import 'dart:async';
+import 'dart:developer';
 
+import 'package:coupon_code/app/data/network/dio_client.dart';
+import 'package:coupon_code/app/modules/services/contants/api_constants.dart';
+import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:get/get.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
 class InAppPurchaseService {
   final InAppPurchase _iap = InAppPurchase.instance;
   StreamSubscription<List<PurchaseDetails>>? _subscription;
+  final DioClient _dioClient = DioClient();
 
-  // IDs must match exactly what you put in the consoles
   static const _productIds = {'deal_publish_7d', 'deal_publish_14d', 'deal_publish_30d'};
 
   RxList<ProductDetails> products = <ProductDetails>[].obs;
   RxBool isProcessing = false.obs;
   bool available = false;
+  RxString dealId = ''.obs;
+
+  // Prevent multiple simultaneous initializations
+  Completer<void>? _initCompleter;
 
   Future<void> init() async {
-    available = await _iap.isAvailable();
-    if (!available) return;
+    if (_initCompleter != null) return _initCompleter!.future;
+    _initCompleter = Completer<void>();
 
-    // Unified stream for all platforms
-    _subscription = _iap.purchaseStream.listen(
-      _onPurchaseUpdate,
-      onError: (error) => Get.snackbar("Error", error.toString()),
-    );
+    try {
+      available = await _iap.isAvailable();
+      if (!available) {
+        _initCompleter!.complete();
+        return;
+      }
 
-    await loadProducts();
+      _subscription?.cancel(); // Cancel existing if any
+      _subscription = _iap.purchaseStream.listen(
+        _onPurchaseUpdate,
+        onError: (error) {
+          isProcessing.value = false;
+          Get.snackbar("Error", error.toString());
+        },
+      );
+
+      await loadProducts();
+      _initCompleter!.complete();
+    } catch (e) {
+      _initCompleter!.completeError(e);
+      _initCompleter = null; // Allow retry on error
+    }
   }
 
   Future<void> loadProducts() async {
     final response = await _iap.queryProductDetails(_productIds);
-    // Sort products by price or ID to keep UI consistent
-    products.assignAll(response.productDetails);
+    // Sort logic moved here to keep UI logic clean
+    final list = response.productDetails.toList();
+    list.sort((a, b) => a.rawPrice.compareTo(b.rawPrice));
+    products.assignAll(list);
   }
 
-  void buy(ProductDetails product) {
-    isProcessing.value = true;
-    final PurchaseParam purchaseParam = PurchaseParam(productDetails: product);
+  void buy(ProductDetails product, String id) {
+    if (isProcessing.value) return; // Prevent double trigger
 
+    isProcessing.value = true;
+    dealId.value = id;
+    final PurchaseParam purchaseParam = PurchaseParam(productDetails: product);
     _iap.buyConsumable(purchaseParam: purchaseParam);
   }
 
   Future<void> _onPurchaseUpdate(List<PurchaseDetails> purchases) async {
     for (var purchase in purchases) {
       if (purchase.status == PurchaseStatus.pending) {
+        isProcessing.value = true;
         continue;
       }
 
@@ -53,22 +81,49 @@ class InAppPurchaseService {
 
       if (purchase.status == PurchaseStatus.canceled) {
         isProcessing.value = false;
-        Get.snackbar("Error", "Transaction canceled!");
+        // Optionally notify user
       }
 
       if (purchase.status == PurchaseStatus.purchased ||
           purchase.status == PurchaseStatus.restored) {
-        // 🔥 VALIDATE WITH EXPRESS.JS
-        bool valid = await _verifyWithExpress(purchase);
+        bool valid = await _verifyWithServer(purchase, dealId.value);
 
         if (valid) {
           if (purchase.pendingCompletePurchase) {
             await _iap.completePurchase(purchase);
           }
-          Get.snackbar("Success", "Plan activated successfully!");
+          isProcessing.value = false;
+          // Use offNamed to clear the "Plan Selection" screen from stack
+          Get.offAllNamed(AppRoutes.PURCHASE_SUCCESS);
+          return; // IMPORTANT: Exit loop after successful navigation
+        } else {
+          isProcessing.value = false;
+          Get.snackbar('Error', 'Couldn\'t verify your purchase!');
         }
-        isProcessing.value = false;
       }
+    }
+  }
+
+  Future<bool> _verifyWithServer(PurchaseDetails purchase, String dealId) async {
+    try {
+      final Map<String, dynamic> purchaseData = {
+        "dealId": dealId,
+        "status": purchase.status.name,
+        "productId": purchase.productID,
+        "purchaseId": purchase.purchaseID ?? '',
+        "localVerificationData": purchase.verificationData.localVerificationData,
+        "serverVerificationData": purchase.verificationData.serverVerificationData,
+        "source": purchase.verificationData.source,
+      };
+
+      final response = await _dioClient.client.post(
+        ApiConstants.verifyPurchase,
+        data: purchaseData,
+      );
+      return response.statusCode == 200;
+    } catch (e) {
+      log("Verification Error: $e");
+      return false;
     }
   }
 
@@ -76,8 +131,7 @@ class InAppPurchaseService {
     await _iap.restorePurchases();
   }
 
-  Future<bool> _verifyWithExpress(PurchaseDetails purchase) async {
-    // Implement your http call to the backend here
-    return true;
+  void dispose() {
+    _subscription?.cancel();
   }
 }

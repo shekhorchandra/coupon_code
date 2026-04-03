@@ -17,9 +17,10 @@ class DealPlanView extends GetView<DealPlanController> {
   final args = Get.arguments as Map<String, dynamic>?;
 
   DealModel? get deal => args?['dealItem'];
+  String? get dealId => deal!.id;
   bool get isNetworkImage => args?['isNetworkImage'] ?? false;
 
-  // 2026 Helper: Clean the "(App Name)" part from Store titles
+  // Clean the "(App Name)" part from Store titles
   String _cleanTitle(String title) {
     return title.split('(')[0].trim();
   }
@@ -27,7 +28,12 @@ class DealPlanView extends GetView<DealPlanController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(title: deal != null ? deal!.title : 'Choose Plan'),
+      appBar: CommonAppBar(
+        title: deal != null ? deal!.title : 'Choose Plan',
+        actions: [
+          IconButton(onPressed: () => controller.restorePurchases(), icon: Icon(Icons.restore)),
+        ],
+      ),
       body: SafeArea(
         child: Obx(() {
           // 1. Loading State
@@ -36,7 +42,7 @@ class DealPlanView extends GetView<DealPlanController> {
           }
 
           // 2. Error/Empty State (Diagnosis)
-          if (controller.iapProducts.isEmpty) {
+          if (controller.iapService.products.isEmpty) {
             return Center(
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
@@ -80,7 +86,7 @@ class DealPlanView extends GetView<DealPlanController> {
                 const SectionHeading(title: 'Choose Publishing Plan:'),
                 const SizedBox(height: 15),
 
-                ...controller.iapProducts.map((product) => _buildPlanCard(product)),
+                ...controller.iapService.products.map((product) => _buildPlanCard(product)),
               ],
             ),
           );
@@ -107,7 +113,7 @@ class DealPlanView extends GetView<DealPlanController> {
     return Obx(() {
       final color = controller.getPlanColor(product.id);
       final String? icon = getPlanIcon(product.id);
-      bool isSelected = controller.selectedProduct.value?.id == product.id;
+      final isSelected = controller.selectedProduct.value?.id == product.id;
 
       return Padding(
         padding: const EdgeInsets.only(bottom: 12),
@@ -180,7 +186,8 @@ class DealPlanView extends GetView<DealPlanController> {
           text: isProcessing
               ? 'Processing...'
               : (selected == null ? 'Select a Plan' : 'Pay ${selected.price}'),
-          onPressed: () => isProcessing ? null : controller.handlePublish(),
+          // Disable button interaction if processing
+          onPressed: () => isProcessing ? null : controller.handlePublish(dealId ?? ""),
         );
       }),
     );

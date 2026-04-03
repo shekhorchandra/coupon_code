@@ -10,11 +10,9 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 class DealPlanController extends GetxController {
   final InAppPurchaseService iapService = InAppPurchaseService();
 
-  // Observables
-  var iapProducts = <ProductDetails>[].obs;
-  var selectedProduct = Rxn<ProductDetails>();
   var isStoreLoading = true.obs;
   var errorMessage = "".obs;
+  var selectedProduct = Rxn<ProductDetails>();
 
   @override
   void onInit() {
@@ -25,9 +23,7 @@ class DealPlanController extends GetxController {
   @override
   void onReady() {
     super.onReady();
-
-    // Show alert after screen loads
-    Future.delayed(Duration.zero, () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       showAlertDialog();
     });
   }
@@ -70,28 +66,19 @@ class DealPlanController extends GetxController {
       isStoreLoading.value = true;
       errorMessage.value = "";
 
-      // 1. Initialize Service (Sets up stream and checks availability)
       await iapService.init();
 
       if (!iapService.available) {
-        errorMessage.value = "Store not available. Check internet or Store login.";
+        errorMessage.value = "Store not available.";
         return;
       }
 
-      // 2. Sync products from service to controller
-      // We wait briefly to ensure the async queryProductDetails in the service is done
       if (iapService.products.isEmpty) {
-        errorMessage.value = "No plans found. Please check App Store/Play Console IDs.";
+        errorMessage.value = "No plans found.";
       } else {
-        // Sort products by price (7d -> 14d -> 30d)
-        var sorted = List<ProductDetails>.from(iapService.products);
-        sorted.sort((a, b) => a.rawPrice.compareTo(b.rawPrice));
-
-        iapProducts.assignAll(sorted);
-
-        // Auto-select the first plan
-        if (iapProducts.isNotEmpty) {
-          selectedProduct.value = iapProducts.first;
+        // Automatically select the first plan if none selected
+        if (selectedProduct.value == null && iapService.products.isNotEmpty) {
+          selectedProduct.value = iapService.products.first;
         }
       }
     } catch (e) {
@@ -101,23 +88,17 @@ class DealPlanController extends GetxController {
     }
   }
 
-  void handlePublish() {
+  void handlePublish(String dealId) {
+    if (iapService.isProcessing.value) return;
+
     if (selectedProduct.value == null) {
-      Get.snackbar(
-        'Error',
-        'Please select a plan to continue',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      Get.snackbar('Error', 'Please select a plan');
       return;
     }
-    iapService.buy(selectedProduct.value!);
+    iapService.buy(selectedProduct.value!, dealId);
   }
 
-  void restorePurchases() {
-    iapService.restorePurchases();
-  }
+  void restorePurchases() => iapService.restorePurchases();
 
   Color getPlanColor(String id) {
     if (id.contains('7d')) return const Color(0xFFF6741C);
