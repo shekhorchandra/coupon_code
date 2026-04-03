@@ -1,6 +1,4 @@
 abstract class AppRoutes {
-  static const PURCHASE_TEST = '/purchase-test';
-
   static const SPLASH = '/';
   static const ONBOARDING = '/onboarding';
 

@@ -439,9 +439,11 @@ class VendorDealsController extends GetxController {
       if (response.statusCode == 201) {
         debugPrint("Deal successfully published.");
 
+        deal.value = DealModel.fromMap(response.data['data']);
+
         Get.toNamed(
           AppRoutes.DEAL_PLAN,
-          arguments: {'dealItem': deal.value, 'isNetworkImage': false},
+          arguments: {'dealItem': deal.value, 'isNetworkImage': true},
         );
       }
     } catch (e) {

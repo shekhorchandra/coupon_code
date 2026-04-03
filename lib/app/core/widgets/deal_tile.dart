@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coupon_code/app/core/values/app_color.dart';
 import 'package:coupon_code/app/core/values/app_text.dart';
+import 'package:coupon_code/app/core/widgets/App_button.dart';
 import 'package:coupon_code/app/data/models/deal_model.dart';
 import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
@@ -68,39 +69,42 @@ class DealTile extends StatelessWidget {
                       ),
 
                       // More options
-                      PopupMenuButton<String>(
-                        color: AppColor.cardBackground,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                        onSelected: (value) {
-                          if (value == 'delete') {
-                            debugPrint('Delete button pressed!');
-                          }
-                        },
-                        itemBuilder: (_) => [
-                          PopupMenuItem(
-                            value: dealType.toString(),
-                            child: Row(
-                              children: [
-                                if (dealType == 0) ...[
-                                  Icon(Iconsax.edit_2),
-                                  const SizedBox(width: 10),
-                                  Text('Edit', style: AppText.body2.medium),
+                      if (dealType == 0)
+                        PopupMenuButton<String>(
+                          color: AppColor.cardBackground,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          onSelected: (value) {
+                            if (value == 'delete') {
+                              debugPrint('Delete button pressed!');
+                            }
+                          },
+                          itemBuilder: (_) => [
+                            PopupMenuItem(
+                              value: dealType.toString(),
+                              child: Row(
+                                children: [
+                                  if (dealType == 0) ...[
+                                    Icon(Iconsax.edit_2),
+                                    const SizedBox(width: 10),
+                                    Text('Edit', style: AppText.body2.medium),
+                                  ],
                                 ],
-
-                                if (dealType == 1) ...[
-                                  Icon(Iconsax.edit_2),
-                                  const SizedBox(width: 10),
-                                  Text('Re-activate', style: AppText.body2.medium),
-                                ],
-                              ],
+                              ),
                             ),
+                          ],
+                          child: const Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Icon(Icons.more_vert_rounded, size: 20),
                           ),
-                        ],
-                        child: const Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Icon(Icons.more_vert_rounded, size: 20),
                         ),
-                      ),
+
+                      if (dealType == 1)
+                        AppButton(
+                          text: 'Re-Activate',
+                          width: 100,
+                          height: 35,
+                          onPressed: () => Get.toNamed(AppRoutes.DEAL_PLAN),
+                        ),
                     ],
                   ),
 
@@ -160,15 +164,6 @@ class DealTile extends StatelessWidget {
                               ),
                             ),
                           ),
-                        ),
-
-                      const SizedBox(width: 5),
-
-                      // Switcher
-                      if (dealType == 0)
-                        Switch.adaptive(
-                          value: deal.activePromotion == null ? false : true,
-                          onChanged: (value) {},
                         ),
                     ],
                   ),

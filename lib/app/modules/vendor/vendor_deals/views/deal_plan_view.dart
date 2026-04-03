@@ -1,163 +1,162 @@
+import 'package:coupon_code/app/core/values/app_assets.dart';
 import 'package:coupon_code/app/core/values/app_sizes.dart';
 import 'package:coupon_code/app/core/values/app_text.dart';
 import 'package:coupon_code/app/core/widgets/App_button.dart';
 import 'package:coupon_code/app/core/widgets/common_app_bar.dart';
 import 'package:coupon_code/app/core/widgets/section_heading.dart';
 import 'package:coupon_code/app/data/models/deal_model.dart';
-import 'package:coupon_code/app/data/models/deal_plan_model.dart';
-import 'package:coupon_code/app/modules/vendor/vendor_deals/controllers/vendor_deals_controller.dart';
-import 'package:coupon_code/app/modules/vendor/vendor_deals/data/deal_plans.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 
-class DealPlanView extends StatefulWidget {
-  const DealPlanView({super.key, this.deal});
+import '../controllers/deal_plan_controller.dart';
 
-  final DealModel? deal;
+class DealPlanView extends GetView<DealPlanController> {
+  DealPlanView({super.key});
 
-  @override
-  State<DealPlanView> createState() => _DealPlanViewState();
-}
+  final args = Get.arguments as Map<String, dynamic>?;
 
-class _DealPlanViewState extends State<DealPlanView> {
-  final VendorDealsController controller = Get.find();
+  DealModel? get deal => args?['dealItem'];
+  bool get isNetworkImage => args?['isNetworkImage'] ?? false;
 
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _prefillData();
-    });
-
-    super.initState();
-  }
-
-  void _prefillData() {
-    final deal = widget.deal;
-
-    if (deal != null) {
-      // Prefill data for updating
-      controller.titleController.text = deal.title;
-      controller.selectedCategory.value = deal.categoryId;
-      controller.highlightController.value = deal.highlights;
-      controller.descController.text = deal.description;
-      controller.couponController.text = deal.coupon ?? '';
-      controller.priceController.text = deal.reguler_price.toString();
-      controller.discountController.text = deal.discountPercent.toStringAsFixed(2);
-      controller.finalPriceController.text = DealModel.afterDiscountPrice(
-        deal.reguler_price ?? deal.originalPrice,
-        deal.discountPercent,
-      ).toStringAsFixed(2);
-    }
+  // 2026 Helper: Clean the "(App Name)" part from Store titles
+  String _cleanTitle(String title) {
+    return title.split('(')[0].trim();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(title: widget.deal != null ? 'Update Deal' : 'Add New Deal'),
-
+      appBar: CommonAppBar(title: deal != null ? deal!.title : 'Choose Plan'),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(AppSizes.screenPadding),
-          child: Column(
-            crossAxisAlignment: .start,
-            children: [
-              // Deal Plan
-              SectionHeading(title: 'Deal Plan:'),
-              SizedBox(height: 10),
-
-              _dealPlan(dealPlan: dealPlans[0], color: Color(0xFFF6741C)),
-              _dealPlan(dealPlan: dealPlans[1], color: Color(0xFF2F6ED8)),
-              _dealPlan(dealPlan: dealPlans[2], color: Color(0xFF63A043)),
-
-              // TODO: add outlet validity
-            ],
-          ),
-        ),
-      ),
-
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(bottom: 25.0, left: 20, right: 20),
         child: Obx(() {
-          final plan = controller.selectedDealPlan.value;
+          // 1. Loading State
+          if (controller.isStoreLoading.value) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-          final buttonText = widget.deal != null
-              ? 'Update'
-              : 'Continue with ${plan?.name} / \$${plan?.price.toStringAsFixed(0)}';
+          // 2. Error/Empty State (Diagnosis)
+          if (controller.iapProducts.isEmpty) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.storefront_outlined, size: 64, color: Colors.grey),
+                    const SizedBox(height: 16),
+                    Text(
+                      controller.errorMessage.value,
+                      textAlign: TextAlign.center,
+                      style: AppText.body1.medium,
+                    ),
+                    const SizedBox(height: 20),
+                    AppButton(text: "Retry Loading Store", onPressed: () => controller.loadStore()),
+                  ],
+                ),
+              ),
+            );
+          }
 
-          return AppButton(
-            text: buttonText,
-            onPressed: () {
-              controller.validateForm();
+          // 3. Main Product List
+          return SingleChildScrollView(
+            padding: EdgeInsets.all(AppSizes.screenPadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // if (deal != null) ...[
+                //   Text(
+                //     deal!.title,
+                //     style: AppText.body1().copyWith(
+                //       color: AppColor.vividSky.s700,
+                //       fontSize: 20,
+                //       fontWeight: FontWeight.bold,
+                //     ),
+                //     textAlign: .center,
+                //   ),
 
-              if (!controller.hasError.value) {
-                // Get.toNamed(
-                //   AppRoutes.DISCOVERDETAILS,
-                //   arguments: {'dealItem': controller.deal.value, 'isNetworkImage': false},
-                // );
+                //   const SizedBox(height: 20),
+                // ],
+                const SectionHeading(title: 'Choose Publishing Plan:'),
+                const SizedBox(height: 15),
 
-                Get.snackbar('Info', 'Yoo! Publishing the deal!');
-              }
-            },
+                ...controller.iapProducts.map((product) => _buildPlanCard(product)),
+              ],
+            ),
           );
         }),
       ),
+      bottomNavigationBar: _buildBottomBar(),
     );
   }
 
-  Widget _dealPlan({required DealPlanModel dealPlan, required Color color}) {
+  Widget _buildPlanCard(ProductDetails product) {
+    String? getPlanIcon(String productId) {
+      switch (productId) {
+        case 'deal_publish_7d':
+          return AppAssets.sevenDaysDeal;
+        case 'deal_publish_14d':
+          return AppAssets.fourteenDaysDeal;
+        case 'deal_publish_30d':
+          return AppAssets.thirtyDaysDeal;
+        default:
+          return null;
+      }
+    }
+
     return Obx(() {
-      bool isSelected = controller.selectedDealPlan.value?.id == dealPlan.id;
+      final color = controller.getPlanColor(product.id);
+      final String? icon = getPlanIcon(product.id);
+      bool isSelected = controller.selectedProduct.value?.id == product.id;
+
       return Padding(
-        padding: const EdgeInsets.only(bottom: 10),
+        padding: const EdgeInsets.only(bottom: 12),
         child: InkWell(
-          borderRadius: BorderRadius.circular(10),
-          onTap: () {
-            controller.selectedDealPlan.value = dealPlan;
-          },
+          borderRadius: BorderRadius.circular(12),
+          onTap: () => controller.selectedProduct.value = product,
           child: Container(
+            padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: color.withAlpha(15),
-              border: Border.all(color: color),
-              borderRadius: BorderRadius.circular(10),
+              color: color.withOpacity(0.05),
+              border: Border.all(
+                color: isSelected ? color : color.withOpacity(0.3),
+                width: isSelected ? 2 : 1,
+              ),
+              borderRadius: BorderRadius.circular(12),
             ),
-            padding: EdgeInsets.all(15),
             child: Row(
-              mainAxisAlignment: .spaceBetween,
               children: [
-                Row(
-                  children: [
-                    if (dealPlan.icon != null) Image.asset(dealPlan.icon!),
-                    const SizedBox(width: 10),
+                if (icon != null) ...[Image.asset(icon), const SizedBox(width: 10)],
 
-                    Column(
-                      crossAxisAlignment: .start,
-                      children: [
-                        Text(dealPlan.name, style: AppText.body2.bold),
-                        if (dealPlan.description != null)
-                          Text(dealPlan.description!, style: AppText.body2.medium),
-                      ],
-                    ),
-                  ],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(_cleanTitle(product.title), style: AppText.body1.bold),
+                      const SizedBox(height: 4),
+                      if (product.description.isNotEmpty)
+                        Text(
+                          product.description,
+                          style: AppText.body2.medium.copyWith(color: Colors.black54),
+                        ),
+                    ],
+                  ),
                 ),
-
+                const SizedBox(width: 10),
                 Row(
                   children: [
-                    Text(
-                      '\$${dealPlan.price.toStringAsFixed(0)}',
-                      style: AppText.h5.bold.copyWith(color: color),
-                    ),
-                    const SizedBox(width: 10),
-
+                    Text(product.price, style: AppText.h5.bold.copyWith(color: color)),
+                    const SizedBox(width: 8),
                     Container(
-                      width: 24,
-                      height: 24,
+                      width: 22,
+                      height: 22,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        border: Border.all(color: color, width: 2),
                         color: isSelected ? color : Colors.transparent,
+                        border: Border.all(color: color, width: 2),
                       ),
                       child: isSelected
-                          ? const Icon(Icons.check, size: 16, color: Colors.white)
+                          ? const Icon(Icons.check, size: 14, color: Colors.white)
                           : null,
                     ),
                   ],
@@ -168,5 +167,22 @@ class _DealPlanViewState extends State<DealPlanView> {
         ),
       );
     });
+  }
+
+  Widget _buildBottomBar() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 30),
+      child: Obx(() {
+        final selected = controller.selectedProduct.value;
+        final isProcessing = controller.iapService.isProcessing.value;
+
+        return AppButton(
+          text: isProcessing
+              ? 'Processing...'
+              : (selected == null ? 'Select a Plan' : 'Pay ${selected.price}'),
+          onPressed: () => isProcessing ? null : controller.handlePublish(),
+        );
+      }),
+    );
   }
 }

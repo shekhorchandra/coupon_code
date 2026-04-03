@@ -13,7 +13,7 @@ class DealPublishNoticeView extends GetView<VendorDealsController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CommonAppBar(title: ''),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: EdgeInsets.all(30),
         child: Column(
           children: [

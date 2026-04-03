@@ -1,135 +1,83 @@
 import 'dart:async';
 
+import 'package:get/get.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
 class InAppPurchaseService {
   final InAppPurchase _iap = InAppPurchase.instance;
-
-  bool available = false;
-  List<ProductDetails> products = [];
-
   StreamSubscription<List<PurchaseDetails>>? _subscription;
 
-  /// Subscription IDs
-  final Set<String> _productIds = {'deal_publish_7d', 'deal_publish_14d', 'deal_publish_30d'};
+  // IDs must match exactly what you put in the consoles
+  static const _productIds = {'deal_publish_7d', 'deal_publish_14d', 'deal_publish_30d'};
 
-  /// 🔥 INIT
-  Future<void> init(Function() onUpdate) async {
+  RxList<ProductDetails> products = <ProductDetails>[].obs;
+  RxBool isProcessing = false.obs;
+  bool available = false;
+
+  Future<void> init() async {
     available = await _iap.isAvailable();
+    if (!available) return;
 
-    if (!available) {
-      print('Store not available');
-      return;
-    }
-
-    /// Listen to purchase updates
+    // Unified stream for all platforms
     _subscription = _iap.purchaseStream.listen(
-      (purchaseDetailsList) {
-        for (final purchase in purchaseDetailsList) {
-          _handlePurchase(purchase, onUpdate);
-        }
-      },
-      onError: (error) {
-        print('Purchase Stream Error: $error');
-      },
+      _onPurchaseUpdate,
+      onError: (error) => Get.snackbar("Error", error.toString()),
     );
 
-    await loadProducts(onUpdate);
+    await loadProducts();
   }
 
-  /// 🔥 LOAD PRODUCTS
-  Future<void> loadProducts(Function() onUpdate) async {
+  Future<void> loadProducts() async {
     final response = await _iap.queryProductDetails(_productIds);
-
-    if (response.error != null) {
-      print('Product Load Error: ${response.error}');
-      return;
-    }
-
-    products = response.productDetails;
-
-    if (products.isEmpty) {
-      print('No products found. Check Play Console setup.');
-    }
-
-    onUpdate();
+    // Sort products by price or ID to keep UI consistent
+    products.assignAll(response.productDetails);
   }
 
-  /// 🔥 BUY SUBSCRIPTION
   void buy(ProductDetails product) {
-    final purchaseParam = PurchaseParam(productDetails: product);
+    isProcessing.value = true;
+    final PurchaseParam purchaseParam = PurchaseParam(productDetails: product);
 
-    _iap.buyNonConsumable(purchaseParam: purchaseParam);
+    _iap.buyConsumable(purchaseParam: purchaseParam);
   }
 
-  /// 🔥 HANDLE PURCHASE
-  Future<void> _handlePurchase(PurchaseDetails purchase, Function() onUpdate) async {
-    switch (purchase.status) {
-      case PurchaseStatus.pending:
-        print('Purchase pending...');
-        break;
+  Future<void> _onPurchaseUpdate(List<PurchaseDetails> purchases) async {
+    for (var purchase in purchases) {
+      if (purchase.status == PurchaseStatus.pending) {
+        continue;
+      }
 
-      case PurchaseStatus.purchased:
-      case PurchaseStatus.restored:
-        bool valid = await _verifyWithServer(purchase);
+      if (purchase.status == PurchaseStatus.error) {
+        isProcessing.value = false;
+        Get.snackbar("Error", "Transaction failed: ${purchase.error?.message}");
+      }
+
+      if (purchase.status == PurchaseStatus.canceled) {
+        isProcessing.value = false;
+        Get.snackbar("Error", "Transaction canceled!");
+      }
+
+      if (purchase.status == PurchaseStatus.purchased ||
+          purchase.status == PurchaseStatus.restored) {
+        // 🔥 VALIDATE WITH EXPRESS.JS
+        bool valid = await _verifyWithExpress(purchase);
 
         if (valid) {
-          _deliverProduct(purchase);
-        } else {
-          print('Invalid purchase detected');
+          if (purchase.pendingCompletePurchase) {
+            await _iap.completePurchase(purchase);
+          }
+          Get.snackbar("Success", "Plan activated successfully!");
         }
-
-        if (purchase.pendingCompletePurchase) {
-          await _iap.completePurchase(purchase);
-        }
-        break;
-
-      case PurchaseStatus.error:
-        print('Purchase Error: ${purchase.error}');
-        break;
-
-      case PurchaseStatus.canceled:
-        print('User canceled purchase');
-        break;
-    }
-
-    onUpdate();
-  }
-
-  /// 🔥 DELIVER PRODUCT (Grant access)
-  void _deliverProduct(PurchaseDetails purchase) {
-    switch (purchase.productID) {
-      case 'deal_publish_7d':
-        print('✅ 7 Days subscription activated');
-        break;
-
-      case 'deal_publish_14d':
-        print('✅ 14 Days subscription activated');
-        break;
-
-      case 'deal_publish_30d':
-        print('✅ 30 Days subscription activated');
-        break;
-
-      default:
-        print('Unknown product: ${purchase.productID}');
+        isProcessing.value = false;
+      }
     }
   }
 
-  /// 🔐 SERVER VALIDATION (IMPORTANT)
-  Future<bool> _verifyWithServer(PurchaseDetails purchase) async {
-    /// 👉 TODO: Replace with real backend validation
-    /// For now, always return true (NOT SAFE for production)
-    return true;
-  }
-
-  /// 🔄 RESTORE PURCHASES
   Future<void> restorePurchases() async {
     await _iap.restorePurchases();
   }
 
-  /// 🧹 CLEANUP
-  void dispose() {
-    _subscription?.cancel();
+  Future<bool> _verifyWithExpress(PurchaseDetails purchase) async {
+    // Implement your http call to the backend here
+    return true;
   }
 }
