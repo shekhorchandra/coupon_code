@@ -94,11 +94,11 @@ class VendorMenuPage extends GetView<VendorAccountController> {
                   icon: Icons.person,
                   onTap: () => Get.toNamed(AppRoutes.VENDOR_PROFILE),
                 ),
-                KMenuItem(
-                  title: 'Payment Methods',
-                  icon: Icons.credit_card_rounded,
-                  onTap: () => Get.toNamed(AppRoutes.PAYMENT_METHOD),
-                ),
+                // KMenuItem(
+                //   title: 'Payment Methods',
+                //   icon: Icons.credit_card_rounded,
+                //   onTap: () => Get.toNamed(AppRoutes.PAYMENT_METHOD),
+                // ),
                 KMenuItem(
                   title: 'About Us',
                   icon: Icons.info_outline_rounded,
