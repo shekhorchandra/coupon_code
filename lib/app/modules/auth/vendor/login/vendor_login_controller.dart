@@ -13,7 +13,6 @@ import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart' hide Response;
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class VendorLoginController extends GetxController {
@@ -109,6 +108,68 @@ class VendorLoginController extends GetxController {
     }
   }
 
+  /// Apple Login with Deeplink [New]
+  Future<void> loginWithAppleDeepLink() async {
+    loading.value = true;
+
+    final AppLinks appLinks = AppLinks();
+    StreamSubscription<Uri>? sub;
+
+    try {
+      // Step 1: Listen for deep link callback
+      sub = appLinks.uriLinkStream.listen((Uri uri) async {
+        if (uri.scheme == "yeppapp" && uri.path == "/auth/apple") {
+          final accessToken = uri.queryParameters['access'];
+          final refreshToken = uri.queryParameters['refresh'];
+
+          if (accessToken != null && refreshToken != null) {
+            _storageService.setAccessToken(accessToken);
+            _storageService.setRefreshToken(refreshToken);
+
+            _storeUserId();
+
+            // Register FCM and Device
+            bool fcmRegistered = await _registerFCM();
+
+            if (!fcmRegistered) {
+              Get.snackbar('Error', 'An error occurred while initializing notifications!');
+              return;
+            }
+
+            bool deviceRegistered = await _registerDevice();
+
+            if (!deviceRegistered) {
+              Get.snackbar('Error', 'An error occurred while registering the device.');
+              return;
+            }
+
+            await _storageService.write('loggedIn', true);
+
+            isVerifiedOrIsShopCreated();
+
+            Get.snackbar("Login Successful", "");
+          } else {
+            Get.snackbar("Error", "Failed to get token from Google login");
+          }
+
+          await sub?.cancel();
+        }
+      });
+
+      // Step 2: Open browser with your API
+      final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.vendorAppleLogin}');
+
+      if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+        Get.snackbar("Error", "Could not launch login URL");
+        return;
+      }
+    } catch (e, st) {
+      _handleException(e, st);
+    } finally {
+      loading.value = false;
+    }
+  }
+
   /// Login API call
   Future<void> loginApi() async {
     debugPrint("loginApi started");
@@ -184,60 +245,59 @@ class VendorLoginController extends GetxController {
   }
 
   // Login with Apple
-  Future<void> loginWithApple(AuthorizationCredentialAppleID credential) async {
-    loading.value = true;
-    // inspect(credential);
-    debugPrint(credential.authorizationCode);
-    debugPrint(credential.identityToken);
-    debugPrint(credential.userIdentifier);
+  // Future<void> loginWithApple(AuthorizationCredentialAppleID credential) async {
+  //   loading.value = true;
+  //   // inspect(credential);
+  //   // debugPrint(credential.authorizationCode);
+  //   // debugPrint(credential.identityToken);
+  //   // debugPrint(credential.userIdentifier);
 
-    // Apple Login Response
-    // authorizationCode = "c679fb0a20bcf4ffd931cb5068278ccc6.0.sruvs.xKyowI2gKAPh..."
-    // email = null
-    // familyName = null
-    // givenName = null
-    // identityToken = "eyJraWQiOiI1aXEzM2xKQllqIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiYXVkIjoiYWdlbmN5LmJldXB0ZWNoLnllc…"
-    // state = null
-    // userIdentifier = "001452.2b850f37f0784c339308e5cee10e499a.01.."
+  //   // Apple Login Response
+  //   // authorizationCode = "c679fb0a20bcf4ffd931cb5068278ccc6.0.sruvs.xKyowI2gKAPh..."
+  //   // email = null
+  //   // familyName = null
+  //   // givenName = null
+  //   // identityToken = "eyJraWQiOiI1aXEzM2xKQllqIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiYXVkIjoiYWdlbmN5LmJldXB0ZWNoLnllc…"
+  //   // state = null
+  //   // userIdentifier = "001452.2b850f37f0784c339308e5cee10e499a.01.."
+  //   try {
+  //     final response = await _performAppleLoginRequest(credential);
 
-    try {
-      final response = await _performAppleLoginRequest(credential);
+  //     if (response.statusCode == 200) {
+  //       // Handle successful login response
+  //       var data = response.data;
+  //       _storeLoginTokens(data);
+  //       _storeUserId();
 
-      if (response.statusCode == 200) {
-        // Handle successful login response
-        var data = response.data;
-        _storeLoginTokens(data);
-        _storeUserId();
+  //       // Register FCM and Device
+  //       bool fcmRegistered = await _registerFCM();
+  //       if (!fcmRegistered) {
+  //         Get.snackbar('Error', 'An error occurred while initializing notifications!');
+  //         return;
+  //       }
 
-        // Register FCM and Device
-        bool fcmRegistered = await _registerFCM();
-        if (!fcmRegistered) {
-          Get.snackbar('Error', 'An error occurred while initializing notifications!');
-          return;
-        }
+  //       bool deviceRegistered = await _registerDevice();
+  //       if (!deviceRegistered) {
+  //         Get.snackbar('Error', 'An error occurred while registering the device.');
+  //         return;
+  //       }
 
-        bool deviceRegistered = await _registerDevice();
-        if (!deviceRegistered) {
-          Get.snackbar('Error', 'An error occurred while registering the device.');
-          return;
-        }
+  //       _storageService.write('loggedIn', true);
 
-        _storageService.write('loggedIn', true);
+  //       // Proceed to the next screen
+  //       isVerifiedOrIsShopCreated();
 
-        // Proceed to the next screen
-        isVerifiedOrIsShopCreated();
-
-        Get.snackbar("Login Successful", "");
-        Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR);
-      } else {
-        _handleError(response.statusCode ?? 0);
-      }
-    } catch (e, stackTrace) {
-      _handleException(e, stackTrace);
-    } finally {
-      loading.value = false;
-    }
-  }
+  //       Get.snackbar("Login Successful", "");
+  //       Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR);
+  //     } else {
+  //       _handleError(response.statusCode ?? 0);
+  //     }
+  //   } catch (e, stackTrace) {
+  //     _handleException(e, stackTrace);
+  //   } finally {
+  //     loading.value = false;
+  //   }
+  // }
 
   /// Perform login request
   Future<Response<dynamic>> _performLoginRequest() {
@@ -248,16 +308,20 @@ class VendorLoginController extends GetxController {
   }
 
   /// Perform Apple login request
-  Future<Response<dynamic>> _performAppleLoginRequest(AuthorizationCredentialAppleID credential) {
-    final String? fullName = (credential.givenName != null && credential.familyName != null)
-        ? "${credential.givenName} ${credential.familyName}"
-        : null;
+  // Future<Response<dynamic>> _performAppleLoginRequest(AuthorizationCredentialAppleID credential) {
+  //   final String? fullName = (credential.givenName != null && credential.familyName != null)
+  //       ? "${credential.givenName} ${credential.familyName}"
+  //       : null;
 
-    return _dioClient.client.post(
-      ApiConstants.vendorAppleLogin,
-      data: {"code": credential.authorizationCode, "user_name": fullName},
-    );
-  }
+  //   return _dioClient.client.post(
+  //     ApiConstants.vendorAppleLogin,
+  //     data: {
+  //       "code": credential.authorizationCode,
+  //       "user_name": fullName,
+  //       "email": credential.email,
+  //     },
+  //   );
+  // }
 
   /// Register FCM
   Future<bool> _registerFCM() async {

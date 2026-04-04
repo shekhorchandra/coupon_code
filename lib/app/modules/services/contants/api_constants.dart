@@ -9,7 +9,7 @@ class ApiConstants {
 
   // vendor login and signup
   static const String vendorLogin = "/auth/login";
-  static const String vendorAppleLogin = "/auth/apple_login";
+  static const String vendorAppleLogin = "/auth/apple/apple_login";
   static const String vendorRegister = "/user/register";
   // static const String register = "/auth/register";
   // static const String getProfile = "/user/profile";
