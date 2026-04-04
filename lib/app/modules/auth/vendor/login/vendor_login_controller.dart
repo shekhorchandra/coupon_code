@@ -66,27 +66,21 @@ class VendorLoginController extends GetxController {
             _storeUserId();
 
             // Register FCM and Device
-            //
-            // bool fcmRegistered = await _registerFCM();
-            //
+            bool fcmRegistered = await _registerFCM();
 
-            // if (!fcmRegistered) {
-            //
-            //   Get.snackbar('Error', 'An error occurred while initializing notifications!');
-            //   return;
-            // }
+            if (!fcmRegistered) {
+              Get.snackbar('Error', 'An error occurred while initializing notifications!');
+              return;
+            }
 
-            //
-            // bool deviceRegistered = await _registerDevice(data);
-            //
+            bool deviceRegistered = await _registerDevice();
 
-            // if (!deviceRegistered) {
-            //
-            //   Get.snackbar('Error', 'An error occurred while registering the device.');
-            //   return;
-            // }
+            if (!deviceRegistered) {
+              Get.snackbar('Error', 'An error occurred while registering the device.');
+              return;
+            }
 
-            _storageService.write('loggedIn', true);
+            await _storageService.write('loggedIn', true);
 
             isVerifiedOrIsShopCreated();
 
@@ -144,25 +138,25 @@ class VendorLoginController extends GetxController {
         debugPrint("User ID stored");
 
         // Register FCM and Device
-        // debugPrint("Registering FCM...");
-        // bool fcmRegistered = await _registerFCM();
-        // debugPrint("FCM registration result: $fcmRegistered");
+        debugPrint("Registering FCM...");
+        bool fcmRegistered = await _registerFCM();
+        debugPrint("FCM registration result: $fcmRegistered");
 
-        // if (!fcmRegistered) {
-        //   debugPrint("FCM registration failed");
-        //   Get.snackbar('Error', 'An error occurred while initializing notifications!');
-        //   return;
-        // }
+        if (!fcmRegistered) {
+          debugPrint("FCM registration failed");
+          Get.snackbar('Error', 'An error occurred while initializing notifications!');
+          return;
+        }
 
-        // debugPrint("Registering device...");
-        // bool deviceRegistered = await _registerDevice(data);
-        // debugPrint("Device registration result: $deviceRegistered");
+        debugPrint("Registering device...");
+        bool deviceRegistered = await _registerDevice();
+        debugPrint("Device registration result: $deviceRegistered");
 
-        // if (!deviceRegistered) {
-        //   debugPrint("Device registration failed");
-        //   Get.snackbar('Error', 'An error occurred while registering the device.');
-        //   return;
-        // }
+        if (!deviceRegistered) {
+          debugPrint("Device registration failed");
+          Get.snackbar('Error', 'An error occurred while registering the device.');
+          return;
+        }
 
         debugPrint("Saving loggedIn flag in storage...");
         _storageService.write('loggedIn', true);
@@ -207,7 +201,7 @@ class VendorLoginController extends GetxController {
     // userIdentifier = "001452.2b850f37f0784c339308e5cee10e499a.01.."
 
     try {
-      final response = await _performAppleLoginRequest(credential.authorizationCode);
+      final response = await _performAppleLoginRequest(credential);
 
       if (response.statusCode == 200) {
         // Handle successful login response
@@ -216,17 +210,17 @@ class VendorLoginController extends GetxController {
         _storeUserId();
 
         // Register FCM and Device
-        // bool fcmRegistered = await _registerFCM();
-        // if (!fcmRegistered) {
-        //   Get.snackbar('Error', 'An error occurred while initializing notifications!');
-        //   return;
-        // }
+        bool fcmRegistered = await _registerFCM();
+        if (!fcmRegistered) {
+          Get.snackbar('Error', 'An error occurred while initializing notifications!');
+          return;
+        }
 
-        // bool deviceRegistered = await _registerDevice(data);
-        // if (!deviceRegistered) {
-        //   Get.snackbar('Error', 'An error occurred while registering the device.');
-        //   return;
-        // }
+        bool deviceRegistered = await _registerDevice();
+        if (!deviceRegistered) {
+          Get.snackbar('Error', 'An error occurred while registering the device.');
+          return;
+        }
 
         _storageService.write('loggedIn', true);
 
@@ -254,8 +248,15 @@ class VendorLoginController extends GetxController {
   }
 
   /// Perform Apple login request
-  Future<Response<dynamic>> _performAppleLoginRequest(String authorizationCode) {
-    return _dioClient.client.post(ApiConstants.vendorAppleLogin, data: {"code": authorizationCode});
+  Future<Response<dynamic>> _performAppleLoginRequest(AuthorizationCredentialAppleID credential) {
+    final String? fullName = (credential.givenName != null && credential.familyName != null)
+        ? "${credential.givenName} ${credential.familyName}"
+        : null;
+
+    return _dioClient.client.post(
+      ApiConstants.vendorAppleLogin,
+      data: {"code": credential.authorizationCode, "user_name": fullName},
+    );
   }
 
   /// Register FCM
@@ -265,7 +266,7 @@ class VendorLoginController extends GetxController {
   }
 
   /// Register device
-  Future<bool> _registerDevice(Map<String, dynamic> data) async {
+  Future<bool> _registerDevice() async {
     try {
       // Device and Token
       var deviceInfo = await _deviceInfoService.getDeviceInfo();

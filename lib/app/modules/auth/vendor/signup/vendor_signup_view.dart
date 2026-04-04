@@ -156,7 +156,7 @@ class VendorSignupView extends GetView<VendorSignupController> {
                           ],
                         );
 
-                        print(credential);
+                        _loginController.loginWithApple(credential);
                       },
                     ),
                   ),
