@@ -44,7 +44,7 @@ class ServiceDetailsPage extends StatefulWidget {
 
 class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
   final controller = Get.put(ServiceDetailsController());
-  final SavesController savesController = Get.find<SavesController>();
+  final SavesController savesController = Get.put(SavesController());
 
   @override
   void initState() {
