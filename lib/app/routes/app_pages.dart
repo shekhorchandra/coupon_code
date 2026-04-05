@@ -123,7 +123,7 @@ class AppPages {
       binding: SavesBinding(),
     ),
 
-    GetPage(name: AppRoutes.SAVED, page: () => UserMySavesPage()),
+    GetPage(name: AppRoutes.SAVED, page: () => UserMySavesPage(), binding: SavesBinding()),
 
     GetPage(name: AppRoutes.MENU, page: () => const MenuView(), binding: MenuBinding()),
 
