@@ -145,7 +145,7 @@ class VendorLoginController extends GetxController {
 
             await _storageService.write('loggedIn', true);
 
-            isVerifiedOrIsShopCreated();
+            await isVerifiedOrIsShopCreated();
 
             Get.snackbar("Login Successful", "");
           } else {
