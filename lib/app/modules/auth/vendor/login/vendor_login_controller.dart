@@ -81,7 +81,7 @@ class VendorLoginController extends GetxController {
 
             await _storageService.write('loggedIn', true);
 
-            isVerifiedOrIsShopCreated();
+            await isVerifiedOrIsShopCreated();
 
             Get.snackbar("Login Successful", "");
           } else {
@@ -172,75 +172,44 @@ class VendorLoginController extends GetxController {
 
   /// Login API call
   Future<void> loginApi() async {
-    debugPrint("loginApi started");
-
     loading.value = true;
-    debugPrint("Loading set to true");
 
     try {
-      debugPrint("Calling _performLoginRequest...");
       final response = await _performLoginRequest();
-      debugPrint("Login request completed");
-
-      debugPrint("Response status code: ${response.statusCode}");
-      debugPrint("Response data: ${response.data}");
 
       if (response.statusCode == 200) {
-        debugPrint("Login success (status 200)");
-
         // Handle successful login response
         var data = response.data;
-        debugPrint("Parsed response data");
 
         _storeLoginTokens(data);
-        debugPrint("Login tokens stored");
 
         _storeUserId();
-        debugPrint("User ID stored");
 
         // Register FCM and Device
-        debugPrint("Registering FCM...");
         bool fcmRegistered = await _registerFCM();
-        debugPrint("FCM registration result: $fcmRegistered");
 
         if (!fcmRegistered) {
-          debugPrint("FCM registration failed");
           Get.snackbar('Error', 'An error occurred while initializing notifications!');
           return;
         }
 
-        debugPrint("Registering device...");
         bool deviceRegistered = await _registerDevice();
-        debugPrint("Device registration result: $deviceRegistered");
 
         if (!deviceRegistered) {
-          debugPrint("Device registration failed");
           Get.snackbar('Error', 'An error occurred while registering the device.');
           return;
         }
 
-        debugPrint("Saving loggedIn flag in storage...");
         _storageService.write('loggedIn', true);
-        debugPrint("loggedIn flag saved");
 
-        debugPrint("Checking verification/shop creation...");
-        isVerifiedOrIsShopCreated();
-        debugPrint("Verification check executed");
+        await isVerifiedOrIsShopCreated();
 
         Get.snackbar("Login Successful", "");
-        Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR);
       } else {
-        debugPrint("Login failed with status code: ${response.statusCode}");
         _handleError(response.statusCode ?? 0);
       }
     } catch (e, stackTrace) {
-      debugPrint("Exception occurred: $e");
-      debugPrint("StackTrace: $stackTrace");
       _handleException(e, stackTrace);
-    } finally {
-      loading.value = false;
-      debugPrint("Loading set to false");
-      debugPrint("loginApi finished");
     }
   }
 
@@ -422,6 +391,11 @@ class VendorLoginController extends GetxController {
 
   /// Login flow
   Future<void> isVerifiedOrIsShopCreated() async {
+    var loggedIn = _storageService.read('loggedIn');
+    if (loggedIn == null || loggedIn == false) {
+      return Get.toNamed(AppRoutes.VENDOR_LOGIN);
+    }
+
     try {
       final response = await _dioClient.client.get(ApiConstants.getMe);
 

@@ -22,6 +22,8 @@ class VendorLoginView extends GetView<VendorLoginController> {
 
   @override
   Widget build(BuildContext context) {
+    if (controller.loading.value) return Center(child: CircularProgressIndicator());
+
     return Scaffold(
       appBar: const CommonAppBar(title: " ", showBack: false),
       body: Padding(
