@@ -6,20 +6,17 @@ import 'package:get/get.dart';
 
 import '../../../../core/values/app_color.dart';
 import '../../../../core/widgets/common_app_bar.dart';
-import '../../bottom_nav_bar/controllers/bottom_nav_controller.dart';
 import '../models/save_item_model.dart';
 
 class UserMySavesPage extends GetView<SavesController> {
-  const UserMySavesPage({super.key});
+  UserMySavesPage({super.key});
 
+  final SavesController controller = Get.put(SavesController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(
-        title: "My Saves",
-        showBack: true,
-      ),
+      appBar: CommonAppBar(title: "My Saves", showBack: true),
       body: Column(
         children: [
           // --- Tabs ---
@@ -33,9 +30,8 @@ class UserMySavesPage extends GetView<SavesController> {
           // --- List of Saved Items ---
           Expanded(
             child: Obx(() {
-
-              if(controller.isLoading.value){
-                return const Center(child: CircularProgressIndicator(color: AppColor.primary,));
+              if (controller.isLoading.value) {
+                return const Center(child: CircularProgressIndicator(color: AppColor.primary));
               }
               List<SaveItem> listToShow;
               switch (controller.selectedTab.value) {
@@ -77,10 +73,7 @@ class UserMySavesPage extends GetView<SavesController> {
                           promotedUntil: item.promotedUntil,
                           status: item.status,
                           onTap: () {
-                            Get.toNamed(
-                              AppRoutes.DISCOVERDETAILS,
-                              arguments: {'id': item.id},
-                            );
+                            Get.toNamed(AppRoutes.DISCOVERDETAILS, arguments: {'id': item.id});
                           },
                         ),
                       ],
@@ -97,7 +90,6 @@ class UserMySavesPage extends GetView<SavesController> {
 
   // Tab button
   Widget _tabButton(String label, int index) {
-
     return Obx(() {
       bool isSelected = controller.selectedTab.value == index;
       return GestureDetector(
