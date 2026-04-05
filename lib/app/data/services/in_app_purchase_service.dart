@@ -86,11 +86,20 @@ class InAppPurchaseService {
       if (purchase.status == PurchaseStatus.error) {
         isProcessing.value = false;
         Get.snackbar("Error", "Transaction failed: ${purchase.error?.message}");
+
+        if (purchase.pendingCompletePurchase) {
+          await _iap.completePurchase(purchase);
+        }
+        continue;
       }
 
       if (purchase.status == PurchaseStatus.canceled) {
         isProcessing.value = false;
-        // Optionally notify user
+
+        if (purchase.pendingCompletePurchase) {
+          await _iap.completePurchase(purchase);
+        }
+        continue;
       }
 
       if (purchase.status == PurchaseStatus.purchased ||
@@ -98,17 +107,17 @@ class InAppPurchaseService {
         bool valid = await _verifyWithServer(purchase, dealId.value);
 
         if (valid) {
-          if (purchase.pendingCompletePurchase) {
-            await _iap.completePurchase(purchase);
-          }
-          isProcessing.value = false;
-          // Use offNamed to clear the "Plan Selection" screen from stack
           Get.offAllNamed(AppRoutes.PURCHASE_SUCCESS);
-          return; // IMPORTANT: Exit loop after successful navigation
         } else {
-          isProcessing.value = false;
           Get.snackbar('Error', 'Couldn\'t verify your purchase!');
         }
+
+        // ✅ ALWAYS complete
+        if (purchase.pendingCompletePurchase) {
+          await _iap.completePurchase(purchase);
+        }
+
+        isProcessing.value = false;
       }
     }
   }
