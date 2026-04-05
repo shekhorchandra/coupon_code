@@ -117,11 +117,7 @@ class AppPages {
       binding: VendorDetailsBinding(),
     ),
 
-    GetPage(
-      name: AppRoutes.SAVEDLATER,
-      page: () => const UserMySavesPage(),
-      binding: SavesBinding(),
-    ),
+    GetPage(name: AppRoutes.SAVEDLATER, page: () => UserMySavesPage(), binding: SavesBinding()),
 
     GetPage(name: AppRoutes.SAVED, page: () => UserMySavesPage(), binding: SavesBinding()),
 

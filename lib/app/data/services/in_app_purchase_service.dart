@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:coupon_code/app/data/network/dio_client.dart';
 import 'package:coupon_code/app/modules/services/contants/api_constants.dart';
@@ -12,12 +13,16 @@ class InAppPurchaseService {
   StreamSubscription<List<PurchaseDetails>>? _subscription;
   final DioClient _dioClient = DioClient();
 
-  static const _productIds = {'deal_publish_7d', 'deal_publish_14d', 'deal_publish_30d'};
+  static final _productIds = Platform.isAndroid
+      ? const {'quick_start_7d', 'standard_14d', 'extended_30d'}
+      : const {'deal_publish_7d', 'deal_publish_14d', 'deal_publish_30d'};
 
   RxList<ProductDetails> products = <ProductDetails>[].obs;
   RxBool isProcessing = false.obs;
   bool available = false;
   RxString dealId = ''.obs;
+  RxString currency = ''.obs;
+  Rx<double> price = (0.0).obs;
 
   // Prevent multiple simultaneous initializations
   Completer<void>? _initCompleter;
@@ -63,6 +68,10 @@ class InAppPurchaseService {
 
     isProcessing.value = true;
     dealId.value = id;
+
+    currency.value = product.currencyCode;
+    price.value = product.rawPrice;
+
     final PurchaseParam purchaseParam = PurchaseParam(productDetails: product);
     _iap.buyConsumable(purchaseParam: purchaseParam);
   }
@@ -108,6 +117,8 @@ class InAppPurchaseService {
     try {
       final Map<String, dynamic> purchaseData = {
         "dealId": dealId,
+        "currency": currency.value,
+        "price": price.value,
         "status": purchase.status.name,
         "productId": purchase.productID,
         "purchaseId": purchase.purchaseID ?? '',
