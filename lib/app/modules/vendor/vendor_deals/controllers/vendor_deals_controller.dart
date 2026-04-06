@@ -47,8 +47,8 @@ class VendorDealsController extends GetxController {
 
   Rx<String?> shopLogo = ''.obs;
 
-  var selectedCouponType = 'Coupon Code'.obs;
-  final List<String> couponTypes = ['Coupon Code', 'QR Code', 'Barcode'];
+  var selectedCouponType = 'QR Code'.obs;
+  final List<String> couponTypes = ['QR Code', 'Barcode'];
   Rxn<File> couponImageFile = Rxn<File>();
 
   final tagController = TextEditingController();
@@ -311,17 +311,13 @@ class VendorDealsController extends GetxController {
       return false;
     }
 
-    final isTextCoupon = selectedCouponType.value == 'Coupon Code';
-    if (isTextCoupon) {
-      if (couponController.text.trim().isEmpty) {
-        _showError("Please enter the Coupon Code.");
-        return false;
-      }
-    } else {
-      if (couponImageFile.value == null) {
-        _showError("Please upload the ${selectedCouponType.value} image.");
-        return false;
-      }
+    if (couponController.text.trim().isEmpty) {
+      _showError("Please enter the Coupon Code.");
+      return false;
+    }
+    if (couponImageFile.value == null) {
+      _showError("Please upload the ${selectedCouponType.value} image.");
+      return false;
     }
 
     // 3. Pricing Validation
@@ -403,6 +399,7 @@ class VendorDealsController extends GetxController {
         "description": descController.text.trim(),
         "highlights": highlightController.toList(),
         "tags": tags.toList(),
+        "coupon": couponController.text.trim(),
       };
 
       if (isTextCoupon) {
@@ -520,6 +517,7 @@ class VendorDealsController extends GetxController {
       "description": descController.text.trim(),
       "highlights": highlightController.toList(),
       "tags": tags.toList(),
+      "coupon": couponController.text.trim(),
     };
 
     if (isTextCoupon) {
@@ -555,9 +553,7 @@ class VendorDealsController extends GetxController {
       isPromoted: true,
       promotedUntil:
           selectedValidityRange.value?.end ?? DateTime.now().add(const Duration(days: 30)),
-      coupon: selectedCouponType.value == 'Coupon Code'
-          ? couponController.text.trim()
-          : "IMAGE_COUPON",
+      coupon: couponController.text.trim(),
       totalViews: 0,
       totalImpression: 0,
     );
@@ -606,18 +602,19 @@ class VendorDealsController extends GetxController {
     selectedOutlets?.clear();
 
     images.clear();
+
     couponImageFile.value = null;
 
     deal.value = null;
 
     hasError.value = true;
+    isLoading.value = false;
   }
 
   @override
-  void onClose() {
-    super.onClose();
+  void dispose() {
+    super.dispose();
 
-    resetForm();
     titleController.dispose();
     descController.dispose();
     couponController.dispose();

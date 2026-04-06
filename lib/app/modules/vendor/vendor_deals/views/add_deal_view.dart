@@ -160,6 +160,11 @@ class _AddDealViewState extends State<AddDealView> {
 
               Text('Discount/Promo', style: AppText.body1.semiBold),
               const SizedBox(height: 10),
+
+              CustomTextField(hint: 'e.g. 50OFF', controller: controller.couponController),
+
+              const SizedBox(height: 10),
+
               Obx(() {
                 return CustomDropdownField<String>(
                   hint: 'Select coupon type',
@@ -175,83 +180,71 @@ class _AddDealViewState extends State<AddDealView> {
               const SizedBox(height: 10),
 
               Obx(() {
-                // Show TextField if 'Coupon Code' is selected
-                if (controller.selectedCouponType.value == 'Coupon Code') {
-                  return CustomTextField(
-                    hint: 'e.g. 50%OFF',
-                    controller: controller.couponController,
-                  );
-                }
                 // Show Image Uploader if 'QR Code' or 'Barcode' is selected
-                else {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Upload ${controller.selectedCouponType.value} Image',
-                        style: AppText.body1.semiBold,
-                      ),
-                      const SizedBox(height: 10),
-                      InkWell(
-                        onTap: controller.pickCouponImage,
-                        child: Container(
-                          height: 120,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[100],
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: Colors.grey[300]!, width: 1),
-                          ),
-                          child: controller.couponImageFile.value != null
-                              ? Stack(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(12),
-                                      child: Image.file(
-                                        controller.couponImageFile.value!,
-                                        width: double.infinity,
-                                        fit: BoxFit.contain,
-                                      ),
-                                    ),
-                                    Positioned(
-                                      right: 8,
-                                      top: 8,
-                                      child: CircleAvatar(
-                                        backgroundColor: Colors.white,
-                                        radius: 15,
-                                        child: IconButton(
-                                          padding: EdgeInsets.zero,
-                                          icon: const Icon(
-                                            Icons.close,
-                                            size: 18,
-                                            color: Colors.red,
-                                          ),
-                                          onPressed: () => controller.couponImageFile.value = null,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              : Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.qr_code_scanner_rounded,
-                                      size: 40,
-                                      color: Colors.grey[400],
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      "Tap to upload ${controller.selectedCouponType.value}",
-                                      style: TextStyle(color: Colors.grey[600]),
-                                    ),
-                                  ],
-                                ),
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Text(
+                    //   'Upload ${controller.selectedCouponType.value} Image',
+                    //   style: AppText.body1.semiBold,
+                    // ),
+                    // const SizedBox(height: 10),
+                    InkWell(
+                      onTap: controller.pickCouponImage,
+                      child: Container(
+                        height: 120,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.grey[300]!, width: 1),
                         ),
+                        child: controller.couponImageFile.value != null
+                            ? Stack(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Image.file(
+                                      controller.couponImageFile.value!,
+                                      width: double.infinity,
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                  Positioned(
+                                    right: 8,
+                                    top: 8,
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.white,
+                                      radius: 15,
+                                      child: IconButton(
+                                        padding: EdgeInsets.zero,
+                                        icon: const Icon(Icons.close, size: 18, color: Colors.red),
+                                        onPressed: () => controller.couponImageFile.value = null,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.qr_code_scanner_rounded,
+                                    size: 40,
+                                    color: Colors.grey[400],
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    "Tap to upload ${controller.selectedCouponType.value}",
+                                    style: TextStyle(color: Colors.grey[600]),
+                                  ),
+                                ],
+                              ),
                       ),
-                    ],
-                  );
-                }
+                    ),
+                  ],
+                );
               }),
               const SizedBox(height: 20),
 
