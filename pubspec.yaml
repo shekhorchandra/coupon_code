@@ -1,5 +1,5 @@
 name: coupon_code
-description: "A Flutter project where you get discount coupon using this app"
+description: "Yepp – Your Ultimate Deal Finder"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev

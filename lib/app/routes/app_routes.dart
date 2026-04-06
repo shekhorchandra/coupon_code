@@ -45,12 +45,12 @@ abstract class AppRoutes {
   static const ADD_DEAL = '/vendor/deals/add';
   static const DEAL_PUBLISH_NOTICE = '/vendor/deals/add/notice';
   static const DEAL_PLAN = '/vendor/deals/plan';
+  static const DEAL_PLAN_PURCHASE_SUCCESS = '/vendor/deals/plan/purchase/success';
   static const UPDATE_DEAL = '/vendor/deals/update';
   static const VENDOR_DEAL_DETAILS = '/vendor/deal_details';
 
   static const PAYMENT_METHOD = '/payment_method';
   static const ADD_PAYMENT_METHOD = '/payment_method/add';
-  static const PURCHASE_SUCCESS = '/payment/success';
 
   static const VENDOR_MENU = '/vendor/menu';
   static const VENDOR_NAVIGATION_BAR = '/vendor/navigation_bar';

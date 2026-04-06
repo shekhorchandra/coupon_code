@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:coupon_code/app/data/services/storage_service.dart';
 import 'package:coupon_code/app/modules/services/contants/api_constants.dart';
 import 'package:coupon_code/app/routes/app_routes.dart';
@@ -124,6 +126,8 @@ class DioClient {
   }
 
   Future<String?> refreshToken() async {
+    log('Refreshing token...');
+
     try {
       final refreshToken = _storageService.refreshToken;
       if (refreshToken == null) return null;
@@ -140,6 +144,9 @@ class DioClient {
         final newRefreshToken = data['newRefreshToken'];
         await _storageService.setAccessToken(newAccessToken);
         await _storageService.setRefreshToken(newRefreshToken);
+
+        log('Saved new refresh token.');
+
         return newAccessToken;
       }
     } catch (e) {
