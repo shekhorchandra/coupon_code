@@ -107,7 +107,7 @@ class InAppPurchaseService {
         bool valid = await _verifyWithServer(purchase, dealId.value);
 
         if (valid) {
-          Get.offAllNamed(AppRoutes.PURCHASE_SUCCESS);
+          Get.offAllNamed(AppRoutes.DEAL_PLAN_PURCHASE_SUCCESS);
         } else {
           Get.snackbar('Error', 'Couldn\'t verify your purchase!');
         }
@@ -136,11 +136,21 @@ class InAppPurchaseService {
         "source": purchase.verificationData.source,
       };
 
-      final response = await _dioClient.client.post(
-        ApiConstants.verifyPurchase,
-        data: purchaseData,
-      );
-      return response.statusCode == 200;
+      if (Platform.isAndroid) {
+        final response = await _dioClient.client.post(
+          ApiConstants.verifyPurchaseGoogle,
+          data: purchaseData,
+        );
+        return response.statusCode == 200;
+      } else if (Platform.isIOS) {
+        final response = await _dioClient.client.post(
+          ApiConstants.verifyPurchaseApple,
+          data: purchaseData,
+        );
+        return response.statusCode == 200;
+      } else {
+        return false;
+      }
     } catch (e) {
       log("Verification Error: $e");
       return false;

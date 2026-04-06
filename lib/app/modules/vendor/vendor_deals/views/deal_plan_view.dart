@@ -30,9 +30,9 @@ class DealPlanView extends GetView<DealPlanController> {
     return Scaffold(
       appBar: CommonAppBar(
         title: deal != null ? deal!.title : 'Choose Plan',
-        actions: [
-          IconButton(onPressed: () => controller.restorePurchases(), icon: Icon(Icons.restore)),
-        ],
+        // actions: [
+        //   IconButton(onPressed: () => controller.restorePurchases(), icon: Icon(Icons.restore)),
+        // ],
       ),
       body: SafeArea(
         child: Obx(() {
