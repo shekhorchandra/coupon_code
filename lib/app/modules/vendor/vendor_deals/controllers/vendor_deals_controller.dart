@@ -435,7 +435,7 @@ class VendorDealsController extends GetxController {
 
         Get.toNamed(
           AppRoutes.DEAL_PLAN,
-          arguments: {'dealItem': deal.value, 'isNetworkImage': true},
+          arguments: {'dealItem': deal.value, 'isNetworkImage': true, 'showSkip': true},
         );
       }
     } catch (e) {

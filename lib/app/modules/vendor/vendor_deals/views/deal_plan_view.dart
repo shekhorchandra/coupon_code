@@ -1,10 +1,12 @@
 import 'package:coupon_code/app/core/values/app_assets.dart';
+import 'package:coupon_code/app/core/values/app_color.dart';
 import 'package:coupon_code/app/core/values/app_sizes.dart';
 import 'package:coupon_code/app/core/values/app_text.dart';
 import 'package:coupon_code/app/core/widgets/App_button.dart';
 import 'package:coupon_code/app/core/widgets/common_app_bar.dart';
 import 'package:coupon_code/app/core/widgets/section_heading.dart';
 import 'package:coupon_code/app/data/models/deal_model.dart';
+import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
@@ -19,6 +21,7 @@ class DealPlanView extends GetView<DealPlanController> {
   DealModel? get deal => args?['dealItem'];
   String? get dealId => deal!.id;
   bool get isNetworkImage => args?['isNetworkImage'] ?? false;
+  bool get showSkip => args?['showSkip'] ?? false;
 
   // Clean the "(App Name)" part from Store titles
   String _cleanTitle(String title) {
@@ -180,14 +183,30 @@ class DealPlanView extends GetView<DealPlanController> {
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 30),
       child: Obx(() {
         final selected = controller.selectedProduct.value;
-        final isProcessing = controller.iapService.isProcessing.value;
+        final isProcessing = controller.isPurchasing.value;
 
-        return AppButton(
-          text: isProcessing
-              ? 'Processing...'
-              : (selected == null ? 'Select a Plan' : 'Pay ${selected.price}'),
-          // Disable button interaction if processing
-          onPressed: () => isProcessing ? null : controller.handlePublish(dealId ?? ""),
+        return Column(
+          mainAxisSize: .min,
+          children: [
+            AppButton(
+              text: isProcessing
+                  ? 'Processing...'
+                  : (selected == null ? 'Select a Plan' : 'Pay ${selected.price}'),
+              // Disable button interaction if processing
+              onPressed: () => isProcessing ? null : controller.handlePublish(dealId ?? ""),
+            ),
+
+            const SizedBox(height: 10),
+
+            if (!isProcessing && showSkip)
+              AppButton(
+                text: 'Skip',
+                backgroundColor: Colors.white,
+                borderColor: AppColor.primary,
+                textColor: AppColor.primary,
+                onPressed: () => Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR),
+              ),
+          ],
         );
       }),
     );
