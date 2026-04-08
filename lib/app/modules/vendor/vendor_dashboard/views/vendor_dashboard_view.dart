@@ -64,9 +64,17 @@ class VendorDashboardPage extends GetView<VendorDashboardController> {
                           const SizedBox(height: 8),
                           AppButton(
                             onPressed: () {
-                              vendorDealsController.resetForm();
+                              if (!menuController.isShopApproved.value) {
+                                Get.snackbar(
+                                  'Access Denied',
+                                  'Your shop isn\'t approved yet!',
+                                  barBlur: 100,
+                                );
+                              } else {
+                                vendorDealsController.resetForm();
 
-                              Get.toNamed(AppRoutes.ADD_DEAL);
+                                Get.toNamed(AppRoutes.ADD_DEAL);
+                              }
                             },
                             text: 'Add New Deal',
                             icon: Icons.add,
@@ -92,7 +100,36 @@ class VendorDashboardPage extends GetView<VendorDashboardController> {
                     ),
                   ],
                 ),
-                const SizedBox(height: AppSizes.denseButtonHeight),
+
+                const SizedBox(height: AppSizes.screenPadding),
+
+                Obx(
+                  () => menuController.isShopApproved.value
+                      ? SizedBox.shrink()
+                      : Column(
+                          children: [
+                            Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: AppColor.error,
+                                borderRadius: BorderRadius.circular(AppSizes.buttonRadius),
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                              child: SafeArea(
+                                bottom: false,
+                                child: Text(
+                                  "Your shop isn't approved yet!",
+                                  style: AppText.body1.medium.copyWith(color: Colors.white),
+                                ),
+                              ),
+                            ),
+
+                            const SizedBox(height: AppSizes.screenPadding),
+                          ],
+                        ),
+                ),
+
+                const SizedBox(height: AppSizes.screenPadding),
 
                 // Overview Cards
                 Row(

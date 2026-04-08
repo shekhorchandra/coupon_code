@@ -49,6 +49,8 @@ class DioClient {
           // Show 400 messages directly
           if (error.response?.statusCode == 400) {
             Get.snackbar('Error', error.response?.data['message']);
+          } else if (error.response?.statusCode == 403) {
+            Get.snackbar('Error', error.response?.data['message']);
           }
 
           // Unauthorized / token expired

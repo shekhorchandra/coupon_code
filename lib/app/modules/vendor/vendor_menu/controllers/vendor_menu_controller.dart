@@ -17,6 +17,7 @@ class VendorMenuController extends GetxController {
   final RxString businessName = ''.obs;
   final RxString businessEmail = ''.obs;
   final RxString businessLogo = ''.obs;
+  final RxBool isShopApproved = true.obs;
 
   final DioClient _dioClient = DioClient();
   final StorageService _storageService = StorageService();
@@ -48,6 +49,10 @@ class VendorMenuController extends GetxController {
         businessName.value = data.businessName ?? '';
         businessEmail.value = data.businessEmail ?? '';
         businessLogo.value = data.businessLogo ?? '';
+        isShopApproved.value = data.shopApproval == "APPROVED";
+        print(isShopApproved.value);
+        print(data.shopApproval);
+        print(isShopApproved.value);
       } else {
         Get.snackbar('Error', 'An error has occured. Status Code: ${response.statusCode}');
       }

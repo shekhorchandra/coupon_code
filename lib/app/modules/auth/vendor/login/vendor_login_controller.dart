@@ -210,6 +210,8 @@ class VendorLoginController extends GetxController {
       }
     } catch (e, stackTrace) {
       _handleException(e, stackTrace);
+    } finally {
+      loading.value = false;
     }
   }
 
