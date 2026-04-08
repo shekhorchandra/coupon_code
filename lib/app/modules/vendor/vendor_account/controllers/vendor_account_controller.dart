@@ -25,6 +25,7 @@ class VendorAccountController extends GetxController {
   final countryCodeController = TextEditingController(text: '');
   final phoneNumberController = TextEditingController(text: '');
   final websiteLinkController = TextEditingController(text: '');
+  final outletNameController = TextEditingController(text: '');
   final businessAddressController = TextEditingController(text: '');
   final zipCodeController = TextEditingController(text: '');
 
@@ -37,6 +38,7 @@ class VendorAccountController extends GetxController {
     emailController.dispose();
     phoneNumberController.dispose();
     websiteLinkController.dispose();
+    outletNameController.dispose();
     businessAddressController.dispose();
     zipCodeController.dispose();
 
@@ -105,10 +107,10 @@ class VendorAccountController extends GetxController {
   }
 
   void saveOutlet() {
-    if (businessAddressController.text.isNotEmpty) {
+    if (businessAddressController.text.isNotEmpty && outletNameController.text.isNotEmpty) {
       outlets.add(
         Outlets(
-          name: 'Outlet ${outlets.length + 1}',
+          name: outletNameController.text,
           address: businessAddressController.text,
           location: Location(coordinates: [pickedLng.value, pickedLat.value]),
           zipCode: zipCodeController.text,
@@ -116,10 +118,13 @@ class VendorAccountController extends GetxController {
       );
 
       // Clear fields after saving
+      outletNameController.clear();
       businessAddressController.clear();
       zipCodeController.clear();
       markers.clear();
       Get.back();
+    } else {
+      Get.snackbar('Error', 'All fields are required!');
     }
   }
 
@@ -165,6 +170,7 @@ class VendorAccountController extends GetxController {
       if (selectedTab.value == 0) {
         outletData = [
           {
+            "outlet_name": businessNameController.text,
             "address": businessAddressController.text,
             "zip_code": zipCodeController.text,
             "coordinates": [pickedLng.value, pickedLat.value],
@@ -173,6 +179,7 @@ class VendorAccountController extends GetxController {
       } else {
         outletData = outlets.map((item) {
           return {
+            "outlet_name": item.name,
             "address": item.address,
             "zip_code": item.zipCode,
             "coordinates": [item.location?.coordinates?[0], item.location?.coordinates?[1]],

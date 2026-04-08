@@ -38,6 +38,15 @@ class AddOutletForm extends GetView<VendorAccountController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text('Outlet Name', style: AppText.body1.semiBold),
+        const SizedBox(height: 5),
+        CustomTextField(
+          hint: 'e.g.: John\'s Shop',
+          controller: controller.outletNameController,
+          icon: Icons.text_fields_rounded,
+        ),
+        const SizedBox(height: 10),
+
         Text('Business Address', style: AppText.body1.semiBold),
         const SizedBox(height: 5),
         CustomTextField(

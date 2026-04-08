@@ -128,7 +128,7 @@ class Outlets {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['_id'] = this.sId;
-    data['name'] = this.name;
+    data['outlet_name'] = this.name;
     data['address'] = this.address;
     data['zip_code'] = this.zipCode;
     if (this.location != null) {
