@@ -1,5 +1,6 @@
 class ApiConstants {
   static const String baseUrl = "https://api.yeppads.com/api/v1";
+  // static const String baseUrl = "https://gastrotomic-squirrelly-yuonne.ngrok-free.dev/api/v1";
 
   // Define endpoints
 
@@ -9,7 +10,8 @@ class ApiConstants {
 
   // vendor login and signup
   static const String vendorLogin = "/auth/login";
-  static const String vendorAppleLogin = "/auth/apple/apple_login";
+  static const String vendorAppleLogin = "/auth/apple";
+  static const String vendorAppleLoginCallback = "/auth/apple/callback";
   static const String vendorRegister = "/user/register";
   // static const String register = "/auth/register";
   // static const String getProfile = "/user/profile";

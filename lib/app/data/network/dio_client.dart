@@ -28,8 +28,8 @@ class DioClient {
 
     // Pretty logger
     _dio.interceptors.add(
-      // PrettyDioLogger(requestBody: true, responseBody: true, error: true, compact: true),
-      PrettyDioLogger(),
+      PrettyDioLogger(requestBody: true, responseBody: true, error: true, compact: true),
+      // PrettyDioLogger(),
     );
 
     _dio.interceptors.add(
