@@ -1,12 +1,13 @@
 class ApiConstants {
-  static const String baseUrl = "https://api.yeppads.com/api/v1";
-  // static const String baseUrl = "https://gastrotomic-squirrelly-yuonne.ngrok-free.dev/api/v1";
+  // static const String baseUrl = "https://api.yeppads.com/api/v1";
+  static const String baseUrl = "https://gastrotomic-squirrelly-yuonne.ngrok-free.dev/api/v1";
 
   // Define endpoints
 
   // Auth endpoints
   static const String forgetPassword = "/auth/forget_password/";
   static const String resetPassword = "/auth/reset_password";
+  static const String changePassword = "/auth/change_password";
 
   // vendor login and signup
   static const String vendorLogin = "/auth/login";
@@ -25,6 +26,7 @@ class ApiConstants {
   // User profile
   static const String getMe = '/user/get_me';
   static const String updateUser = '/user';
+  static const String deleteUser = '/user/delete_account';
 
   //user category
   static const String category = "/category";

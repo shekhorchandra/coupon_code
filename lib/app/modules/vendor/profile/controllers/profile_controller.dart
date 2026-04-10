@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:coupon_code/app/data/models/user_model.dart';
 import 'package:coupon_code/app/data/network/dio_client.dart';
 import 'package:coupon_code/app/modules/services/contants/api_constants.dart';
+import 'package:coupon_code/app/modules/vendor/vendor_menu/controllers/vendor_menu_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -10,6 +13,7 @@ class ProfileController extends GetxController {
   var user = UserModel().obs;
   var isLoading = false.obs;
   var isPasswordLoading = false.obs;
+  RxBool fullPageLoading = false.obs;
 
   // Main Profile Controllers
   late TextEditingController usernameController;
@@ -89,29 +93,77 @@ class ProfileController extends GetxController {
   }
 
   // --- Update Password Logic ---
-  Future<void> updatePassword() async {
+  Future<void> updatePassword(oldPassword, newPassword) async {
     if (!passwordFormKey.currentState!.validate()) return;
 
     isPasswordLoading.value = true;
     try {
-      await Future.delayed(const Duration(seconds: 2)); // Simulate API
-
-      // Clear fields after success
-      currentPasswordController.clear();
-      newPasswordController.clear();
-      confirmPasswordController.clear();
-
-      Get.back(); // Close bottom sheet
-      Get.snackbar(
-        "Success",
-        "Password changed successfully",
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
+      final response = await _dioClient.client.post(
+        ApiConstants.changePassword,
+        data: {"oldPassword": oldPassword, "newPassword": newPassword},
       );
+
+      if (response.statusCode == 200) {
+        // Clear fields after success
+        currentPasswordController.clear();
+        newPasswordController.clear();
+        confirmPasswordController.clear();
+
+        Get.back(); // Close bottom sheet
+        Get.snackbar(
+          "Success",
+          "Password changed successfully",
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
+      } else {
+        Get.snackbar("Error", "Failed to update password");
+      }
     } catch (e) {
       Get.snackbar("Error", "Failed to update password");
     } finally {
       isPasswordLoading.value = false;
+    }
+  }
+
+  // Delete Account
+  Future<void> deleteAccount() async {
+    Get.back();
+
+    try {
+      if (currentPasswordController.text.isNotEmpty) {
+        isLoading.value = true;
+
+        // Verify Password
+        final response = await _dioClient.client.post(
+          ApiConstants.vendorLogin,
+          data: {
+            "email": emailController.value.text,
+            "password": currentPasswordController.value.text,
+          },
+        );
+
+        if (response.statusCode == 200) {
+          final response = await DioClient().client.delete(ApiConstants.deleteUser);
+
+          if (response.statusCode == 200) {
+            Get.snackbar('Account deleted successfully!', '', barBlur: 0);
+
+            Get.put(() => VendorMenuController().logout());
+          } else {
+            Get.snackbar('Error', 'Failed to delete your account!');
+          }
+        } else {
+          Get.snackbar('Authentication Error', '');
+        }
+      } else {
+        Get.snackbar('Password Required', 'Please enter your password!');
+      }
+    } catch (e) {
+      log(e.toString());
+    } finally {
+      isLoading.value = false;
+      currentPasswordController.clear();
     }
   }
 }
