@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:coupon_code/app/core/values/app_color.dart';
 import 'package:coupon_code/app/data/models/shop_model.dart';
 import 'package:coupon_code/app/data/network/dio_client.dart';
+import 'package:coupon_code/app/data/services/google_auth_service.dart';
 import 'package:coupon_code/app/data/services/storage_service.dart';
 import 'package:coupon_code/app/modules/services/contants/api_constants.dart';
 import 'package:coupon_code/app/routes/app_routes.dart';
@@ -112,6 +113,9 @@ class VendorMenuController extends GetxController {
       // Unregister FCM
       String? deviceId = await _storageService.read('device_id');
       _dioClient.client.patch(ApiConstants.fcmUnregister, data: {"deviceId": deviceId});
+
+      // Logout Google Logged-in Users
+      await GoogleAuthService().signOut();
 
       // Clear local storage (tokens, user data)
       await _storageService.clear();

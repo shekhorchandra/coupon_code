@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:coupon_code/app/data/services/google_auth_service.dart';
 import 'package:coupon_code/app/modules/services/contants/api_constants.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -157,7 +158,8 @@ class VendorLoginView extends GetView<VendorLoginController> {
                     child: SocialButton(
                       text: "Google",
                       iconPath: AppAssets.google,
-                      onPressed: () => Get.find<VendorLoginController>().loginWithGoogleDeepLink(),
+                      // onPressed: () => Get.find<VendorLoginController>().loginWithGoogleDeepLink(),
+                      onPressed: () => GoogleAuthService().signInWithGoogle(),
                     ),
                   ),
                   const SizedBox(width: 12),

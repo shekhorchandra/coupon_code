@@ -35,7 +35,7 @@ class DeviceInfoService {
       return "${androidInfo.model} (${androidInfo.brand}, Android ${androidInfo.version.release})";
     } else if (Platform.isIOS) {
       IosDeviceInfo iosInfo = await _deviceInfoPlugin.iosInfo;
-      return "${iosInfo.utsname.machine} (${iosInfo.systemVersion})";
+      return "${iosInfo.utsname.machine}, iOS (${iosInfo.systemVersion})";
     } else {
       return "Unknown Device";
     }

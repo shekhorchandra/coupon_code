@@ -30,6 +30,7 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>yeppapp</string>
+				<string>com.googleusercontent.apps.191216477482-s6k2ote1bd7bbon8kld6bpti5rfdfh0c</string>
 			</array>
 		</dict>
 	</array>
@@ -71,5 +72,9 @@
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
+	<key>GIDClientID</key>
+	<string>191216477482-s6k2ote1bd7bbon8kld6bpti5rfdfh0c.apps.googleusercontent.com</string>
+	<key>GIDServerClientID</key>
+	<string>191216477482-m252ctvld0ibkh2smjugehs78h08om3d.apps.googleusercontent.com</string>
 </dict>
 </plist>
