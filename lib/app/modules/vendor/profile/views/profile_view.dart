@@ -1,5 +1,6 @@
 import 'package:coupon_code/app/core/values/app_color.dart';
 import 'package:coupon_code/app/core/widgets/common_app_bar.dart';
+import 'package:coupon_code/app/modules/vendor/vendor_menu/controllers/vendor_menu_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -80,7 +81,8 @@ class ProfileView extends GetView<ProfileController> {
   Widget _buildTextField({
     required String label,
     required TextEditingController controller,
-    required IconData icon,
+    IconData? icon,
+    String? hintText,
     TextInputType? keyboardType,
   }) {
     return Column(
@@ -92,8 +94,8 @@ class ProfileView extends GetView<ProfileController> {
           controller: controller,
           keyboardType: keyboardType,
           decoration: InputDecoration(
-            hintText: "Enter $label",
-            prefixIcon: Icon(icon),
+            hintText: hintText == null ? "Enter $label" : hintText,
+            prefixIcon: icon != null ? Icon(icon) : null,
             filled: true,
             fillColor: Colors.grey.shade100,
             contentPadding: const EdgeInsets.symmetric(vertical: 14),
@@ -359,15 +361,25 @@ class ProfileView extends GetView<ProfileController> {
             style: TextStyle(color: AppColor.error),
           ),
           SizedBox(height: 16),
-          _passwordField(label: 'Password', controller: controller.currentPasswordController),
+          _buildTextField(
+            label: "Type 'YES' to delete your account",
+            hintText: 'Type \'YES\'',
+            controller: controller.confirmAccountDeletionController,
+          ),
         ],
       ),
       textCancel: "No",
       textConfirm: "Delete",
       confirmTextColor: Colors.white,
       buttonColor: Colors.red,
-      onCancel: () => controller.currentPasswordController.clear(),
-      onConfirm: () => controller.deleteAccount(),
+      onCancel: () => controller.confirmAccountDeletionController.clear(),
+      onConfirm: () async {
+        final bool result = await controller.deleteAccount();
+
+        if (result == true) {
+          Get.put(VendorMenuController().logout());
+        }
+      },
     );
   }
 }

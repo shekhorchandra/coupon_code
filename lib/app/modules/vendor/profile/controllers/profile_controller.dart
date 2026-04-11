@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:coupon_code/app/data/models/user_model.dart';
 import 'package:coupon_code/app/data/network/dio_client.dart';
 import 'package:coupon_code/app/modules/services/contants/api_constants.dart';
-import 'package:coupon_code/app/modules/vendor/vendor_menu/controllers/vendor_menu_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -24,6 +23,8 @@ class ProfileController extends GetxController {
   late TextEditingController newPasswordController;
   late TextEditingController confirmPasswordController;
 
+  late TextEditingController confirmAccountDeletionController;
+
   final profileFormKey = GlobalKey<FormState>();
   final passwordFormKey = GlobalKey<FormState>();
 
@@ -40,6 +41,7 @@ class ProfileController extends GetxController {
     currentPasswordController = TextEditingController();
     newPasswordController = TextEditingController();
     confirmPasswordController = TextEditingController();
+    confirmAccountDeletionController = TextEditingController();
   }
 
   @override
@@ -127,43 +129,38 @@ class ProfileController extends GetxController {
   }
 
   // Delete Account
-  Future<void> deleteAccount() async {
+  Future<bool> deleteAccount() async {
     Get.back();
 
     try {
-      if (currentPasswordController.text.isNotEmpty) {
+      if (confirmAccountDeletionController.text.isNotEmpty) {
         isLoading.value = true;
 
-        // Verify Password
-        final response = await _dioClient.client.post(
-          ApiConstants.vendorLogin,
-          data: {
-            "email": emailController.value.text,
-            "password": currentPasswordController.value.text,
-          },
-        );
-
-        if (response.statusCode == 200) {
+        if (confirmAccountDeletionController.text.toLowerCase() == 'yes') {
           final response = await DioClient().client.delete(ApiConstants.deleteUser);
 
           if (response.statusCode == 200) {
-            Get.snackbar('Account deleted successfully!', '', barBlur: 0);
+            Get.snackbar('Account deleted successfully!', '', barBlur: 100);
 
-            Get.put(() => VendorMenuController().logout());
+            return true;
           } else {
             Get.snackbar('Error', 'Failed to delete your account!');
           }
         } else {
-          Get.snackbar('Authentication Error', '');
+          Get.snackbar("Type 'YES' to delete your account!", '');
         }
       } else {
-        Get.snackbar('Password Required', 'Please enter your password!');
+        Get.snackbar('Text is empty!', "Type 'YES' to delete your account!");
       }
+
+      return false;
     } catch (e) {
       log(e.toString());
+
+      return false;
     } finally {
       isLoading.value = false;
-      currentPasswordController.clear();
+      confirmAccountDeletionController.clear();
     }
   }
 }
