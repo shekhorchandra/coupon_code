@@ -4,6 +4,6 @@ import 'package:get/get.dart';
 class VendorNavigationBarBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<VendorNavigationBarController>(() => VendorNavigationBarController());
+    Get.lazyPut(() => VendorNavigationBarController());
   }
 }

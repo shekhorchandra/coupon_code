@@ -11,6 +11,7 @@ class ApiConstants {
 
   // vendor login and signup
   static const String vendorLogin = "/auth/login";
+  static const String vendorGoogleLogin = "/auth/google/auth";
   static const String vendorAppleLogin = "/auth/apple";
   static const String vendorAppleLoginCallback = "/auth/apple/callback";
   static const String vendorRegister = "/user/register";

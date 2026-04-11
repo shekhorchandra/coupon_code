@@ -10,13 +10,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class VendorDealsPage extends GetView<VendorDashboardController> {
-  VendorDealsPage({super.key}) {
-    Get.put(MyDealsController());
-    Get.put(VendorDealsController());
-  }
+  VendorDealsPage({super.key}) {}
 
   @override
   Widget build(BuildContext context) {
+    Get.put(MyDealsController());
+    Get.put(VendorDealsController());
+
     return Scaffold(
       appBar: CommonAppBar(title: 'Deals', showBack: false),
 

@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:app_links/app_links.dart';
 import 'package:coupon_code/app/data/network/dio_client.dart';
 import 'package:coupon_code/app/data/services/device_info_service.dart';
 import 'package:coupon_code/app/data/services/fcm_service.dart';
+import 'package:coupon_code/app/data/services/google_auth_service.dart';
 import 'package:coupon_code/app/data/services/storage_service.dart';
 import 'package:coupon_code/app/modules/services/Helper_status_code/HttpStatusHandler.dart';
 import 'package:coupon_code/app/modules/services/contants/api_constants.dart';
@@ -14,7 +14,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart' hide Response;
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class VendorLoginController extends GetxController {
   final obscure = true.obs;
@@ -27,8 +26,6 @@ class VendorLoginController extends GetxController {
   final DioClient _dioClient = DioClient();
   final DeviceInfoService _deviceInfoService = DeviceInfoService();
   final StorageService _storageService = StorageService();
-
-  /// for google login
 
   @override
   void onInit() {
@@ -46,68 +43,68 @@ class VendorLoginController extends GetxController {
 
   /// for google login
 
-  Future<void> loginWithGoogleDeepLink() async {
-    loading.value = true;
+  // Future<void> loginWithGoogleDeepLink() async {
+  //   loading.value = true;
 
-    final AppLinks appLinks = AppLinks();
-    StreamSubscription<Uri>? sub;
+  //   final AppLinks appLinks = AppLinks();
+  //   StreamSubscription<Uri>? sub;
 
-    try {
-      // Step 1: Listen for deep link callback
-      sub = appLinks.uriLinkStream.listen((Uri uri) async {
-        if (uri.scheme == "yeppapp" && uri.path == "/auth/google") {
-          final accessToken = uri.queryParameters['access'];
-          final refreshToken = uri.queryParameters['refresh'];
+  //   try {
+  //     // Step 1: Listen for deep link callback
+  //     sub = appLinks.uriLinkStream.listen((Uri uri) async {
+  //       if (uri.scheme == "yeppapp" && uri.path == "/auth/google") {
+  //         final accessToken = uri.queryParameters['access'];
+  //         final refreshToken = uri.queryParameters['refresh'];
 
-          if (accessToken != null && refreshToken != null) {
-            _storageService.setAccessToken(accessToken);
-            _storageService.setRefreshToken(refreshToken);
+  //         if (accessToken != null && refreshToken != null) {
+  //           _storageService.setAccessToken(accessToken);
+  //           _storageService.setRefreshToken(refreshToken);
 
-            _storeUserId();
+  //           _storeUserId();
 
-            // Register FCM and Device
-            bool fcmRegistered = await _registerFCM();
+  //           // Register FCM and Device
+  //           bool fcmRegistered = await _registerFCM();
 
-            if (!fcmRegistered) {
-              Get.snackbar('Error', 'An error occurred while initializing notifications!');
-              return;
-            }
+  //           if (!fcmRegistered) {
+  //             Get.snackbar('Error', 'An error occurred while initializing notifications!');
+  //             return;
+  //           }
 
-            bool deviceRegistered = await _registerDevice();
+  //           bool deviceRegistered = await _registerDevice();
 
-            if (!deviceRegistered) {
-              Get.snackbar('Error', 'An error occurred while registering the device.');
-              return;
-            }
+  //           if (!deviceRegistered) {
+  //             Get.snackbar('Error', 'An error occurred while registering the device.');
+  //             return;
+  //           }
 
-            await _storageService.write('loggedIn', true);
+  //           await _storageService.write('loggedIn', true);
 
-            await isVerifiedOrIsShopCreated();
+  //           await isVerifiedOrIsShopCreated();
 
-            Get.snackbar("Login Successful", "");
-          } else {
-            Get.snackbar("Error", "Failed to get token from Google login");
-          }
+  //           Get.snackbar("Login Successful", "");
+  //         } else {
+  //           Get.snackbar("Error", "Failed to get token from Google login");
+  //         }
 
-          await sub?.cancel();
-        }
-      });
+  //         await sub?.cancel();
+  //       }
+  //     });
 
-      // Step 2: Open browser with your API
-      final url = Uri.parse(
-        '${ApiConstants.baseUrl}/auth/google?redirect_uri=myapp://google-login',
-      );
+  //     // Step 2: Open browser with your API
+  //     final url = Uri.parse(
+  //       '${ApiConstants.baseUrl}/auth/google?redirect_uri=myapp://google-login',
+  //     );
 
-      if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
-        Get.snackbar("Error", "Could not launch login URL");
-        return;
-      }
-    } catch (e, st) {
-      _handleException(e, st);
-    } finally {
-      loading.value = false;
-    }
-  }
+  //     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+  //       Get.snackbar("Error", "Could not launch login URL");
+  //       return;
+  //     }
+  //   } catch (e, st) {
+  //     _handleException(e, st);
+  //   } finally {
+  //     loading.value = false;
+  //   }
+  // }
 
   // /// Apple Login with Deeplink [New]
   // Future<void> loginWithAppleDeepLink() async {
@@ -268,6 +265,90 @@ class VendorLoginController extends GetxController {
       }
     } catch (e, stackTrace) {
       _handleException(e, stackTrace);
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  Future<void> loginWithGoogle() async {
+    String? accessToken;
+    String? refreshToken;
+
+    loading.value = true;
+    try {
+      final googleUser = await GoogleAuthService().signInWithGoogle();
+
+      if (googleUser != null) {
+        final googleAuth = await googleUser.authentication;
+        final displayName = await googleUser.displayName;
+        final email = await googleUser.email;
+        final photoUrl = await googleUser.photoUrl;
+        final googleAccessToken = googleAuth.accessToken;
+        final idToken = googleAuth.idToken;
+
+        debugPrint("Display Name: $displayName");
+        debugPrint('Email: $email');
+        debugPrint('Photo URL: $photoUrl');
+        debugPrint('Access Token: $googleAccessToken');
+        debugPrint('ID Token: $idToken');
+
+        // Send to Backend & Login
+        final data = {
+          "name": displayName,
+          "email": email,
+          "picture_url": photoUrl,
+          "access_token": accessToken,
+          "id_token": idToken,
+          "platform": Platform.isIOS ? "ios" : "android",
+        };
+
+        final response = await _dioClient.client.post(ApiConstants.vendorGoogleLogin, data: data);
+
+        if (response.statusCode == 200) {
+          final data = response.data['data'];
+
+          accessToken = data['accessToken'];
+          refreshToken = data['refreshToken'];
+        } else {
+          Get.snackbar('Error', 'Failed to verify login with server!');
+
+          return;
+        }
+      } else {
+        Get.snackbar('Error', 'Failed to login with Google!');
+
+        return;
+      }
+
+      /// Login
+      // Save tokens returned from server
+      _storageService.setAccessToken(accessToken!);
+      _storageService.setRefreshToken(refreshToken!);
+
+      _storeUserId();
+
+      // Register FCM and Device
+      bool fcmRegistered = await _registerFCM();
+
+      if (!fcmRegistered) {
+        Get.snackbar('Error', 'An error occurred while initializing notifications!');
+        return;
+      }
+
+      bool deviceRegistered = await _registerDevice();
+
+      if (!deviceRegistered) {
+        Get.snackbar('Error', 'An error occurred while registering the device.');
+        return;
+      }
+
+      await _storageService.write('loggedIn', true);
+
+      await isVerifiedOrIsShopCreated();
+
+      Get.snackbar("Login Successful", "");
+    } catch (e, st) {
+      _handleException(e, st);
     } finally {
       loading.value = false;
     }
