@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:coupon_code/app/data/network/dio_client.dart';
 import 'package:coupon_code/app/modules/auth/vendor/login/vendor_login_controller.dart';
@@ -9,7 +10,7 @@ import 'package:get/get.dart';
 class VendorVerificationController extends GetxController {
   VendorVerificationController();
 
-  final String email = Get.arguments['email'];
+  RxString email = ''.obs;
 
   var otpCode = "".obs;
   var secondsRemaining = 30.obs;
@@ -19,14 +20,33 @@ class VendorVerificationController extends GetxController {
   final DioClient _dioClient = DioClient();
 
   @override
-  void onInit() {
+  void onInit() async {
+    await _getEmail();
+
     sendOtp();
     startTimer();
     super.onInit();
   }
 
+  Future<void> _getEmail() async {
+    try {
+      final response = await _dioClient.client.get(ApiConstants.getMe);
+
+      if (response.statusCode == 200) {
+        email.value = response.data['data']['email'];
+      } else {
+        Get.snackbar('Error', "Couldn't fetch email to send OTP!");
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
   Future<void> sendOtp() async {
-    final response = await _dioClient.client.post(ApiConstants.sendOtp, data: {"email": email});
+    final response = await _dioClient.client.post(
+      ApiConstants.sendOtp,
+      data: {'email': email.value},
+    );
 
     if (response.statusCode == 200) {
       Get.snackbar('Success', 'OTP has been sent successfully!');
@@ -69,7 +89,7 @@ class VendorVerificationController extends GetxController {
 
     final response = await _dioClient.client.post(
       ApiConstants.verifyOtp,
-      data: {"otp": int.parse(otpCode.value), "email": email},
+      data: {"otp": int.parse(otpCode.value), "email": email.value},
     );
 
     if (response.statusCode == 200) {

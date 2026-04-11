@@ -23,7 +23,7 @@ class VendorVerificationView extends GetView<VendorVerificationController> {
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -34,17 +34,19 @@ class VendorVerificationView extends GetView<VendorVerificationController> {
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
-            RichText(
-              textAlign: TextAlign.center,
-              text: TextSpan(
-                style: const TextStyle(color: Colors.grey, fontSize: 16),
-                children: [
-                  const TextSpan(text: "Enter the code sent to "),
-                  TextSpan(
-                    text: controller.email,
-                    style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                  ),
-                ],
+            Obx(
+              () => RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  style: const TextStyle(color: Colors.grey, fontSize: 16),
+                  children: [
+                    const TextSpan(text: "Enter the code sent to "),
+                    TextSpan(
+                      text: (controller.email.value == '') ? 'your email' : controller.email.value,
+                      style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 40),
