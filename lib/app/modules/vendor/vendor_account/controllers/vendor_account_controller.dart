@@ -16,13 +16,14 @@ import 'package:image_picker/image_picker.dart';
 class VendorAccountController extends GetxController {
   VendorAccountController();
 
+  final isLoading = false.obs;
   final isUpdating = false.obs;
 
   // Text Controllers
   final businessNameController = TextEditingController(text: '');
   final businessDescriptionController = TextEditingController(text: '');
   final emailController = TextEditingController(text: '');
-  final countryCodeController = TextEditingController(text: '');
+  final countryCodeController = TextEditingController(text: '+93');
   final phoneNumberController = TextEditingController(text: '');
   final websiteLinkController = TextEditingController(text: '');
   final outletNameController = TextEditingController(text: '');
@@ -140,18 +141,16 @@ class VendorAccountController extends GetxController {
 
   /// Submit the form
   Future<void> submitForApproval() async {
-    final DioClient _dioClient = DioClient();
-
-    if (selectedImage.value == null) {
-      Get.snackbar("Error", "Please upload a business logo");
-      return;
-    }
+    isLoading.value = true;
 
     try {
-      // Show loading indicator
-      isUpdating.value = true;
+      if (selectedImage.value == null) {
+        Get.snackbar("Error", "Please upload a business logo");
+        return;
+      }
 
-      // Shop part
+      final DioClient _dioClient = DioClient();
+
       Map<String, dynamic> shopData = {
         "business_name": businessNameController.text,
         "business_email": emailController.text,
@@ -160,13 +159,13 @@ class VendorAccountController extends GetxController {
           "phone_number": phoneNumberController.text,
         },
         "description": businessDescriptionController.text,
-        "coord": [pickedLng.value, pickedLat.value], // [Lng, Lat]
+        "coord": [pickedLng.value, pickedLat.value],
         "zip_code": zipCodeController.text,
         if (websiteLinkController.text.isNotEmpty) "website": websiteLinkController.text,
       };
 
-      // Outlet list part
       List<Map<String, dynamic>> outletData = [];
+
       if (selectedTab.value == 0) {
         outletData = [
           {
@@ -187,10 +186,8 @@ class VendorAccountController extends GetxController {
         }).toList();
       }
 
-      // Combine both
       Map<String, dynamic> finalPayload = {"shop": shopData, "outlet": outletData};
 
-      // Create formdata
       dio.FormData formData = dio.FormData.fromMap({
         "data": jsonEncode(finalPayload),
         "file": await dio.MultipartFile.fromFile(
@@ -199,7 +196,6 @@ class VendorAccountController extends GetxController {
         ),
       });
 
-      // Send request
       final response = await _dioClient.client.post(ApiConstants.createShop, data: formData);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -214,8 +210,7 @@ class VendorAccountController extends GetxController {
       Get.snackbar("Error", "Something went wrong");
       log("General Error: $e");
     } finally {
-      // Hide loading indicator
-      isUpdating.value = false;
+      isLoading.value = false;
     }
   }
 }

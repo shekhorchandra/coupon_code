@@ -204,10 +204,13 @@ class UpdateShopView extends GetView<UpdateShopController> {
               ),
               const SizedBox(height: 30),
 
-              AppButton(
-                text: 'Update',
-                onPressed: () =>
-                    controller.updateShopDetails(), // Update shop details on button press
+              Obx(
+                () => AppButton(
+                  text: 'Update',
+                  loading: controller.isLoading.value,
+                  onPressed: () =>
+                      controller.updateShopDetails(), // Update shop details on button press
+                ),
               ),
             ],
           ),

@@ -16,8 +16,6 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 class CreateVendorAccountPage extends GetView<VendorAccountController> {
   CreateVendorAccountPage({super.key});
-
-  final controller = Get.put(VendorAccountController());
   final serviceDetailsController = Get.put(ServiceDetailsController());
 
   @override
@@ -44,7 +42,7 @@ class CreateVendorAccountPage extends GetView<VendorAccountController> {
           controller.emailController.text =
               serviceDetailsController.shop.value!.businessEmail ?? '';
           controller.countryCodeController.text =
-              serviceDetailsController.shop.value!.businessPhone?.countryCode ?? '';
+              serviceDetailsController.shop.value!.businessPhone?.countryCode ?? '+93';
           controller.phoneNumberController.text =
               serviceDetailsController.shop.value!.businessPhone?.phoneNumber ?? '';
           controller.websiteLinkController.text =
@@ -239,17 +237,22 @@ class CreateVendorAccountPage extends GetView<VendorAccountController> {
               ),
               const SizedBox(height: 30),
 
-              if (shopId == null)
-                AppButton(
-                  text: 'Submit for Approval',
-                  onPressed: () => controller.submitForApproval(),
-                ),
+              Obx(() {
+                if (shopId == null)
+                  return AppButton(
+                    text: 'Submit for Approval',
+                    loading: controller.isLoading.value,
+                    onPressed: () => controller.submitForApproval(),
+                  );
 
-              if (shopId != null)
-                AppButton(
+                return AppButton(
                   text: isUpdating ? 'Update' : 'Publish',
-                  onPressed: () => controller.submitForApproval(),
-                ),
+                  loading: controller.isLoading.value,
+                  onPressed: () {
+                    controller.submitForApproval();
+                  },
+                );
+              }),
             ],
           ),
         ),

@@ -52,32 +52,28 @@ class AppButton extends StatelessWidget {
         child: Center(
           child: loading
               ? const SizedBox(
-            height: 22,
-            width: 22,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              color: AppColor.titleColor,
-            ),
-          )
+                  height: 22,
+                  width: 22,
+                  child: CircularProgressIndicator(strokeWidth: 2, color: AppColor.titleColor),
+                )
               : Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (leading != null) ...[
-                leading!,
-                const SizedBox(width: 8),
-              ] else if (icon != null) ...[
-                Icon(icon, size: 18, color: textColor),
-                const SizedBox(width: 6),
-              ],
-              Text(
-                text,
-                overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.TextButton
-                    .copyWith(color: textColor),
-              ),
-            ],
-          ),
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (leading != null) ...[
+                      leading!,
+                      const SizedBox(width: 8),
+                    ] else if (icon != null) ...[
+                      Icon(icon, size: 18, color: textColor),
+                      const SizedBox(width: 6),
+                    ],
+                    Text(
+                      text,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyles.TextButton.copyWith(color: textColor),
+                    ),
+                  ],
+                ),
         ),
       ),
     );
