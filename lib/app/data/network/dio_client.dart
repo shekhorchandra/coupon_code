@@ -167,7 +167,7 @@ class DioClient {
       }
     } catch (_) {}
     await _storageService.clear();
-    Get.snackbar("Session Expired", "Please login again");
+    // Get.snackbar("Session Expired", "Please login again");
     Get.offAllNamed(AppRoutes.USER_BOTTOM_NAV);
   }
 }

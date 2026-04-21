@@ -498,7 +498,8 @@ class VendorLoginController extends GetxController {
           if (isShopCreated) {
             Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR);
           } else {
-            Get.offAllNamed(AppRoutes.CREATE_VENDOR_ACCOUNT);
+            // Get.offAllNamed(AppRoutes.CREATE_VENDOR_ACCOUNT);
+            Get.offAllNamed(AppRoutes.VENDOR_NAVIGATION_BAR);
           }
         } else {
           Get.offAllNamed(
