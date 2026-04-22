@@ -1,5 +1,4 @@
 import 'package:coupon_code/app/core/values/app_assets.dart';
-import 'package:coupon_code/app/routes/app_routes.dart';
 import 'package:flutter/material.dart' hide MenuController;
 import 'package:get/get.dart';
 
@@ -78,7 +77,7 @@ class MenuView extends GetView<MenuController> {
             const SizedBox(height: 12),
 
             // _menuItem(Icons.info_outline, "About Us", controller.goToAbout),
-            _menuItem(Icons.info_outline, "About Us", () => Get.toNamed(AppRoutes.ABOUT)),
+            _menuItem(Icons.info_outline, "About Us", controller.goToAbout),
 
             // _menuItem(Icons.campaign_outlined, 'Advertise on App', controller.onAdvertiseTap),
             _menuItem(Icons.contact_support_outlined, "Contact Us", controller.onContactUsTap),
@@ -86,11 +85,11 @@ class MenuView extends GetView<MenuController> {
             const SizedBox(height: 24),
             _menuItem(Icons.privacy_tip_outlined, "Privacy Policy", controller.onPrivacyPolicyTap),
             _menuItem(Icons.description_outlined, "Terms & Condition", controller.onTermsTap),
-            _menuItem(Icons.star_rate_outlined, "Rate the App", controller.onRateAppTap),
+            // _menuItem(Icons.star_rate_outlined, "Rate the App", controller.onRateAppTap),
             _menuItem(
               Icons.share_outlined,
               "Invite Friends",
-                  () => controller.onInviteFriendsTap(context),
+              () => controller.onInviteFriendsTap(context),
             ),
 
             const SizedBox(height: 24),

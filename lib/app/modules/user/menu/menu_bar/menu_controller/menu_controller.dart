@@ -19,7 +19,10 @@ class MenuController extends GetxController {
   }
 
   void goToAbout() {
-    Get.toNamed(AppRoutes.ABOUT);
+    Get.toNamed(
+      AppRoutes.IN_APP_WEBVIEW,
+      arguments: {'title': 'About Us', 'url': 'https://yeppads.com/about-us'},
+    );
   }
 
   void onAdvertiseTap() {
@@ -27,19 +30,31 @@ class MenuController extends GetxController {
   }
 
   void onContactUsTap() {
-    Get.toNamed(AppRoutes.CONTACT_US);
+    Get.toNamed(
+      AppRoutes.IN_APP_WEBVIEW,
+      arguments: {'title': 'Contact Us', 'url': 'https://yeppads.com/contact-us'},
+    );
   }
 
   void onHelpSupportTap() {
-    Get.toNamed(AppRoutes.HELP_SUPPORT);
+    Get.toNamed(
+      AppRoutes.IN_APP_WEBVIEW,
+      arguments: {'title': 'Help & Support', 'url': 'https://yeppads.com/help-support'},
+    );
   }
 
   void onPrivacyPolicyTap() {
-    Get.toNamed(AppRoutes.PRIVACYPOLICY);
+    Get.toNamed(
+      AppRoutes.IN_APP_WEBVIEW,
+      arguments: {'title': 'Privacy Policy', 'url': 'https://yeppads.com/privacy-policy'},
+    );
   }
 
   void onTermsTap() {
-    Get.toNamed(AppRoutes.TERMSCONDITION);
+    Get.toNamed(
+      AppRoutes.IN_APP_WEBVIEW,
+      arguments: {'title': 'Terms & Conditions', 'url': 'https://yeppads.com/terms-and-conditions'},
+    );
   }
 
   void onRateAppTap() {
