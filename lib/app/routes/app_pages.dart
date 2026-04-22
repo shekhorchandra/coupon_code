@@ -1,6 +1,8 @@
 import 'package:coupon_code/app/data/models/deal_model.dart';
 import 'package:coupon_code/app/modules/auth/vendor/verification/vendor_verification_binding.dart';
 import 'package:coupon_code/app/modules/auth/vendor/verification/vendor_verification_view.dart';
+import 'package:coupon_code/app/modules/common/webview/bindings/in_app_webview_binding.dart';
+import 'package:coupon_code/app/modules/common/webview/views/in_app_webview_view.dart';
 import 'package:coupon_code/app/modules/vendor/notification/bindings/notification_binding.dart';
 import 'package:coupon_code/app/modules/vendor/notification/views/notification_view.dart';
 import 'package:coupon_code/app/modules/vendor/payment_method/bindings/payment_method_binding.dart';
@@ -57,14 +59,8 @@ import '../modules/user/discover_bar/Discover/views/discover_view.dart';
 import '../modules/user/discover_bar/discover_details/views/discover_details_view_page.dart';
 import '../modules/user/discover_bar/vendor_shop_details/bindings/vendor_details_binding.dart';
 import '../modules/user/discover_bar/vendor_shop_details/views/vendor_details_view.dart';
-import '../modules/user/menu/about_us/bindings/About_Binding.dart';
-import '../modules/user/menu/about_us/views/About_View.dart';
-import '../modules/user/menu/contact_us/contact_view/contact_us_view.dart';
-import '../modules/user/menu/help_support/help_support_view/Help_Support_View.dart';
 import '../modules/user/menu/menu_bar/menu_binding/menu_binding.dart';
 import '../modules/user/menu/menu_bar/menu_view/menu_view.dart';
-import '../modules/user/menu/privacy_policy/privacy_policy_view/Privacy_Policy_View.dart';
-import '../modules/user/menu/terms_condition/terms_condition_view/Terms_Condition_View.dart';
 import '../modules/user/saved/bindings/user_saved_binding.dart';
 import '../modules/user/saved/views/save_view.dart';
 import 'app_routes.dart';
@@ -256,8 +252,6 @@ class AppPages {
       binding: ResetPasswordBinding(),
     ),
 
-    /// About Us
-    GetPage(name: AppRoutes.ABOUT, page: () => const AboutView(), binding: AboutBinding()),
     GetPage(
       name: AppRoutes.VENDOR_DASHBOARD,
       page: () => VendorDashboardPage(),
@@ -285,16 +279,17 @@ class AppPages {
       binding: NotificationBinding(),
     ),
 
-    /// Contact Us
-    GetPage(name: AppRoutes.CONTACT_US, page: () => const ContactUsView()),
+    /// In App Webview
+    GetPage(
+      name: AppRoutes.IN_APP_WEBVIEW,
+      page: () {
+        final args = Get.arguments;
+        final String? title = args['title'];
+        final String? url = args['url'];
 
-    /// Help and Support
-    GetPage(name: AppRoutes.HELP_SUPPORT, page: () => const HelpSupportView()),
-
-    /// Terms and conditions
-    GetPage(name: AppRoutes.TERMSCONDITION, page: () => const TermsConditionView()),
-
-    /// Privacy Policy
-    GetPage(name: AppRoutes.PRIVACYPOLICY, page: () => const PrivacyPolicyView()),
+        return InAppWebviewView(title: title, url: url);
+      },
+      binding: InAppWebviewBinding(),
+    ),
   ];
 }
