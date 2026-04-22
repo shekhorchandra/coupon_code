@@ -102,30 +102,55 @@ class VendorMenuPage extends GetView<VendorAccountController> {
                 KMenuItem(
                   title: 'About Us',
                   icon: Icons.info_outline_rounded,
-                  onTap: () => Get.toNamed(AppRoutes.ABOUT),
+                  onTap: () => Get.toNamed(
+                    AppRoutes.IN_APP_WEBVIEW,
+                    arguments: {'title': 'About Us', 'url': 'https://yeppads.com/about-us'},
+                  ),
                 ),
                 KMenuItem(
                   title: 'Contact Us',
                   icon: Icons.headphones_outlined,
-                  onTap: () => Get.toNamed(AppRoutes.CONTACT_US),
+                  onTap: () => Get.toNamed(
+                    AppRoutes.IN_APP_WEBVIEW,
+                    arguments: {'title': 'Contact Us', 'url': 'https://yeppads.com/contact-us'},
+                  ),
                 ),
                 KMenuItem(
                   title: 'Help & Support',
                   icon: Icons.help_outline_rounded,
-                  onTap: () => Get.toNamed(AppRoutes.HELP_SUPPORT),
+                  onTap: () => Get.toNamed(
+                    AppRoutes.IN_APP_WEBVIEW,
+                    arguments: {
+                      'title': 'Help & Support',
+                      'url': 'https://yeppads.com/help-support',
+                    },
+                  ),
                 ),
 
                 KMenuItem(
                   title: 'Privacy Policy',
                   icon: Icons.privacy_tip_outlined,
-                  onTap: () => Get.toNamed(AppRoutes.PRIVACYPOLICY),
+                  onTap: () => Get.toNamed(
+                    AppRoutes.IN_APP_WEBVIEW,
+                    arguments: {
+                      'title': 'Privacy Policy',
+                      'url': 'https://yeppads.com/privacy-policy',
+                    },
+                  ),
                 ),
                 KMenuItem(
                   title: 'Terms & Conditions',
                   icon: Icons.description_outlined,
-                  onTap: () => Get.toNamed(AppRoutes.TERMSCONDITION),
+                  onTap: () => Get.toNamed(
+                    AppRoutes.IN_APP_WEBVIEW,
+                    arguments: {
+                      'title': 'Terms & Conditions',
+                      'url': 'https://yeppads.com/terms-and-conditions',
+                    },
+                  ),
                 ),
-                KMenuItem(title: 'Rate the App', icon: Icons.star_rate_rounded, onTap: () {}),
+                // TODO: show this after app is published
+                // KMenuItem(title: 'Rate the App', icon: Icons.star_rate_rounded, onTap: () {}),
                 KMenuItem(
                   title: 'Invite Friends',
                   icon: Icons.share_outlined,

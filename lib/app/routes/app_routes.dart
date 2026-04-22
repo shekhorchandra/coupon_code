@@ -13,6 +13,8 @@ abstract class AppRoutes {
   static const OTP_VERIFY = "/otp_verify";
   static const RESET_PASSWORD = "/reset_password";
 
+  static const IN_APP_WEBVIEW = "/page";
+
   static const DISCOVER = '/discover';
   static const DISCOVERDETAILS = '/discover-details';
 
@@ -23,12 +25,6 @@ abstract class AppRoutes {
   static const SAVED = '/save';
   static const SAVEDLATER = '/my-saves';
   static const MENU = '/menu';
-
-  static const ABOUT = '/about';
-  static const CONTACT_US = '/contact-us';
-  static const HELP_SUPPORT = '/help-support';
-  static const TERMSCONDITION = '/terms-condition';
-  static const PRIVACYPOLICY = '/privacy-policy';
 
   static const USER_BOTTOM_NAV = '/navigation_bar';
 

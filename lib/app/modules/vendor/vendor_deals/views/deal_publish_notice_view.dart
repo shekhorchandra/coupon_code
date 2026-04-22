@@ -52,7 +52,13 @@ class DealPublishNoticeView extends GetView<VendorDealsController> {
                             style: AppText.body2.regular.copyWith(color: AppColor.primary),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                Get.toNamed(AppRoutes.TERMSCONDITION);
+                                Get.toNamed(
+                                  AppRoutes.IN_APP_WEBVIEW,
+                                  arguments: {
+                                    'title': 'Terms & Conditions',
+                                    'url': 'https://yeppads.com/terms-and-conditions',
+                                  },
+                                );
                               },
                           ),
                         ],

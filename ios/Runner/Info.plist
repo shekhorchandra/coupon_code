@@ -100,6 +100,6 @@
 		<key>UIStatusBarHidden</key>
 		<true/>
 		<key>UIViewControllerBasedStatusBarAppearance</key>
-		<false/>
+		<true/>
 	</dict>
 </plist>
