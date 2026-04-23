@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
@@ -126,9 +127,9 @@ class SavesController extends GetxController {
   }
 
   // Computed getters
-  List<SaveItem> get all => savesList;
-  List<SaveItem> get available => savesList.where((item) => item.isAvailable).toList();
-  List<SaveItem> get expired => savesList.where((item) => !item.isAvailable).toList();
+  List<dynamic> get all => savesList;
+  List<dynamic> get available => savesList.where((item) => item.isAvailable).toList();
+  List<dynamic> get expired => savesList.where((item) => !item.isAvailable).toList();
 
   void changeTab(int index) => selectedTab.value = index;
 }

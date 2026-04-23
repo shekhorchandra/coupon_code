@@ -21,6 +21,9 @@ class VendorSingleDealView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Calculate the CTR
+    final ctr = (deal.totalImpression > 0) ? (deal.totalViews / deal.totalImpression) * 100 : 0.0;
+
     return Scaffold(
       appBar: CommonAppBar(title: 'Deal Details'),
       body: SingleChildScrollView(
@@ -148,7 +151,7 @@ class VendorSingleDealView extends StatelessWidget {
               children: [
                 OverviewCard(title: 'Impressions', number: '${deal.totalImpression}'),
                 OverviewCard(title: 'Views', number: '${deal.totalViews}'),
-                OverviewCard(title: 'CTR', number: '20%'), // TODO: fix this value
+                OverviewCard(title: 'CTR', number: '$ctr%'),
               ],
             ),
 

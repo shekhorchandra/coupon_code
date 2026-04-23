@@ -54,8 +54,8 @@ class VendorDealsController extends GetxController {
   final tagController = TextEditingController();
   RxList<String> tags = <String>[].obs;
 
-  RxList<Outlets>? outlets = <Outlets>[].obs;
-  RxList<Outlets>? selectedOutlets = <Outlets>[].obs;
+  RxList<dynamic>? outlets = <dynamic>[].obs;
+  RxList<dynamic>? selectedOutlets = <dynamic>[].obs;
 
   DioClient _dioClient = DioClient();
 
@@ -202,7 +202,6 @@ class VendorDealsController extends GetxController {
 
   // Selections
   Rx<String> selectedCategory = ''.obs;
-  // TODO: Fetch categories from API
   RxList<DealCategoryModel> categories = <DealCategoryModel>[].obs;
   Rx<DealPlanModel?> selectedDealPlan = Rx<DealPlanModel?>(dealPlans[0]);
   Rx<DateTimeRange?> selectedValidityRange = Rx<DateTimeRange?>(null);

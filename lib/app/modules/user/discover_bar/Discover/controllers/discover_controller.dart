@@ -1,8 +1,9 @@
 import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../services/Helper_status_code/HttpStatusHandler.dart';
+
 import '../../../../services/contants/api_constants.dart';
 import '../../../../services/geolocator_helper/current_location_picker.dart';
 import '../models/deal_card_model.dart';
@@ -94,12 +95,10 @@ class DiscoverController extends GetxController {
 
       final response = await Dio().get(
         '${ApiConstants.baseUrl}/service/deals/$lng/$lat',
-        queryParameters: {"page": page, "limit": 10},
+        queryParameters: {"page": page, "limit": 10000},
       );
 
-      final res = response.data is String
-          ? jsonDecode(response.data)
-          : response.data;
+      final res = response.data is String ? jsonDecode(response.data) : response.data;
 
       if (response.statusCode == 200 && res['success'] == true) {
         final List items = res['data']['deals'];
@@ -127,7 +126,7 @@ class DiscoverController extends GetxController {
       final double lng = position.longitude;
       final double lat = position.latitude;
 
-      final query = {"page": page, "limit": 10, "searchTerm": searchTerm};
+      final query = {"page": page, "limit": 10000, "searchTerm": searchTerm};
 
       final response = await Dio().get(
         '${ApiConstants.baseUrl}/service/deals/all_deals/$lng/$lat',
@@ -152,4 +151,3 @@ class DiscoverController extends GetxController {
     }
   }
 }
-

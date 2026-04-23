@@ -19,7 +19,7 @@ class UpdateShopController extends GetxController {
   final email = TextEditingController();
   Rx<BusinessPhone> countryCode = BusinessPhone().obs;
   final phoneNumber = TextEditingController();
-  final List<Outlets> outlets = [];
+  final List<dynamic> outlets = [];
   final website = TextEditingController();
   // Outlet Tab Controller
   Rx<int> selectedTab = 0.obs;

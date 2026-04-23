@@ -7,10 +7,10 @@ class NotificationController extends GetxController {
   DioClient _dioClient = DioClient();
 
   // Variables to track notifications and pagination
-  RxList<NotificationModel> notifications = <NotificationModel>[].obs;
+  RxList<dynamic> notifications = <dynamic>[].obs;
   RxBool isLoading = false.obs;
   RxInt page = 1.obs;
-  RxInt limit = 10.obs;
+  RxInt limit = 100.obs;
   RxInt unreadCount = 0.obs;
 
   // Fetch notifications with pagination

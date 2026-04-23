@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
-import 'package:geocoding/geocoding.dart';
 
 class LocationPickerScreen extends StatefulWidget {
   @override
@@ -24,9 +24,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
 
   void _setMarker(LatLng position) {
     setState(() {
-      markers = {
-        Marker(markerId: MarkerId("selected-location"), position: position),
-      };
+      markers = {Marker(markerId: MarkerId("selected-location"), position: position)};
     });
   }
 
@@ -38,12 +36,11 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
 
     Placemark place = placemarks.first;
 
-    addressController.text =
-        "${place.street}, ${place.locality}, ${place.country}";
+    addressController.text = "${place.street}, ${place.locality}, ${place.country}";
   }
 
   Future<void> _getLatLngFromAddress(String address) async {
-    List<Location> locations = await locationFromAddress(address);
+    List<dynamic> locations = await locationFromAddress(address);
     Location location = locations.first;
 
     LatLng newPosition = LatLng(location.latitude, location.longitude);
@@ -76,9 +73,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
 
                 LatLng newPosition = LatLng(lat, lng);
 
-                mapController?.animateCamera(
-                  CameraUpdate.newLatLngZoom(newPosition, 15),
-                );
+                mapController?.animateCamera(CameraUpdate.newLatLngZoom(newPosition, 15));
 
                 _setMarker(newPosition);
               },
@@ -86,10 +81,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
           ),
           Expanded(
             child: GoogleMap(
-              initialCameraPosition: CameraPosition(
-                target: selectedLocation,
-                zoom: 14,
-              ),
+              initialCameraPosition: CameraPosition(target: selectedLocation, zoom: 14),
               onMapCreated: (controller) {
                 mapController = controller;
               },

@@ -10,7 +10,7 @@ class ShopModel {
   String? website;
   String? createdAt;
   String? updatedAt;
-  List<Outlets>? outlets;
+  List<dynamic>? outlets;
 
   ShopModel({
     this.sId,

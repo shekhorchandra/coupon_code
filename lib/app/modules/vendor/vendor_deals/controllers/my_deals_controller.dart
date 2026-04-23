@@ -66,7 +66,7 @@ class MyDealsController extends GetxController {
     try {
       final response = await _dioClient.client.get(
         ApiConstants.myDeals,
-        queryParameters: {'page': page.value, 'limit': 10, 'deal_filter': _getFilter()},
+        queryParameters: {'page': page.value, 'limit': 10000, 'deal_filter': _getFilter()},
       );
 
       if (response.statusCode == 200) {

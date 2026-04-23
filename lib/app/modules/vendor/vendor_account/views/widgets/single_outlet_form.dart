@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 class SingleOutletForm extends GetView<VendorAccountController> {
   SingleOutletForm({super.key, this.outlets});
 
-  final List<Outlets>? outlets;
+  final List<dynamic>? outlets;
 
   @override
   Widget build(BuildContext context) {

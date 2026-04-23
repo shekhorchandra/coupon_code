@@ -218,10 +218,7 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
                     child: InkWell(
                       borderRadius: BorderRadius.circular(8),
                       onTap: () {
-                        Get.toNamed(
-                          AppRoutes.shopDetails,
-                          arguments: {"shopId": deal.shopId},
-                        ); // TODO: pass the shop id or details
+                        Get.toNamed(AppRoutes.shopDetails, arguments: {"shopId": deal.shopId});
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),

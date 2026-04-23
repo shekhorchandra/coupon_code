@@ -65,7 +65,7 @@ class VendorAccountController extends GetxController {
   final ImagePicker _picker = ImagePicker();
 
   Future<void> pickImage() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
 
     if (image != null) {
       File file = File(image.path);
@@ -74,7 +74,8 @@ class VendorAccountController extends GetxController {
       int sizeInBytes = await file.length();
       double sizeInMb = sizeInBytes / (1024 * 1024);
 
-      if (sizeInMb <= 10) {
+      if (sizeInMb <= 100000) {
+        // Revenge
         selectedImage.value = file;
       } else {
         Get.snackbar("Error", "File size exceeds 10MB");
@@ -96,7 +97,7 @@ class VendorAccountController extends GetxController {
       position: LatLng(43.68235894136127, -79.62811399251223),
     ),
   }.obs;
-  var outlets = <Outlets>[].obs;
+  var outlets = <dynamic>[].obs;
 
   void updateLocation(LatLng position) {
     // Save to variables
@@ -164,7 +165,7 @@ class VendorAccountController extends GetxController {
         if (websiteLinkController.text.isNotEmpty) "website": websiteLinkController.text,
       };
 
-      List<Map<String, dynamic>> outletData = [];
+      List<dynamic> outletData = [];
 
       if (selectedTab.value == 0) {
         outletData = [

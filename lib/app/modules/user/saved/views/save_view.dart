@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 
 import '../../../../core/values/app_color.dart';
 import '../../../../core/widgets/common_app_bar.dart';
-import '../models/save_item_model.dart';
 
 class UserMySavesPage extends GetView<SavesController> {
   UserMySavesPage({super.key});
@@ -33,7 +32,7 @@ class UserMySavesPage extends GetView<SavesController> {
               if (controller.isLoading.value) {
                 return const Center(child: CircularProgressIndicator(color: AppColor.primary));
               }
-              List<SaveItem> listToShow;
+              List<dynamic> listToShow;
               switch (controller.selectedTab.value) {
                 case 1:
                   listToShow = controller.available;

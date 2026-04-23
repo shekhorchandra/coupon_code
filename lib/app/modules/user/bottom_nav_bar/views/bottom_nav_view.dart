@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+
 import '../../../../core/values/app_assets.dart';
 import '../../../../core/values/app_color.dart';
 import '../controllers/bottom_nav_controller.dart';
@@ -20,8 +21,7 @@ class UserNavigationBarPage extends GetView<UserNavigationBarController> {
             controller.screens[controller.selectedIndex.value],
 
             // Overlay page (e.g., AboutView)
-            if (controller.currentOverlayPage.value != null)
-              controller.currentOverlayPage.value!,
+            if (controller.currentOverlayPage.value != null) controller.currentOverlayPage.value!,
           ],
         );
       }),
@@ -52,10 +52,8 @@ class UserNavigationBarPage extends GetView<UserNavigationBarController> {
                   height: 65,
                   backgroundColor: AppColor.white,
                   indicatorColor: AppColor.vividSky.s300,
-                  labelTextStyle: MaterialStateProperty.resolveWith<TextStyle>((
-                    states,
-                  ) {
-                    if (states.contains(MaterialState.selected)) {
+                  labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>((states) {
+                    if (states.contains(WidgetState.selected)) {
                       return TextStyle(
                         color: AppColor.vividSky.s300,
                         fontWeight: FontWeight.w600,
@@ -70,9 +68,7 @@ class UserNavigationBarPage extends GetView<UserNavigationBarController> {
                       icon: SvgPicture.asset(
                         AppAssets.discover,
                         colorFilter: ColorFilter.mode(
-                          controller.selectedIndex.value == 0
-                              ? AppColor.white
-                              : AppColor.bw.s500,
+                          controller.selectedIndex.value == 0 ? AppColor.white : AppColor.bw.s500,
                           BlendMode.srcIn,
                         ),
                         width: 20,
@@ -86,9 +82,7 @@ class UserNavigationBarPage extends GetView<UserNavigationBarController> {
                         width: 20,
                         height: 20,
                         colorFilter: ColorFilter.mode(
-                          controller.selectedIndex.value == 1
-                              ? AppColor.white
-                              : AppColor.bw.s500,
+                          controller.selectedIndex.value == 1 ? AppColor.white : AppColor.bw.s500,
                           BlendMode.srcIn,
                         ),
                       ),
@@ -100,9 +94,7 @@ class UserNavigationBarPage extends GetView<UserNavigationBarController> {
                         width: 20,
                         height: 20,
                         colorFilter: ColorFilter.mode(
-                          controller.selectedIndex.value == 2
-                              ? AppColor.white
-                              : AppColor.bw.s500,
+                          controller.selectedIndex.value == 2 ? AppColor.white : AppColor.bw.s500,
                           BlendMode.srcIn,
                         ),
                       ),
@@ -114,9 +106,7 @@ class UserNavigationBarPage extends GetView<UserNavigationBarController> {
                         width: 20,
                         height: 20,
                         colorFilter: ColorFilter.mode(
-                          controller.selectedIndex.value == 3
-                              ? AppColor.white
-                              : AppColor.bw.s500,
+                          controller.selectedIndex.value == 3 ? AppColor.white : AppColor.bw.s500,
                           BlendMode.srcIn,
                         ),
                       ),

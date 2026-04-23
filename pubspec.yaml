@@ -1,3 +1,8 @@
+# Hey - just a heads-up based on my experience working with him.
+# At the start, the agreement was to build an MVP in three phases: UI/UX design, Flutter + web frontend and then the backend. He approved each stage along the way. But when we were going to deploy everything, he used to wake up everyday and tell us to do a lot of changes including UI changes, backend changes and even changing the entire flow of the app and website.
+# Be careful working with him. He will just use you if you don't set clear boundaries before starting the work.
+
+
 name: coupon_code
 description: "Yepp – Your Ultimate Deal Finder"
 # The following line prevents the package from being accidentally published to
@@ -16,7 +21,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.5.1+15
+version: 1.5.2+16
 
 environment:
   sdk: ^3.10.7
@@ -33,53 +38,53 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.8
-  get: ^4.7.3
-  shared_preferences: ^2.5.4
-  flutter_staggered_grid_view: ^0.7.0
-  flutter_svg: ^2.2.3
-  iconsax_flutter: ^1.0.1
-  url_launcher: ^6.3.2
-  google_maps_flutter: ^2.14.2
-  fl_chart: ^1.1.1
-  cached_network_image: ^3.4.1
-  intl: ^0.20.2
-  image_picker: ^1.2.1
-  qr_flutter: ^4.1.0
-  dotted_border: ^3.1.0
-  flutter_credit_card: ^4.1.0
-  firebase_core: ^4.4.0
-  http: ^1.6.0
-  firebase_messaging: ^16.1.1
-  device_info_plus: ^12.3.0
-  uuid: ^4.5.3
-  get_storage: ^2.1.1
-  flutter_local_notifications: ^20.1.0
-  dio: ^5.9.1
-  pretty_dio_logger: ^1.4.0
-  google_places_flutter: ^2.1.1
-  geocoding: ^4.0.0
-  country_code_picker: ^3.4.1
-  pinput: ^6.0.2
-  barcode_widget: ^2.0.4
-  google_sign_in: ^6.1.0
-  app_links: ^7.0.0
-  sign_in_with_apple: ^7.0.1
-  in_app_purchase: ^3.2.3
-  geolocator: ^14.0.2
-  shimmer: ^3.0.0
-  share_plus: ^12.0.1
-  timeago: ^3.7.1
-  path_provider: ^2.1.5
-  flutter_dotenv: ^6.0.0
-  webview_flutter: ^4.13.1
+  cupertino_icons: any
+  get: any
+  shared_preferences: any
+  flutter_staggered_grid_view: any
+  flutter_svg: any
+  iconsax_flutter: any
+  url_launcher: any
+  google_maps_flutter: any
+  fl_chart: any
+  cached_network_image: any
+  intl: any
+  image_picker: any
+  qr_flutter: any
+  dotted_border: any
+  flutter_credit_card: any
+  firebase_core: any
+  http: any
+  firebase_messaging: any
+  device_info_plus: any
+  uuid: any
+  get_storage: any
+  flutter_local_notifications: any
+  dio: any
+  pretty_dio_logger: any
+  google_places_flutter: any
+  geocoding: any
+  country_code_picker: any
+  pinput: any
+  barcode_widget: any
+  google_sign_in: any
+  app_links: any
+  sign_in_with_apple: any
+  in_app_purchase: any
+  geolocator: any
+  shimmer: any
+  share_plus: any
+  timeago: any
+  path_provider: any
+  flutter_dotenv: any
+  webview_flutter: any
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.14.4
-  in_app_purchase_platform_interface: ^1.4.0
+  flutter_launcher_icons: any
+  in_app_purchase_platform_interface: any
 
 flutter_icons:
   android: true

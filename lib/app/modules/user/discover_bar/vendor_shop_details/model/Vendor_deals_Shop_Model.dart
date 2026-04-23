@@ -1,4 +1,3 @@
-
 class VendorDetailsModel {
   final String id;
   final String vendorId;
@@ -7,8 +6,8 @@ class VendorDetailsModel {
   final BusinessPhoneModel? businessPhone;
   final String businessLogo;
   final String description;
-  final List<OutletModel> outlets;
-  final List<DealModel> deals;
+  final List<dynamic> outlets;
+  final List<dynamic> deals;
 
   VendorDetailsModel({
     required this.id,
@@ -33,13 +32,9 @@ class VendorDetailsModel {
           : null,
       businessLogo: json['business_logo'] ?? '',
       description: json['description'] ?? '',
-      outlets: (json['outlets'] as List? ?? [])
-          .map((e) => OutletModel.fromJson(e ?? {}))
-          .toList(),
+      outlets: (json['outlets'] as List? ?? []).map((e) => OutletModel.fromJson(e ?? {})).toList(),
 
-      deals: (json['deals'] as List? ?? [])
-          .map((e) => DealModel.fromJson(e ?? {}))
-          .toList(),
+      deals: (json['deals'] as List? ?? []).map((e) => DealModel.fromJson(e ?? {})).toList(),
     );
   }
 }
@@ -48,10 +43,7 @@ class BusinessPhoneModel {
   final String countryCode;
   final String phoneNumber;
 
-  BusinessPhoneModel({
-    required this.countryCode,
-    required this.phoneNumber,
-  });
+  BusinessPhoneModel({required this.countryCode, required this.phoneNumber});
 
   factory BusinessPhoneModel.fromJson(Map<String, dynamic> json) {
     return BusinessPhoneModel(
@@ -77,7 +69,6 @@ class OutletModel {
   });
 
   factory OutletModel.fromJson(Map<String, dynamic> json) {
-
     final location = json['location'] ?? {};
     final coordinates = location['coordinates'] ?? [0.0, 0.0];
 

@@ -7,11 +7,7 @@ import '../model/category_deal_model.dart';
 class CategoryDetailsApiService {
   final Dio _dio = Dio();
 
-  Future<List<CategoryDealModel>> getCategoryDeals(
-      String categoryId, {
-        String sort = "reguler_price",
-      }) async {
-
+  Future<List<dynamic>> getCategoryDeals(String categoryId, {String sort = "reguler_price"}) async {
     final position = await getCurrentLocation();
 
     if (position == null) {
@@ -21,17 +17,9 @@ class CategoryDetailsApiService {
     final double lng = position.longitude;
     final double lat = position.latitude;
 
-    final String url =
-        "${ApiConstants.baseUrl}${ApiConstants.categoryDeals(categoryId)}";
+    final String url = "${ApiConstants.baseUrl}${ApiConstants.categoryDeals(categoryId)}";
 
-    final response = await _dio.get(
-      url,
-      queryParameters: {
-        "lng": lng,
-        "lat": lat,
-        "sort": sort,
-      },
-    );
+    final response = await _dio.get(url, queryParameters: {"lng": lng, "lat": lat, "sort": sort});
 
     final List deals = response.data["data"]["deals"];
 

@@ -8,7 +8,7 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 
 class InAppPurchaseService {
   final InAppPurchase _iap = InAppPurchase.instance;
-  StreamSubscription<List<PurchaseDetails>>? _subscription;
+  StreamSubscription<List<dynamic>>? _subscription;
   final DioClient _dioClient = DioClient();
 
   // Prevent duplicate verifications
@@ -21,7 +21,7 @@ class InAppPurchaseService {
       ? {'quick_start_7d', 'standard_14d', 'extended_30d'}
       : {'deal_publish_7d', 'deal_publish_14d', 'deal_publish_30d'};
 
-  List<ProductDetails> products = [];
+  List<dynamic> products = [];
   bool isAvailable = false;
 
   /// Callback to notify controller
@@ -58,7 +58,7 @@ class InAppPurchaseService {
     );
   }
 
-  Future<void> _onPurchaseUpdate(List<PurchaseDetails> purchases) async {
+  Future<void> _onPurchaseUpdate(List<dynamic> purchases) async {
     for (var purchase in purchases) {
       final pId = purchase.purchaseID;
       if (pId == null || _verifyingPurchaseIds.contains(pId)) continue;

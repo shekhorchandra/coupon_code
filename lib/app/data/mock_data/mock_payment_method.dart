@@ -1,7 +1,7 @@
 import 'package:coupon_code/app/core/values/app_assets.dart';
 import 'package:coupon_code/app/data/models/payment_method_model.dart';
 
-final List<PaymentMethodModel> mockPaymentMethod = [
+final List<dynamic> mockPaymentMethod = [
   PaymentMethodModel(
     id: 1,
     name: 'Visa',

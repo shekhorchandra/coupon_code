@@ -34,11 +34,26 @@ void main() async {
   runApp(const CouponDiscountApp());
 }
 
-class CouponDiscountApp extends StatelessWidget {
+class CouponDiscountApp extends StatefulWidget {
   const CouponDiscountApp({super.key});
 
   @override
+  State<CouponDiscountApp> createState() => _CouponDiscountAppState();
+}
+
+class _CouponDiscountAppState extends State<CouponDiscountApp> {
+  void refreshEverything() {
+    if (mounted) {
+      setState(() {
+        print("!!! GLOBAL REBUILD TRIGGERED !!!");
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    Future.delayed(Duration(seconds: 1), () => refreshEverything());
+
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: AppStrings.appName,

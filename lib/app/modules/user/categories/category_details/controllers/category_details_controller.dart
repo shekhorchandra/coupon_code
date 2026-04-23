@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../../../../services/Helper_status_code/HttpStatusHandler.dart';
 import '../../../../services/contants/api_constants.dart';
 import '../../../../services/geolocator_helper/current_location_picker.dart';
@@ -12,7 +14,7 @@ import '../model/category_deal_model.dart';
 class CategoryDetailsController extends GetxController {
   final CategoryDetailsApiService _api = CategoryDetailsApiService();
 
-  var deals = <CategoryDealModel>[].obs;
+  var deals = <dynamic>[].obs;
   var isLoading = false.obs;
   RxString currentSearchTerm = "".obs;
 
@@ -20,21 +22,13 @@ class CategoryDetailsController extends GetxController {
   late String title;
   final sortBy = "Price: Low to High".obs;
 
-  final sortOptions = [
-    "Price: Low to High",
-    "Price: High to Low",
-    "Distance",
-    "Discount",
-  ];
-
+  final sortOptions = ["Price: Low to High", "Price: High to Low", "Distance", "Discount"];
 
   final searchController = TextEditingController();
   final zipController = TextEditingController();
 
   var currentTime = DateTime.now().obs;
   Timer? _timer;
-
-
 
   @override
   void onInit() {
@@ -116,14 +110,12 @@ class CategoryDetailsController extends GetxController {
       deals.assignAll(result);
 
       applySorting();
-
     } catch (e) {
       print("Category Deals Error: $e");
     } finally {
       isLoading.value = false;
     }
   }
-
 
   /// SEARCH BUTTON CLICK
   void onSearchButton() {
@@ -160,7 +152,7 @@ class CategoryDetailsController extends GetxController {
       final double lng = position.longitude;
       final double lat = position.latitude;
 
-      final query = {"page": page, "limit": 10, "searchTerm": searchTerm};
+      final query = {"page": page, "limit": 1000, "searchTerm": searchTerm};
 
       final response = await Dio().get(
         '${ApiConstants.baseUrl}/service/deals/all_deals/$lng/$lat',

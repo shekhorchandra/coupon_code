@@ -1,5 +1,5 @@
-import 'package:get/get.dart';
 import 'package:dio/dio.dart';
+import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 import '../../../../services/Helper_status_code/HttpStatusHandler.dart';
@@ -53,13 +53,11 @@ class CategoriesController extends GetxController {
     }
   }
 
-  List<CategoryModel> get filteredCategories {
+  List<dynamic> get filteredCategories {
     if (searchText.value.isEmpty) return categories;
 
     return categories
-        .where(
-          (c) => c.name.toLowerCase().contains(searchText.value.toLowerCase()),
-        )
+        .where((c) => c.name.toLowerCase().contains(searchText.value.toLowerCase()))
         .toList();
   }
 
