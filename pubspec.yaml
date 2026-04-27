@@ -1,8 +1,3 @@
-# Hey - just a heads-up based on my experience working with him.
-# At the start, the agreement was to build an MVP in three phases: UI/UX design, Flutter + web frontend and then the backend. He approved each stage along the way. But when we were going to deploy everything, he used to wake up everyday and tell us to do a lot of changes including UI changes, backend changes and even changing the entire flow of the app and website.
-# Be careful working with him. He will just use you if you don't set clear boundaries before starting the work.
-
-
 name: coupon_code
 description: "Yepp – Your Ultimate Deal Finder"
 # The following line prevents the package from being accidentally published to
@@ -21,7 +16,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.5.3+17
+version: 1.5.4+18
 
 environment:
   sdk: ^3.10.7
