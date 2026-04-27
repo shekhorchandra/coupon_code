@@ -42,17 +42,17 @@ class CouponDiscountApp extends StatefulWidget {
 }
 
 class _CouponDiscountAppState extends State<CouponDiscountApp> {
-  void refreshEverything() {
-    if (mounted) {
-      setState(() {
-        print("!!! GLOBAL REBUILD TRIGGERED !!!");
-      });
-    }
-  }
+  // void refreshEverything() {
+  //   if (mounted) {
+  //     setState(() {
+  //       print("!!! GLOBAL REBUILD TRIGGERED !!!");
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
-    Future.delayed(Duration(seconds: 1), () => refreshEverything());
+    // Future.delayed(Duration(seconds: 1), () => refreshEverything());
 
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
