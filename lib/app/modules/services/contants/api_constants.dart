@@ -44,7 +44,8 @@ class ApiConstants {
   static const String topViewedDeals = '/service/top_viewed_deals';
   static const String addDeal = '/service';
   static String dealDetails(String id) => '/service/$id';
-  static String serviceDetails(String id, double lng, double lat) => '/service/$id/$lng/$lat';
+  static String serviceDetails(String id, double lng, double lat) =>
+      '/service/$id/$lng/$lat';
 
   // Deal
   static String getDeals(String longitude, String latitude) =>
@@ -60,6 +61,8 @@ class ApiConstants {
   static const String notifications = '/notification';
 
   /// Purchase
-  static const String verifyPurchaseGoogle = '/payment/api/google_in_app_purchase';
-  static const String verifyPurchaseApple = '/payment/api/apple_in_app_purchase';
+  static const String verifyPurchaseGoogle =
+      '/payment/api/google_in_app_purchase';
+  static const String verifyPurchaseApple =
+      '/payment/api/apple_in_app_purchase';
 }
