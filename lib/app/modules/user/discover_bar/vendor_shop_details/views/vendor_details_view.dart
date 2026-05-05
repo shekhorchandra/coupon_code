@@ -14,104 +14,102 @@ class VendorDetailsView extends GetView<VendorDetailsController> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: CommonAppBar(title: 'Vendor Details'),
-        body: Obx(() {
-          if (controller.isLoading.value) {
-            return const Center(child: CircularProgressIndicator( color: AppColor.primary,));
-          }
+    return Scaffold(
+      appBar: CommonAppBar(title: 'Vendor Details'),
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return const Center(child: CircularProgressIndicator( color: AppColor.primary,));
+        }
 
-          final vendor = controller.vendor.value;
-          if (vendor == null) {
-            return const Center(child: Text("Vendor not found"));
-          }
-          return Column(
-            children: [
-              /// Business Logo
-              Container(
-                width: 74,
-                height: 74,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: AppColor.primary, // border color
-                    width: 2,
-                  ),
+        final vendor = controller.vendor.value;
+        if (vendor == null) {
+          return const Center(child: Text("Vendor not found"));
+        }
+        return Column(
+          children: [
+            /// Business Logo
+            Container(
+              width: 74,
+              height: 74,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: AppColor.primary, // border color
+                  width: 2,
                 ),
-                child: ClipOval(
-                  child: Image.network(
-                    vendor.businessLogo,
-                    width: 70,
-                    height: 70,
-                    fit: BoxFit.cover,
+              ),
+              child: ClipOval(
+                child: Image.network(
+                  vendor.businessLogo,
+                  width: 70,
+                  height: 70,
+                  fit: BoxFit.cover,
 
-                    /// Loading Indicator
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
+                  /// Loading Indicator
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
 
-                      return Container(
-                        alignment: Alignment.center,
-                        color: AppColor.white,
-                        child: const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: AppColor.primary,
-                          ),
+                    return Container(
+                      alignment: Alignment.center,
+                      color: AppColor.white,
+                      child: const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: AppColor.primary,
                         ),
-                      );
-                    },
-
-                    /// Error Widget
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        color: AppColor.greyText,
-                        alignment: Alignment.center,
-                        child: const Icon(Icons.store),
-                      );
-                    },
-                  ),
-                ),
-              ),
-
-              /// Vendor Name
-              Text(vendor.businessName, style: AppTextStyles.MenuTitle),
-
-              /// Description
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Text(vendor.description, style: AppTextStyles.Text),
-              ),
-
-              /// Tabs
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _tabButton("Active Deals", 0),
-                  _tabButton("Address & Location", 1),
-                ],
-              ),
-
-              /// Tab Content
-              Expanded(
-                child: RefreshIndicator(
-                  color: AppColor.primary,
-                  onRefresh: () async {
-                    await controller.fetchVendorDetails(); // your reload API
+                      ),
+                    );
                   },
-                  child: Obx(() {
-                    return controller.selectedTab.value == 0
-                        ? _activeDeals()
-                        : _addressLocation();
-                  }),
+
+                  /// Error Widget
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: AppColor.greyText,
+                      alignment: Alignment.center,
+                      child: const Icon(Icons.store),
+                    );
+                  },
                 ),
-              )
-            ],
-          );
-        }),
-      ),
+              ),
+            ),
+
+            /// Vendor Name
+            Text(vendor.businessName, style: AppTextStyles.MenuTitle),
+
+            /// Description
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Text(vendor.description, style: AppTextStyles.Text),
+            ),
+
+            /// Tabs
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _tabButton("Active Deals", 0),
+                _tabButton("Address & Location", 1),
+              ],
+            ),
+
+            /// Tab Content
+            Expanded(
+              child: RefreshIndicator(
+                color: AppColor.primary,
+                onRefresh: () async {
+                  await controller.fetchVendorDetails(); // your reload API
+                },
+                child: Obx(() {
+                  return controller.selectedTab.value == 0
+                      ? _activeDeals()
+                      : _addressLocation();
+                }),
+              ),
+            )
+          ],
+        );
+      }),
     );
   }
 

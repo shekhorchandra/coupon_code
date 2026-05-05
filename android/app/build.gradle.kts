@@ -47,14 +47,14 @@ android {
         multiDexEnabled = true
     }
 
-   signingConfigs {
-       create("release") {
-           keyAlias = keystoreProperties["keyAlias"] as String
-           keyPassword = keystoreProperties["keyPassword"] as String
-           storeFile = keystoreProperties["storeFile"]?.let { file(it) }
-           storePassword = keystoreProperties["storePassword"] as String
-       }
-   }
+    signingConfigs {
+        create("release") {
+            keyAlias = keystoreProperties["keyAlias"] as? String
+            keyPassword = keystoreProperties["keyPassword"] as? String
+            storeFile = keystoreProperties["storeFile"]?.let { file(it) }
+            storePassword = keystoreProperties["storePassword"] as? String
+        }
+    }
 
     buildTypes {
         release {
